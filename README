@@ -1,0 +1,19 @@
+There's a pathname embedded mysite/settings.py.
+'NAME': '/Users/stevescalpone/dev/HBI/HBI/database/mysite.db', # Or path to database file if using sqlite3.
+
+First you'll want a fresh database:
+rm -f database/mysite.db
+python manage.py syncdb
+
+It's going to prompt you for a superuser.
+admin/123456
+
+Start the server with this:
+python manage.py runserver
+
+Here's how you get to the admin console:
+http://127.0.0.1:8000/admin/
+
+Connect to the server with your browser:
+http://127.0.0.1:8000/tracker/
+
