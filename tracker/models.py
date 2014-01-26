@@ -42,7 +42,13 @@ class ResidenceParent(models.Model):
 
 class Child(models.Model):
     residence = models.ForeignKey(Residence)
-    name = models.CharField(max_length=200)
+    first_name1 = models.CharField(max_length=200)
+    first_name2 = models.CharField(max_length=200)
+    last_name1 = models.CharField(max_length=200)
+    last_name2 = models.CharField(max_length=200)
+    birthdate = models.DateField();
+    birthplace = models.CharField(max_length=200);
+    intake_date = models.DateField();
 
     def __unicode__(self):
         return self.name
