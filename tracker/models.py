@@ -1,3 +1,5 @@
+import datetime
+
 from django.db import models
 
 from django.contrib.auth.models import User
@@ -53,6 +55,23 @@ class Child(models.Model):
 
     def __unicode__(self):
         return self.first_name1
+
+    def age():
+        return age_in_years(birthdate, datetime.datetime.utcnow())
+
+    def age_in_years(from_date, to_date, leap_day_anniversary_Feb28=True):
+        age = to_date.year - from_date.year
+        try:
+            anniversary = from_date.replace(year=to_date.year)
+        except ValueError:
+            assert from_date.day == 29 and from_date.month == 2
+            if leap_day_anniversary_Feb28:
+                anniversary = datetime.date(to_date.year, 2, 28)
+            else:
+                anniversary = datetime.date(to_date.year, 3, 1)
+        if to_date < anniversary:
+            age -= 1
+        return age
 
 class BasicInfo(models.Model):
     child = models.ForeignKey(Child)
