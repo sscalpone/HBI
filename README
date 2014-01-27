@@ -20,3 +20,8 @@ http://127.0.0.1:8000/admin/
 
 Connect to the server with your browser:
 http://127.0.0.1:8000/tracker/
+
+Initialize the db with some data:
+cp media/photos/me.png fixtures/
+python manage.py loaddata fixtures/basic.json 
+

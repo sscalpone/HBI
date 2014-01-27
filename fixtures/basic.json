@@ -1,0 +1,191 @@
+
+[
+  {
+    "model": "tracker.residence",
+    "pk": 1,
+    "fields": {
+      "residence_name": "Ace"
+    }
+  },
+  {
+    "pk": 1,
+    "model": "tracker.residencedirector",
+    "fields": {
+      "residence": 1,
+      "user": 1
+    }
+  },
+  {
+    "pk": 1,
+    "model": "tracker.residenceparent",
+    "fields": {
+      "residence": 1,
+      "user": 1
+    }
+  },
+  {
+    "model": "tracker.child",
+    "pk": 1,
+    "fields": {
+      "first_name2": "Abby",
+      "first_name1": "",
+      "last_name1": "Adams",
+      "last_name2": "",
+      "residence": 1,
+      "intake_date": "2014-01-26",
+      "birthplace": "Allantown",
+      "birthdate": "2001-01-01",
+      "photo": "photos\/me.png"
+    }
+  },
+  {
+    "model": "tracker.child",
+    "pk": 2,
+    "fields": {
+      "first_name2": "Betty",
+      "first_name1": "",
+      "last_name1": "Burns",
+      "last_name2": "",
+      "residence": 1,
+      "intake_date": "2014-01-26",
+      "birthplace": "Bismark",
+      "birthdate": "2002-02-02",
+      "photo": "photos\/me.png"
+    }
+  },
+  {
+    "model": "tracker.child",
+    "pk": 3,
+    "fields": {
+      "first_name2": "Charlie",
+      "first_name1": "",
+      "last_name1": "Card",
+      "last_name2": "",
+      "residence": 1,
+      "intake_date": "2014-01-26",
+      "birthplace": "Centerville",
+      "birthdate": "2003-03-03",
+      "photo": "photos\/me.png"
+    }
+  },
+  {
+    "model": "tracker.child",
+    "pk": 4,
+    "fields": {
+      "first_name2": "Dave",
+      "first_name1": "",
+      "last_name1": "Daniels",
+      "last_name2": "",
+      "residence": 1,
+      "intake_date": "2014-01-26",
+      "birthplace": "Davenport",
+      "birthdate": "2004-04-04",
+      "photo": "photos\/me.png"
+    }
+  },
+  {
+    "model": "tracker.child",
+    "pk": 5,
+    "fields": {
+      "first_name2": "Eddie",
+      "first_name1": "",
+      "last_name1": "Edwards",
+      "last_name2": "",
+      "residence": 1,
+      "intake_date": "2014-01-26",
+      "birthplace": "Eagle Creek",
+      "birthdate": "2005-05-05",
+      "photo": "photos\/me.png"
+    }
+  },
+  {
+    "model": "tracker.child",
+    "pk": 6,
+    "fields": {
+      "first_name2": "Fred",
+      "first_name1": "",
+      "last_name1": "Flinstone",
+      "last_name2": "",
+      "residence": 1,
+      "intake_date": "2014-01-26",
+      "birthplace": "Flint",
+      "birthdate": "2006-06-06",
+      "photo": "photos\/me.png"
+    }
+  },
+  {
+    "model": "tracker.child",
+    "pk": 7,
+    "fields": {
+      "first_name2": "Gary",
+      "first_name1": "",
+      "last_name1": "Gains",
+      "last_name2": "",
+      "residence": 1,
+      "intake_date": "2010-01-26",
+      "birthplace": "Home",
+      "birthdate": "2007-07-07",
+      "photo": "photos\/me.png"
+    }
+  },
+  {
+    "model": "tracker.child",
+    "pk": 8,
+    "fields": {
+      "first_name2": "Henry",
+      "first_name1": "",
+      "last_name1": "Higgins",
+      "last_name2": "",
+      "residence": 1,
+      "intake_date": "2011-01-26",
+      "birthplace": "Home",
+      "birthdate": "2008-08-08",
+      "photo": "photos\/me.png"
+    }
+  },
+  {
+    "model": "tracker.child",
+    "pk": 9,
+    "fields": {
+      "first_name2": "Ingrid",
+      "first_name1": "",
+      "last_name1": "Immel",
+      "last_name2": "",
+      "residence": 1,
+      "intake_date": "2014-01-26",
+      "birthplace": "Indio",
+      "birthdate": "2009-09-09",
+      "photo": "photos\/me.png"
+    }
+  },
+  {
+    "model": "tracker.child",
+    "pk": 10,
+    "fields": {
+      "first_name2": "Jerry",
+      "first_name1": "",
+      "last_name1": "Jones",
+      "last_name2": "",
+      "residence": 1,
+      "intake_date": "2014-01-26",
+      "birthplace": "Jersey",
+      "birthdate": "2010-10-10",
+      "photo": "photos\/me.png"
+    }
+  },
+  {
+    "model": "tracker.child",
+    "pk": 11,
+    "fields": {
+      "first_name2": "Kevin",
+      "first_name1": "",
+      "last_name1": "Kurry",
+      "last_name2": "",
+      "residence": 1,
+      "intake_date": "2014-01-26",
+      "birthplace": "Home",
+      "birthdate": "2011-11-11",
+      "photo": "photos\/me.png"
+    }
+  }
+]
