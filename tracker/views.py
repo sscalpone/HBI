@@ -8,6 +8,7 @@ from django.template import RequestContext, loader
 
 from tracker.models import Residence
 from tracker.models import Child
+from tracker.models import ChildForm
 
 def index(request):
     return render(request, 'tracker/index.html')
@@ -43,7 +44,12 @@ def children(request):
     return render(request, 'tracker/children.html', context)
 
 def add_child(request):
-    return render(request, 'tracker/add_child.html')
+    form = ChildForm(request.POST)
+
+    context = {
+        'form': form,
+    }
+    return render(request, 'tracker/add_child.html', context)
 
 def child(request, child_id):
     p = get_object_or_404(Child, pk=child_id)

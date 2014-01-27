@@ -3,7 +3,8 @@
 
 <h1>Poner un Niño</h1>
 
-<form action="{% url 'tracker:add_child' %}" method="post">
-{% csrf_token %}
-{{ form }}
+<form action="{% url 'tracker:add_child' %}" enctype="multipart/form-data" method="post">
+    {% csrf_token %}
+    {{ form }}
+    <input type="submit" value="Poner" />
 </form>

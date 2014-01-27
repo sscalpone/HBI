@@ -4,6 +4,8 @@ from django.db import models
 
 from django.contrib.auth.models import User
 
+from django.forms import ModelForm
+
 class Residence(models.Model):
     residence_name = models.CharField(max_length=200)
 
@@ -72,6 +74,11 @@ class Child(models.Model):
             if to_date < anniversary:
                 computed_age -= 1
         return computed_age
+
+class ChildForm(ModelForm):
+    class Meta:
+        model = Child
+        fields = '__all__'
 
 class BasicInfo(models.Model):
     child = models.ForeignKey(Child)
