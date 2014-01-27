@@ -1,5 +1,9 @@
-There's a pathname embedded mysite/settings.py.
-'NAME': '/Users/stevescalpone/dev/HBI/HBI/database/mysite.db', # Or path to database file if using sqlite3.
+You'll be happier if you install virtual env.
+
+We are using Django 1.6.1 and Python 2.7.5.
+
+Install the Python Image Tools:
+pip install Pillow
 
 First you'll want a fresh database:
 rm -f database/mysite.db
@@ -16,4 +20,3 @@ http://127.0.0.1:8000/admin/
 
 Connect to the server with your browser:
 http://127.0.0.1:8000/tracker/
-
