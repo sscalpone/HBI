@@ -1,0 +1,15 @@
+
+{% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+
+<h1>Información General</h1>
+
+<h2>{{ child.first_name1 }} {{ child.first_name2 }} {{ child.last_name1 }} {{ child.last_name2 }}</h2>
+<img src="{{ child.photo.url }}" />
+
+<dl>
+    <dt>Fecha de Naciemiento</dt><dd>{{ child.birthdate }}</dd>
+    <dt>Años</dt><dd>{{ child.age }}</dd>
+    <dt>Casa Girasoles</dt><dd>{{ child.residence.residence_name }}</dd>
+    <dt>Fetcha de Ingreso</dt><dd>{{ child.intake_date }}</dd>
+    <dt>Lugar de Naciemiento</dt><dd>{{ child.birthplace }}</dd>
+</dl>

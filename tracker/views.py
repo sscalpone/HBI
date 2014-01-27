@@ -7,6 +7,7 @@ from django.shortcuts import render, get_object_or_404
 from django.template import RequestContext, loader
 
 from tracker.models import Residence
+from tracker.models import Child
 
 def index(request):
     return render(request, 'tracker/index.html')
@@ -34,3 +35,19 @@ def residence(request, residence_id):
 	else:
 		return HttpResponseRedirect(reverse('polls:results', args=(p.id,)))
 
+def children(request):
+    list_of_children = Child.objects.all()
+    context = RequestContext(request, {
+        'children': list_of_children
+    })
+    return render(request, 'tracker/children.html', context)
+
+def add_child(request):
+    return render(request, 'tracker/add_child.html')
+
+def child(request, child_id):
+    p = get_object_or_404(Child, pk=child_id)
+    context = {
+        'child': p
+    }
+    return render(request, 'tracker/child_information.html', context)

@@ -1,0 +1,10 @@
+
+{% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+
+<h1>Los Niños</h1>
+<a href="{% url 'tracker:add_child' %}">Poner una otra niña...</a>
+<ul>
+{% for child in children %}
+	<li class="{% cycle 'even' 'odd' %}"><a href="{% url 'tracker:child' child.id %}">{{ child.first_name1 }} {{ child.first_name2 }} {{ child.last_name1 }} {{ child.last_name2 }}</a></li>
+{% endfor %}
+</ul>

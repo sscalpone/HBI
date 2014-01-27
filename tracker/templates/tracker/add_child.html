@@ -1,0 +1,9 @@
+
+{% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+
+<h1>Poner un Niño</h1>
+
+<form action="{% url 'tracker:add_child' %}" method="post">
+{% csrf_token %}
+{{ form }}
+</form>
