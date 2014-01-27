@@ -49,7 +49,7 @@ class Child(models.Model):
     birthdate = models.DateField()
     birthplace = models.CharField(max_length=200)
     intake_date = models.DateField()
-    photo = models.ImageField('photos')
+    photo = models.ImageField(upload_to='photos')
 
     def __unicode__(self):
         return self.name
