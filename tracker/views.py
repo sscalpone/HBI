@@ -44,8 +44,14 @@ def children(request):
     return render(request, 'tracker/children.html', context)
 
 def add_child(request):
-    form = ChildForm(request.POST)
-
+    if request.method == 'POST':
+        form = ChildForm(request.POST, request.FILES)
+        if form.is_valid():
+            saved_child = form.save()
+            if saved_child:
+                return HttpResponseRedirect(reverse('tracker:children'))
+    else:
+        form = ChildForm()
     context = {
         'form': form,
     }
