@@ -1,15 +1,18 @@
 from django.conf.urls import patterns, url
 
-from tracker import views
+from tracker.views import main
+from tracker.views import residence
+from tracker.views import child
+
 
 urlpatterns = patterns('',
     # ex: /tracker/
-    url(r'^$', views.index, name='index'),
-    url(r'^login/$', views.login, name='login'),
-    url(r'^main/$', views.main, name='main'),
-    url(r'^residence/$', views.residence, name='residence'),
-    url(r'^children/$', views.children, name='children'),
-    url(r'^children/new/$', views.add_child, name='add_child'),
-    url(r'^children/view/(?P<child_id>\d+)', views.child, name='child')
+    url(r'^$', main.index, name='index'),
+    url(r'^login/$', main.login, name='login'),
+    url(r'^residences/$', residence.index, name='residences'),
+    url(r'^residence/(?P<residence_id>\d+)', residence.view, name='residence'),
+    url(r'^children/$', child.index, name='children'),
+    url(r'^child/new/$', child.new, name='add_child'),
+    url(r'^child/(?P<child_id>\d+)', child.view, name='child')
 )
 
