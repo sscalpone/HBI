@@ -8,10 +8,8 @@ from django.contrib.auth.models import User
 
 class Child(models.Model):
     residence = models.ForeignKey(Residence)
-    first_name1 = models.CharField(max_length=200)
-    first_name2 = models.CharField(max_length=200)
-    last_name1 = models.CharField(max_length=200)
-    last_name2 = models.CharField(max_length=200)
+    first_name = models.CharField(max_length=200)
+    last_name = models.CharField(max_length=200)
     birthdate = models.DateField()
     birthplace = models.CharField(max_length=200)
     intake_date = models.DateField()
@@ -22,7 +20,7 @@ class Child(models.Model):
         db_table = 'tracker_child'
 
     def __unicode__(self):
-        return self.first_name1
+        return self.first_name
 
     def age(self):
         return self.age_in_years(self.birthdate, datetime.datetime.utcnow())
