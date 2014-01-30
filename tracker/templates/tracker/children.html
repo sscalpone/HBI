@@ -5,6 +5,6 @@
 <a href="{% url 'tracker:add_child' %}">Poner una otra niña...</a>
 <ul>
 {% for child in children %}
-	<li class="{% cycle 'even' 'odd' %}"><a href="{% url 'tracker:child' child.id %}">{{ child.first_name1 }} {{ child.first_name2 }} {{ child.last_name1 }} {{ child.last_name2 }}</a></li>
+	<li class="{% cycle 'even' 'odd' %}"><a href="{% url 'tracker:child' child.id %}">{{ child.first_name }} {{ child.last_name }}</a></li>
 {% endfor %}
 </ul>
