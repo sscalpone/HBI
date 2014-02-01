@@ -11,16 +11,13 @@ admin.autodiscover()
 admin.site.unregister(Site)
 
 urlpatterns = patterns('',
-    # Examples:
-    # url(r'^$', 'mysite.views.home', name='home'),
-    # url(r'^mysite/', include('mysite.foo.urls')),
-
-    # Uncomment the admin/doc line below to enable admin documentation:
-    # url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
-
-    # Uncomment the next line to enable the admin:
     url(r'^$', RedirectView.as_view(url='/tracker/')),
     url(r'^polls/', include('polls.urls', namespace="polls")),
     url(r'^tracker/', include('tracker.urls', namespace="tracker")),
     url(r'^admin/', include(admin.site.urls)),
-) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+)
+
+if settings.DEBUG:
+    urlpatterns += patterns('',
+        (r'^assets/(?P<path>.*)$', 'django.views.static.serve', {'document_root': settings.ASSETS_ROOT})
+    ) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

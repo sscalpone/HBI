@@ -1,0 +1,229 @@
+
+/*
+   Eric Meyer's CSS reset -- helps create consistency across browser styles
+
+   http://meyerweb.com/eric/tools/css/reset/
+   v2.0 | 20110126
+   License: none (public domain)
+*/
+
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed,
+figure, figcaption, footer, header, hgroup,
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	font-size: 100%;
+	font: inherit;
+	vertical-align: baseline;
+}
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure,
+footer, header, hgroup, menu, nav, section {
+	display: block;
+}
+body {
+	line-height: 1;
+}
+ol, ul {
+	list-style: none;
+}
+blockquote, q {
+	quotes: none;
+}
+blockquote:before, blockquote:after,
+q:before, q:after {
+	content: '';
+	content: none;
+}
+table {
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+
+/*
+  HBI Tracker Styles
+*/
+
+html {
+    font-family: "Lucida Grande", "DejaVu Sans", "Bitstream Vera Sans", Verdana, Arial, sans-serif;
+    font-size: 10px;
+    background: #b8a079;
+}
+
+h1 {
+    font-size: 3em;
+    line-height: 1.5em;
+}
+
+h2 {
+    font-size: 2.5em;
+    line-height: 1.5em;
+}
+
+div#header {
+    background: #4A2E20;
+    padding: 1em;
+    color: #ffffff;
+}
+
+div#menu {
+    height: 4.33em;
+    padding: 0;
+    background: #bfa98c;
+    background: -webkit-linear-gradient(#bfa98c, #b8a079);
+    background: -o-linear-gradient(#bfa98c, #b8a079);
+    background: -moz-linear-gradient(#bfa98c, #b8a079);
+    background: linear-gradient(#bfa98c, #b8a079);
+    border-bottom: 1px #4A2E20 solid;
+}
+
+div#content {
+    padding: 2em;
+}
+
+span.button a {
+    display: inline-block;
+    border: 1px solid #333;
+    border-radius: 0.33em;
+    font-size: 2em;
+    padding: 0.165em;
+    margin: 0.33em;
+    background: #ddd;
+    background: -webkit-linear-gradient(#eee, #ddd);
+    background: -o-linear-gradient(#eee, #ddd);
+    background: -moz-linear-gradient(#eee, #ddd);
+    background: linear-gradient(#eee, #ddd);
+    text-decoration: none;
+    color: #000;
+}
+
+
+/* Main Student Grid */
+ul.grid-list {
+    margin: 0 -2em;
+    background: #222;
+}
+
+ul.grid-list li {
+    display: inline-block;
+    height: 30em;
+    width: 25em;
+    overflow: hidden;
+}
+
+ul.grid-list li a {
+    color: #fff;
+    text-shadow: #ffffff 2px;
+    margin: 1.5em 2.5em  1.5em 2.5em;
+    text-decoration: none;
+}
+
+ul.grid-list li img {
+    display: block;
+    width: 20em;
+    height:20em;
+    max-width: 20em;
+    max-height:20em;
+    margin: 1.5em 2.5em  1.5em 2.5em;
+    border-radius: 2em;
+}
+
+ul.grid-list li img.green {
+    border: 4px #2e804d solid;
+}
+
+ul.grid-list li img.yellow {
+    border: 4px #eadf39 solid;
+}
+
+ul.grid-list li img.red {
+    border: 4px #ec1a15 solid;
+}
+
+ul.grid-list li p {
+    display: block;
+    text-align: center;
+    font-size: 1.5em;
+    margin: 1.5em 2.5em  1.5em 2.5em;
+}
+
+/* Form Styles */
+form {
+
+}
+form * {
+    font-size: 2em;
+    display: block;
+}
+
+form label {
+    font-size: 1.33em;
+    padding: 1.00em 0em 0.15em 0em;
+}
+
+form input[type="text"] {
+    outline: none;
+    background: transparent;
+    font-size: 2em;
+    border-radius: 1em;
+    padding: 0.33em 0.66em;
+    margin: 3px;
+    border: 1px #4A2E20 solid;
+    width: 40em;
+}
+
+form input[type="text"]:focus {
+    outline: none;
+    margin: 0px;
+    border: 4px #4A2E20 solid;
+    background: #bfa98c;
+}
+
+form label {
+    margin-top: 0.66em;
+    display: inline-block;
+}
+
+/* Child View Styles */
+
+div#child-info {
+
+}
+
+div#child-info img {
+    margin-top: 1.33em;
+    border-radius: 1em;
+    border: 1px #4A2E20 solid;
+    float: left;
+    width: 30em;
+    height: 30em;
+    max-width: 30em;
+    max-height: 30em;
+}
+
+div#child-info dl {
+    padding: 0em 0em 0em 32em;
+}
+div#child-info dt {
+    font-size: 1.33em;
+    padding: 1.00em 0em 0.15em 0em;
+}
+
+div#child-info dd {
+    font-size: 2em;
+    border-radius: 1em;
+    padding: 0.33em 0.66em;
+    border: 1px #4A2E20 solid;
+    display: inline-block;
+}

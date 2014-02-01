@@ -1,10 +1,15 @@
+{% extends 'base.html' %}
 
-{% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+{% block title %}Poner un Niño{% endblock %}
 
-<h1>Poner un Niño</h1>
+{% block content %}
 
-<form action="{% url 'tracker:add_child' %}" enctype="multipart/form-data" method="post">
-    {% csrf_token %}
-    {{ form }}
-    <input type="submit" value="Poner" />
-</form>
+    <h1>Poner un Niño</h1>
+    {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+
+    <form action="{% url 'tracker:add_child' %}" enctype="multipart/form-data" method="post">
+        {% csrf_token %}
+        {{ form }}
+        <input type="submit" value="Poner" />
+    </form>
+{% endblock %}
