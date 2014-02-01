@@ -12,7 +12,6 @@ admin.autodiscover()
 
 urlpatterns = patterns('',
     url(r'^$', RedirectView.as_view(url='/tracker/')),
-    url(r'^polls/', include('polls.urls', namespace="polls")),
     url(r'^tracker/', include('tracker.urls', namespace="tracker")),
     url(r'^admin/', include(admin.site.urls)),
 )
