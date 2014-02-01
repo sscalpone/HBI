@@ -12,3 +12,6 @@ from PsychologicalExamInfo import PsychologicalExamInfo
 from PsychologicalExamInfo import PsychologicalExamDiagnosis
 from Residence import Residence
 from SocialExamInfo import SocialExamInfo
+from ConsultationHistory import ConsultationHistory
+from DiseaseHistory import DiseaseHistory
+from OperationHistory import OperationHistory
