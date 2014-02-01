@@ -21,7 +21,7 @@ class SocialExamInfo(models.Model):
     family_situation = models.TextField()
     health_situation = models.TextField()
     housing_situation = models.TextField()
-    enconomic_situation = models.TextField()
+    economic_situation = models.TextField()
     general_comments = models.TextField()
     visitors_allowed = models.BooleanField()
     visitors_notes = models.TextField()
