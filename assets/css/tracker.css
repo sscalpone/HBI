@@ -90,6 +90,7 @@ div#menu {
 
 div#content {
     padding: 2em;
+    background: #b8a079;
 }
 
 span.button a {
@@ -226,4 +227,27 @@ div#child-info dd {
     padding: 0.33em 0.66em;
     border: 1px #4A2E20 solid;
     display: inline-block;
+}
+
+/* Two-column styles */
+
+div.two-column {
+    float: left;
+    height: 100%;
+    background: #fff;
+    background: linear-gradient(#eee, #fff);
+    clear:both;
+}
+
+div.two-column #sidebar {
+    float: left;
+    width: 30em;
+}
+
+div.two-column #sidebar ul {
+    margin: 1em;
+}
+
+div.two-column #content {
+    float: left;
 }
