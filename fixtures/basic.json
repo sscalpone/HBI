@@ -8,22 +8,6 @@
     }
   },
   {
-    "pk": 1,
-    "model": "tracker.residencedirector",
-    "fields": {
-      "residence": 1,
-      "user": 1
-    }
-  },
-  {
-    "pk": 1,
-    "model": "tracker.residenceparent",
-    "fields": {
-      "residence": 1,
-      "user": 1
-    }
-  },
-  {
     "model": "tracker.child",
     "pk": 1,
     "fields": {

@@ -12,9 +12,3 @@ from PsychologicalExamInfo import PsychologicalExamInfo
 from PsychologicalExamInfo import PsychologicalExamDiagnosis
 from Residence import Residence
 from SocialExamInfo import SocialExamInfo
-from Users import Admin
-from Users import Medical
-from Users import MedicalAdmin
-from Users import ResidenceDirector
-from Users import ResidenceParent
-

@@ -18,6 +18,7 @@ class Child(models.Model):
     class Meta:
         app_label = 'tracker'
         db_table = 'tracker_child'
+        verbose_name_plural = "Children"
 
     def __unicode__(self):
         return self.first_name
