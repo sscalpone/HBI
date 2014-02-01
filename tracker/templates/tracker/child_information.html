@@ -1,15 +1,17 @@
+{% extends 'base.html' %}
 
-{% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+{% block title %}Información General{% endblock %}
 
-<h1>Información General</h1>
-
-<h2>{{ child.first_name }} {{ child.last_name }}</h2>
-<img src="{{ child.photo.url }}" />
-
-<dl>
-    <dt>Fecha de Naciemiento</dt><dd>{{ child.birthdate }}</dd>
-    <dt>Años</dt><dd>{{ child.age }}</dd>
-    <dt>Casa Girasoles</dt><dd>{{ child.residence.residence_name }}</dd>
-    <dt>Fecha de Ingreso</dt><dd>{{ child.intake_date }}</dd>
-    <dt>Lugar de Naciemiento</dt><dd>{{ child.birthplace }}</dd>
-</dl>
+{% block content %}
+    <div id="child-info">
+        <h2>{{ child.first_name }} {{ child.last_name }}</h2>
+        <img src="{{ child.photo.url }}" />
+        <dl>
+            <dt>Fecha de Naciemiento</dt><dd>{{ child.birthdate }}</dd>
+            <dt>Años</dt><dd>{{ child.age }}</dd>
+            <dt>Casa Girasoles</dt><dd>{{ child.residence.residence_name }}</dd>
+            <dt>Fecha de Ingreso</dt><dd>{{ child.intake_date }}</dd>
+            <dt>Lugar de Naciemiento</dt><dd>{{ child.birthplace }}</dd>
+        </dl>
+    </div>
+{% endblock %}

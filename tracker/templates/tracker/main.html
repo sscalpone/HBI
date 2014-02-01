@@ -1,6 +1,8 @@
+{% extends 'base.html' %}
 
-{% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+{% block title %}¿Cuál Casa?{% endblock %}
 
+{% block content %}
 <form action="{% url 'tracker:residence' %}" method="post">
 {% csrf_token %}
 {% for choice in residence_list %}
@@ -9,4 +11,4 @@
 {% endfor %}
 <input type="submit" value="Residence" />
 </form>
-
+{% endblock %}

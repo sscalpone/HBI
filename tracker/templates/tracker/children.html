@@ -1,10 +1,14 @@
+{% extends 'base.html' %}
 
-{% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+{% block title %}Los Niños{% endblock %}
 
-<h1>Los Niños</h1>
-<a href="{% url 'tracker:add_child' %}">Poner una otra niña...</a>
-<ul>
-{% for child in children %}
-	<li class="{% cycle 'even' 'odd' %}"><a href="{% url 'tracker:child' child.id %}">{{ child.first_name }} {{ child.last_name }}</a></li>
-{% endfor %}
-</ul>
+{% block menu %}<span class="button"><a href="{% url 'tracker:add_child' %}">Poner una otra niño...</a></span>{% endblock %}
+
+{% block content %}
+    <h1>Elija un niño</h1>
+    <ul class="grid-list">
+    {% for child in children %}
+	    <li class="{% cycle 'even' 'odd' %}"><a href="{% url 'tracker:child' child.id %}"><img class="red" src="{{ child.photo.url }}" /><p>{{ child.first_name }} {{ child.last_name }}</p></a></li>
+    {% endfor %}
+    </ul>
+{% endblock %}
