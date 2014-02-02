@@ -164,7 +164,7 @@ form {
 
 }
 form * {
-    font-size: 2em;
+    font-size: 1.66em;
     display: block;
 }
 
@@ -176,7 +176,7 @@ form label {
 form input[type="text"], form input[type="password"] {
     outline: none;
     background: transparent;
-    font-size: 2em;
+    font-size: 1.66em;
     border-radius: 1em;
     padding: 0.33em 0.66em;
     margin: 3px;
@@ -189,6 +189,10 @@ form input[type="text"]:focus, form input[type="password"]:focus {
     margin: 0px;
     border: 4px #4A2E20 solid;
     background: #bfa98c;
+}
+
+form input[type="file"] {
+    font-size: initial;
 }
 
 form label {
@@ -234,8 +238,8 @@ div#child-info dd {
 div.two-column {
     float: left;
     height: 100%;
-    background: #fff;
-    background: linear-gradient(#eee, #fff);
+    background: #4A2E20;
+    background: linear-gradient(#4A2E20, #5d3b26);
     clear:both;
 }
 
@@ -250,4 +254,14 @@ div.two-column #sidebar ul {
 
 div.two-column #content {
     float: left;
+}
+
+div.two-column #sidebar ul li {
+    font-size: 1.33em;
+    line-height: 2em;
+    text-align: right;
+}
+
+div.two-column #sidebar ul li a {
+    color: #fff;
 }
