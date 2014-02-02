@@ -8,7 +8,7 @@ from django.contrib.sites.models import Site
 # Uncomment the next two lines to enable the admin:
 from django.contrib import admin
 admin.autodiscover()
-admin.site.unregister(Site)
+# admin.site.unregister(Site)
 
 urlpatterns = patterns('',
     url(r'^$', RedirectView.as_view(url='/tracker/')),

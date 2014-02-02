@@ -15,3 +15,4 @@ from SocialExamInfo import SocialExamInfo
 from ConsultationHistory import ConsultationHistory
 from DiseaseHistory import DiseaseHistory
 from OperationHistory import OperationHistory
+from OperationHistoryForm import OperationHistoryForm

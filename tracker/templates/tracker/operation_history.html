@@ -1,0 +1,46 @@
+{% extends 'two-column.html' %}
+
+{% block title %}Información Operation{% endblock %}
+
+{% block sidebar %}
+    <ul>
+        <li>Ohai! I'm a menu item.</li>
+    </ul>
+{% endblock %}
+
+{% block content %}
+
+    {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+
+    <form action="{% url 'tracker:add_operation_history' child_id %}" enctype="multipart/form-data" method="post">
+        {% csrf_token %}
+        {{ form }}
+        <input type="submit" value="Poner" />
+    </form>
+
+    <table>
+    <tr>
+      <th colspan="5">
+         <h3><br>Operation History</h3>
+      </th>
+    </tr>
+    <tr>
+      <th>Date</th>
+      <th>Institution</th>
+      <th>Preop Diagnosis</th>
+      <th>Intervention</th>
+      <th>Postop Diagnosis</th>
+    </tr>
+    {% for operation in operation_history %}
+       <tr>
+          <td>{{operation.date}}</td>
+          <td>{{operation.institution}}</td>
+          <td>{{operation.preop_diagnosis}}</td>
+          <td>{{operation.intervention}}</td>
+          <td>{{operation.postop_diagnosis}}</td>
+       </tr>
+    {% endfor %}
+    </table>
+
+{% endblock %}
+

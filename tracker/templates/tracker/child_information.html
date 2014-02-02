@@ -19,5 +19,6 @@
             <dt>Fecha de Ingreso</dt><dd>{{ child.intake_date }}</dd>
             <dt>Lugar de Naciemiento</dt><dd>{{ child.birthplace }}</dd>
         </dl>
+	    <a href="{% url 'tracker:operation_history' child.id %}"><p>Operation History</p></a>
     </div>
 {% endblock %}
