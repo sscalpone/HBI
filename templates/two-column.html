@@ -16,7 +16,11 @@
 
     <div class="two-column">
         <div id="sidebar">
-            {% block sidebar %}{% endblock %}
+            {% block sidebar %}
+             <ul>
+                <li>Ohai! I'm a menu item.</li>
+            </ul>
+            {% endblock %}
         </div>
         <div id="content">
             {% block content %}{% endblock %}
