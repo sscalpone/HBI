@@ -195,6 +195,25 @@ form input[type="file"] {
     font-size: initial;
 }
 
+form textarea {
+    outline: none;
+    background: transparent;
+    font-size: 1.66em;
+    border-radius: 1em;
+    padding: 0.33em 0.66em;
+    margin: 3px;
+    border: 1px #4A2E20 solid;
+    width: 40em;
+    height: 4em;
+}
+
+form textarea:focus {
+    outline: none;
+    margin: 0px;
+    border: 4px #4A2E20 solid;
+    background: #bfa98c;
+}
+
 form label {
     margin-top: 0.66em;
     display: inline-block;
