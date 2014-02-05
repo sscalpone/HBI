@@ -1,0 +1,46 @@
+{% extends 'two-column.html' %}
+
+{% block title %}Información Disease{% endblock %}
+
+{% block sidebar %}
+    <ul>
+        <li>Ohai! I'm a menu item.</li>
+    </ul>
+{% endblock %}
+
+{% block content %}
+
+    {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+
+    <form action="{% url 'tracker:add_disease_history' child_id %}" enctype="multipart/form-data" method="post">
+        {% csrf_token %}
+        {{ form }}
+        <input type="submit" value="Poner" />
+    </form>
+
+    <table>
+    <tr>
+      <th colspan="5">
+         <h3><br>Operation History</h3>
+      </th>
+    </tr>
+    <tr>
+      <th>Date</th>
+      <th>Institution</th>
+      <th>Diagnosis</th>
+      <th>Studies</th>
+      <th>Treatment</th>
+    </tr>
+    {% for disease in disease_history %}
+       <tr>
+          <td>{{disease.date}}</td>
+          <td>{{disease.institution}}</td>
+          <td>{{disease.dianosis}}</td>
+          <td>{{disease.studies}}</td>
+          <td>{{disease.treatment}}</td>
+       </tr>
+    {% endfor %}
+    </table>
+
+{% endblock %}
+

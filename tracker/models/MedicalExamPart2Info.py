@@ -1,6 +1,7 @@
 import datetime
 
 from Child import Child
+from Signature import Signature
 
 from django.db import models
 
@@ -8,6 +9,7 @@ from django.contrib.auth.models import User
 
 class MedicalExamPart2Info(models.Model):
     child = models.ForeignKey(Child)
+    signature = models.ForeignKey(Signature)
     date = models.DateField()
     illness_notes = models.TextField()
     appetite_notes = models.TextField()
