@@ -1,0 +1,36 @@
+{% extends 'child-screen.html' %}
+
+{% block title %}Información Odontológico{% endblock %}
+
+{% block content %}
+
+    {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+
+    <form action="{% url 'tracker:add_dental_exam' child_id %}" enctype="multipart/form-data" method="post">
+        {% csrf_token %}
+        {{ form }}
+        <input type="submit" value="Poner" />
+    </form>
+
+    <table>
+    <tr>
+      <th colspan="5">
+         <h3><br>Evaluación Odontológico</h3>
+      </th>
+    </tr>
+    <tr>
+      <th>Date</th>
+      <th>Diagnóstico</th>
+      <th>Recomendaciones</th>
+    </tr>
+    {% for operation in operation_history %}
+       <tr>
+          <td>{{operation.date}}</td>
+          <td>{{operation.diagnostico}}</td>
+          <td>{{operation.recommendation}}</td>
+       </tr>
+    {% endfor %}
+    </table>
+
+{% endblock %}
+

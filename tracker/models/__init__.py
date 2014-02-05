@@ -4,7 +4,7 @@ from BloodExam import BloodParasite
 from Child import Child
 from ChildForm import ChildForm
 from DentalExam import DentalExam
-from DentalExam import DentalExamDiagnosis
+from DentalExamForm import DentalExamForm
 from MedicalExamPart1Info import MedicalExamPart1Info
 from MedicalExamPart2Info import MedicalExamPart2Info
 from MedicalExamPart2Info import MedicalExamDiagnosis
