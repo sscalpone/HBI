@@ -1,11 +1,6 @@
-import datetime
+# coding=utf-8
 
-from OperationHistory import OperationHistory
-
-from django.db import models
-
-from django.contrib.auth.models import User
-
+from tracker.models import OperationHistory
 from django.forms import ModelForm
 
 

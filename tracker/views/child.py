@@ -33,6 +33,7 @@ def new(request):
 def view(request, child_id):
     p = get_object_or_404(Child, pk=child_id)
     context = {
-        'child': p
+        'child': p,
+        'child_id': p.id
     }
     return render(request, 'tracker/child_information.html', context)

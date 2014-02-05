@@ -1,0 +1,15 @@
+{% extends 'child-screen.html' %}
+
+{% block title %}Evaulacíon e Informe Social{% endblock %}
+
+{% block content %}
+
+    <h1>Evaulacíon e Informe Social</h1>
+    {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+
+    <form action="{% url 'tracker:new_social_exam' child_id %}" enctype="multipart/form-data" method="post">
+        {% csrf_token %}
+        {{ form }}
+        <input type="submit" value="Poner" />
+    </form>
+{% endblock %}

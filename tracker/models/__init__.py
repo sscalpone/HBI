@@ -13,6 +13,7 @@ from PsychologicalExamInfo import PsychologicalExamDiagnosis
 from PsychologicalExamInfoForm import PsychologicalExamInfoForm
 from Residence import Residence
 from SocialExamInfo import SocialExamInfo
+from SocialExamInfoForm import SocialExamInfoForm
 from ConsultationHistory import ConsultationHistory
 from ConsultationHistoryForm import ConsultationHistoryForm
 from DiseaseHistory import DiseaseHistory

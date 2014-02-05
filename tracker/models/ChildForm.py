@@ -1,8 +1,6 @@
 # coding=utf-8
 
-import datetime
-from Child import Child
-from django.db import models
+from tracker.models import Child
 from django.forms import ModelForm
 
 
