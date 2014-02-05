@@ -6,7 +6,7 @@
 
     {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
 
-    <form action="{% url 'tracker:add_dental_exam' child_id %}" enctype="multipart/form-data" method="post">
+    <form action="{% url 'tracker:add_dental_exam' child.id %}" enctype="multipart/form-data" method="post">
         {% csrf_token %}
         {{ form }}
         <input type="submit" value="Poner" />
@@ -19,15 +19,17 @@
       </th>
     </tr>
     <tr>
-      <th>Date</th>
+      <th>Fecha</th>
+      <th>Edad</th>
       <th>Diagnóstico</th>
       <th>Recomendaciones</th>
     </tr>
-    {% for operation in operation_history %}
+    {% for exam in dental_exams %}
        <tr>
-          <td>{{operation.date}}</td>
-          <td>{{operation.diagnostico}}</td>
-          <td>{{operation.recommendation}}</td>
+          <td>{{exam.date}}</td>
+          <td>{{child.age}}</td>
+          <td>{{exam.diagnostico}}</td>
+          <td>{{exam.recommendation}}</td>
        </tr>
     {% endfor %}
     </table>

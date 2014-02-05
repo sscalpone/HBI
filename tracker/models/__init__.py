@@ -10,6 +10,7 @@ from MedicalExamPart2Info import MedicalExamPart2Info
 from MedicalExamPart2Info import MedicalExamDiagnosis
 from PsychologicalExamInfo import PsychologicalExamInfo
 from PsychologicalExamInfo import PsychologicalExamDiagnosis
+from PsychologicalExamInfoForm import PsychologicalExamInfoForm
 from Residence import Residence
 from SocialExamInfo import SocialExamInfo
 from ConsultationHistory import ConsultationHistory

@@ -7,6 +7,7 @@ from tracker.views import disease_history
 from tracker.views import operation_history
 from tracker.views import consultation_history
 from tracker.views import dental_exam
+from tracker.views import psychological_exam_info
 
 
 urlpatterns = patterns('',
@@ -26,5 +27,7 @@ urlpatterns = patterns('',
     url(r'^consultation_history/(?P<child_id>\d+)', consultation_history.view, name='consultation_history'),
     url(r'^dental_exam/new/(?P<child_id>\d+)', dental_exam.new, name='add_dental_exam'),
     url(r'^dental_exam/(?P<child_id>\d+)', dental_exam.view, name='dental_exam'),
+    url(r'^psychological_exam_info/new/(?P<child_id>\d+)', psychological_exam_info.new, name='add_psychological_exam_info'),
+    url(r'^psychological_exam_info/(?P<child_id>\d+)', psychological_exam_info.view, name='psychological_exam_info'),
 )
 
