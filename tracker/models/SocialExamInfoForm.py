@@ -2,6 +2,7 @@
 
 from tracker.models import SocialExamInfo
 from django.forms import ModelForm
+from django.forms import RadioSelect
 
 
 class SocialExamInfoForm(ModelForm):
@@ -50,4 +51,13 @@ class SocialExamInfoForm(ModelForm):
             'visitors_notes': "Especificar",
             'social_diagnosis': "Diagnostico Social",
             'recommendation': "Recomendaciones",
+        }
+        widgets = {
+            'has_birth_certificate': RadioSelect(choices=((True, 'Si'),(False, 'No'))),
+            'original_birth_certificate': RadioSelect(choices=((True, 'Si'),(False, 'No'))),
+            'dni': RadioSelect(choices=((True, 'Si'),(False, 'No'))),
+            'dni_in_process': RadioSelect(choices=((True, 'Si'),(False, 'No'))),
+            'sis': RadioSelect(choices=((True, 'Si'),(False, 'No'))),
+            'sis_in_process': RadioSelect(choices=((True, 'Si'),(False, 'No'))),
+            'visitors_allowed': RadioSelect(choices=((True, 'Si'),(False, 'No'))),
         }
