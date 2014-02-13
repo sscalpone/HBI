@@ -9,6 +9,7 @@ class SocialExamInfoForm(ModelForm):
         model = SocialExamInfo
         fields = (
             'date',
+            'age_at_evaluation',
             'has_birth_certificate',
             'original_birth_certificate',
             'dni',
@@ -30,6 +31,7 @@ class SocialExamInfoForm(ModelForm):
         )
         labels = {
             'date': "Fecha",
+            'age_at_evaluation': "Edad",
             'has_birth_certificate': "Partida de Naciemiento",
             'original_birth_certificate': "Original",
             'dni': "DNI",

@@ -9,7 +9,10 @@
 
     <form action="{% url 'tracker:new_social_exam' child_id %}" enctype="multipart/form-data" method="post">
         {% csrf_token %}
-        {{ form }}
+        {{ social_exam_form }}
+        <br />
+        <h3>Los Datos del Profesíonal</h3>
+        {{ signature_form }}
         <input type="submit" value="Poner" />
     </form>
 {% endblock %}
