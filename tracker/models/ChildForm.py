@@ -3,11 +3,19 @@
 from tracker.models import Child
 from django.forms import ModelForm
 
-
 class ChildForm(ModelForm):
     class Meta:
         model = Child
         fields = '__all__'
+        fields = {
+            'residence',
+            'first_name',
+            'last_name',
+            'birthdate',
+            'birthplace',
+            'intake_date',
+            'photo',
+        }
         labels = {
             'residence': 'Casa Girasoles',
             'first_name': 'Nombres',

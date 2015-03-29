@@ -3,9 +3,10 @@
 {% block sidebar %}
     <ul>
         <li><a href="{% url 'tracker:child' child_id %}">Info General</a></li>
+        <li><a href="{% url 'tracker:new_dental_exam' child_id %}">Evaluacíon e Informe Odontológico</a></li>
+        <li><a href="{% url 'tracker:new_medical_exam_part1' child_id %}">Evaluacíon e Informe Médico / Parte 1</a></li>
+        <li><a href="{% url 'tracker:new_medical_exam_part2' child_id %}">Evaluacíon e Informe Médico / Parte 2</a></li>
+        <li><a href="{% url 'tracker:new_psychological_exam' child_id %}">Evaluacíon e Informe Psicológico</a></li>
         <li><a href="{% url 'tracker:new_social_exam' child_id %}">Evaluacíon e Informe Social</a></li>
-        <li><a href="{% url 'tracker:child' child_id %}">Evaluacíon e Informe Psicológico</a></li>
-        <li><a href="{% url 'tracker:child' child_id %}">Evaluacíon e Informe Odontológico</a></li>
-        <li><a href="{% url 'tracker:child' child_id %}">Evaluacíon e Informe Médico/Salud</a></li>
     </ul>
 {% endblock %}

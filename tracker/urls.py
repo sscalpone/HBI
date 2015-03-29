@@ -3,11 +3,10 @@ from django.conf.urls import patterns, url
 from tracker.views import main
 from tracker.views import residence
 from tracker.views import child
-from tracker.views import disease_history
-from tracker.views import operation_history
-from tracker.views import consultation_history
 from tracker.views import dental_exam
-from tracker.views import psychological_exam_info
+from tracker.views import medical_exam_part1
+from tracker.views import medical_exam_part2
+from tracker.views import psychological_exam
 from tracker.views import social_exam
 
 urlpatterns = patterns('',
@@ -19,18 +18,22 @@ urlpatterns = patterns('',
     url(r'^children/$', child.index, name='children'),
     url(r'^child/new/$', child.new, name='add_child'),
     url(r'^child/(?P<child_id>\d+)', child.view, name='child'),
-    url(r'^disease_history/new/(?P<child_id>\d+)', disease_history.new, name='add_disease_history'),
-    url(r'^disease_history/(?P<child_id>\d+)', disease_history.view, name='disease_history'),
-    url(r'^operation_history/new/(?P<child_id>\d+)', operation_history.new, name='add_operation_history'),
-    url(r'^operation_history/(?P<child_id>\d+)', operation_history.view, name='operation_history'),
-    url(r'^consultation_history/new/(?P<child_id>\d+)', consultation_history.new, name='add_consultation_history'),
-    url(r'^consultation_history/(?P<child_id>\d+)', consultation_history.view, name='consultation_history'),
-    url(r'^dental_exam/new/(?P<child_id>\d+)', dental_exam.new, name='add_dental_exam'),
+
+    url(r'^dental_exam/new/(?P<child_id>\d+)', dental_exam.new, name='new_dental_exam'),
     url(r'^dental_exam/(?P<child_id>\d+)', dental_exam.view, name='dental_exam'),
-    url(r'^psychological_exam_info/new/(?P<child_id>\d+)', psychological_exam_info.new, name='add_psychological_exam_info'),
-    url(r'^psychological_exam_info/(?P<child_id>\d+)', psychological_exam_info.view, name='psychological_exam_info'),
+
+    url(r'^medical_exam_part1/new/(?P<child_id>\d+)', medical_exam_part1.new, name='new_medical_exam_part1'),
+    url(r'^medical_exam_part1/(?P<child_id>\d+)', medical_exam_part1.view, name='medical_exam_part1'),
+
+    url(r'^medical_exam_part2/new/(?P<child_id>\d+)', medical_exam_part2.new, name='new_medical_exam_part2'),
+    url(r'^medical_exam_part2/(?P<child_id>\d+)', medical_exam_part2.view, name='medical_exam_part2'),
+
+    url(r'^psychological_exam/new/(?P<child_id>\d+)', psychological_exam.new, name='new_psychological_exam'),
+    url(r'^psychological_exam/(?P<child_id>\d+)', psychological_exam.view, name='psychological_exam'),
+
+    url(r'^social_exams/new/(?P<child_id>\d+)', social_exam.new, name='new_social_exam'),
     url(r'^social_exams/(?P<child_id>\d+)', social_exam.index, name='social_exams'),
     url(r'^social_exam/(?P<exam_id>\d+)', social_exam.view, name='social_exam'),
-    url(r'^social_exams/new/(?P<child_id>\d+)', social_exam.new, name='new_social_exam'),
+
 )
 

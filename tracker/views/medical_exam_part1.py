@@ -8,36 +8,36 @@ from django.core.urlresolvers import reverse
 from django.shortcuts import render, get_object_or_404
 from django.template import RequestContext, loader
 
-from tracker.models import DentalExam
-from tracker.models import DentalExamForm
+from tracker.models import MedicalExamPart1
+from tracker.models import MedicalExamPart1Form
 from tracker.models import Signature
 from tracker.models import SignatureForm
 from tracker.models import Child
 
 def index(request, child_id):
-    list = DentalExam.objects.filter(child_id=child_id)
+    list = MedicalExamPart1.objects.filter(child_id=child_id)
     context = RequestContext(request, {
-        'DentalExams': list,
+        'Medical Exams': list,
         'child_id': child_id
     })
-    return render(request, 'tracker/child_dental_histories.html', context)
+    return render(request, 'tracker/child_medical_exam_part1_histories.html', context)
 
 def new(request, child_id):
     if request.method == 'POST':
         signature_form = SignatureForm(request.POST, request.FILES)
-        dental_exam_form = DentalExamForm(request.POST, request.FILES)
-        if signature_form.is_valid() and dental_exam_form.is_valid():
+        medical_exam_part1_form = MedicalExamPart1Form(request.POST, request.FILES)
+        if signature_form.is_valid() and medical_exam_part1_form.is_valid():
             signature = signature_form.save()
             if signature:
                 child = get_object_or_404(Child, pk=child_id)
-                dental_exam = dental_exam_form.save(commit=False)
-                dental_exam.signature = signature
-                dental_exam.child = child
-                if dental_exam.save():
-                    return HttpResponseRedirect(reverse('tracker:dental_exams'))
+                medical_exam_part1 = medical_exam_part1_form.save(commit=False)
+                medical_exam_part1.signature = signature
+                medical_exam_part1.child = child
+                if medical_exam_part1.save():
+                    return HttpResponseRedirect(reverse('tracker:medical_exam_part1s'))
     else:
         child = get_object_or_404(Child, pk=child_id)
-        dental_exam_form = DentalExamForm(initial={
+        medical_exam_part1_form = MedicalExamPart1Form(initial={
                 'child': child_id,
                 'date': datetime.date.today(),
             }
@@ -45,14 +45,14 @@ def new(request, child_id):
         signature_form = SignatureForm()
     context = {
         'child_id': child_id,
-        'dental_exam_form': dental_exam_form,
+        'medical_exam_part1_form': medical_exam_part1_form,
         'signature_form': signature_form,
     }
-    return render(request, 'tracker/add_child_dental_history.html', context)
+    return render(request, 'tracker/add_child_medical_exam_part1_history.html', context)
 
 def view(request, exam_id):
-    p = get_object_or_404(DentalExam, pk=exam_id)
+    p = get_object_or_404(MedicalExamPart1, pk=exam_id)
     context = {
         'exam': p,
     }
-    return render(request, 'tracker/child_dental_history.html', context)
+    return render(request, 'tracker/child_medical_exam_part1_history.html', context)

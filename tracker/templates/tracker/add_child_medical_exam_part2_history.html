@@ -1,0 +1,18 @@
+{% extends 'child-screen.html' %}
+
+{% block title %}Evaluacíon e Informe Médico / Parte 2{% endblock %}
+
+{% block content %}
+
+    <h1>Evaluacíon e Informe Médico / Parte 2</h1>
+    {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+
+    <form action="{% url 'tracker:new_medical_exam_part2' child_id %}" enctype="multipart/form-data" method="post">
+        {% csrf_token %}
+        {{ medical_exam_part2_form }}
+        <br />
+        <h3>Los Datos del Profesíonal</h3>
+        {{ signature_form }}
+        <input type="submit" value="Poner" />
+    </form>
+{% endblock %}

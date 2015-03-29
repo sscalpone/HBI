@@ -1,38 +1,9 @@
-{% extends 'child-screen.html' %}
+{% extends 'two-column.html' %}
 
 {% block title %}Información Odontológico{% endblock %}
 
 {% block content %}
+    <div id="dental-exam">
 
-    {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
-
-    <form action="{% url 'tracker:add_dental_exam' child.id %}" enctype="multipart/form-data" method="post">
-        {% csrf_token %}
-        {{ form }}
-        <input type="submit" value="Poner" />
-    </form>
-
-    <table>
-    <tr>
-      <th colspan="5">
-         <h3><br>Evaluación Odontológico</h3>
-      </th>
-    </tr>
-    <tr>
-      <th>Fecha</th>
-      <th>Edad</th>
-      <th>Diagnóstico</th>
-      <th>Recomendaciones</th>
-    </tr>
-    {% for exam in dental_exams %}
-       <tr>
-          <td>{{exam.date}}</td>
-          <td>{{child.age}}</td>
-          <td>{{exam.diagnostico}}</td>
-          <td>{{exam.recommendation}}</td>
-       </tr>
-    {% endfor %}
-    </table>
-
+    </div>
 {% endblock %}
-

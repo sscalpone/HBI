@@ -1,9 +1,20 @@
 You'll be happier if you install virtual env.
+https://virtualenv.pypa.io/en/latest/installation.html
 
-We are using Django 1.6.1 and Python 2.7.5.
+We are using Django 1.7.7 and Python 2.7.6.
+
+python --version
+
+Install Homebrew.  Follow the instructions at brew.sh.
+
+sudo easy_install pip
+
+sudo pip install virtualenv
+
+sudo pip install Django==1.7.7
 
 Install the Python Image Tools:
-pip install Pillow
+sudo pip install Pillow
 
 First you'll want a fresh database:
 rm -f database/mysite.db
