@@ -7,7 +7,7 @@ from django.forms import ModelForm
 class MedicalExamPart2Form(ModelForm):
     class Meta:
         model = MedicalExamPart2
-        fields = {
+        fields = (
             'date',
             'appetite_notes',
             'sleep_notes',
@@ -27,7 +27,7 @@ class MedicalExamPart2Form(ModelForm):
             'extremities_normal',
             'neurological_normal',
             'recommendations',
-        }
+        )
         labels = {
             'date': 'Fecha',
             'appetite_notes': 'Apetito',

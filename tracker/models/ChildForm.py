@@ -7,7 +7,7 @@ class ChildForm(ModelForm):
     class Meta:
         model = Child
         fields = '__all__'
-        fields = {
+        fields = (
             'residence',
             'first_name',
             'last_name',
@@ -15,7 +15,7 @@ class ChildForm(ModelForm):
             'birthplace',
             'intake_date',
             'photo',
-        }
+        )
         labels = {
             'residence': 'Casa Girasoles',
             'first_name': 'Nombres',

@@ -7,10 +7,10 @@ from django.forms import ModelForm
 class DentalExamForm(ModelForm):
     class Meta:
         model = DentalExam
-        fields = {
+        fields = (
             'date',
             'recommendation',
-        }
+        )
         labels = {
             'date': 'Fecha',
             'recommendation': 'Recomendaciones',

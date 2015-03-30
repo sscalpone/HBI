@@ -7,7 +7,7 @@ from django.forms import ModelForm
 class MedicalExamPart1Form(ModelForm):
     class Meta:
         model = MedicalExamPart1
-        fields = {
+        fields = (
             'date',
             'background_notes',
             'birth_history',
@@ -54,7 +54,7 @@ class MedicalExamPart1Form(ModelForm):
             'density_notes',
             'glucose_normal',
             'glucose_notes',
-        }
+        )
         labels = {
             'date': 'Fecha',
             'background_notes': 'Antecedents Familiares Patológicos y de Riesgo Conocidos',

@@ -6,13 +6,13 @@ from django.forms import ModelForm
 class SignatureForm(ModelForm):
     class Meta:
         model = Signature
-        fields = {
+        fields = (
             'nombres',
             'apellidos',
             'emp',
             'direccion',
             'celular',
-        }
+        )
         labels = {
             'nombres': 'Nombres',
             'apellidos': 'Apellidos',

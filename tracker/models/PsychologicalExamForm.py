@@ -8,7 +8,7 @@ from django.forms import ModelForm
 class PsychologicalExamForm(ModelForm):
     class Meta:
         model = PsychologicalExam
-        fields = {
+        fields = (
             'date',
             'background_notes',
             'physical_description',
@@ -17,7 +17,7 @@ class PsychologicalExamForm(ModelForm):
             'psychomotor_notes',
             'emotional_notes',
             'recommendation',
-        }
+        )
         labels = {
             'date': 'Fecha',
             'background_notes': 'Antecedents Patológicos Personales y Familiares Importantes',
@@ -32,8 +32,8 @@ class PsychologicalExamForm(ModelForm):
 class PsychologicalExamDiagnosisForm(ModelForm):
     class Meta:
         model = PsychologicalExamDiagnosis
-        fields = {
-        }
+        fields = (
+        )
         labels = {
             'diagnoses': 'Diagnostico',
             'diagnoses_cie_dsm9': 'CIE o DSM9',
