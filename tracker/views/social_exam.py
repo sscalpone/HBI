@@ -23,27 +23,28 @@ def index(request, child_id):
     return render(request, 'tracker/child_social_histories.html', context)
 
 def new(request, child_id):
+    child = get_object_or_404(Child, pk=child_id)
     if request.method == 'POST':
         signature_form = SignatureForm(request.POST, request.FILES)
         social_exam_form = SocialExamForm(request.POST, request.FILES)
         if signature_form.is_valid() and social_exam_form.is_valid():
             signature = signature_form.save()
             if signature:
-                child = get_object_or_404(Child, pk=child_id)
                 social_exam = social_exam_form.save(commit=False)
                 social_exam.signature = signature
                 social_exam.child = child
                 if social_exam.save():
                     return HttpResponseRedirect(reverse('tracker:social_exams'))
     else:
-        child = get_object_or_404(Child, pk=child_id)
         social_exam_form = SocialExamForm(initial={
-                'child': child_id,
+                'child': child,
+                'child_id': child_id,
                 'date': datetime.date.today(),
             }
         )
         signature_form = SignatureForm()
     context = {
+        'child': child,
         'child_id': child_id,
         'social_exam_form': social_exam_form,
         'signature_form': signature_form,

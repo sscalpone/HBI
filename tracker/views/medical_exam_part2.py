@@ -23,27 +23,28 @@ def index(request, child_id):
     return render(request, 'tracker/child_medical_exam_part2_histories.html', context)
 
 def new(request, child_id):
+    child = get_object_or_404(Child, pk=child_id)
     if request.method == 'POST':
         signature_form = SignatureForm(request.POST, request.FILES)
         medical_exam_part2_form = MedicalExamPart2Form(request.POST, request.FILES)
         if signature_form.is_valid() and medical_exam_part2_form.is_valid():
             signature = signature_form.save()
             if signature:
-                child = get_object_or_404(Child, pk=child_id)
                 medical_exam_part2 = medical_exam_part2_form.save(commit=False)
                 medical_exam_part2.signature = signature
                 medical_exam_part2.child = child
                 if medical_exam_part2.save():
                     return HttpResponseRedirect(reverse('tracker:medical_exam_part2s'))
     else:
-        child = get_object_or_404(Child, pk=child_id)
         medical_exam_part2_form = MedicalExamPart2Form(initial={
-                'child': child_id,
+                'child': child,
+                'child_id': child_id,
                 'date': datetime.date.today(),
             }
         )
         signature_form = SignatureForm()
     context = {
+        'child': child,
         'child_id': child_id,
         'medical_exam_part2_form': medical_exam_part2_form,
         'signature_form': signature_form,

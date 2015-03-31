@@ -23,27 +23,28 @@ def index(request, child_id):
     return render(request, 'tracker/child_psychological_histories.html', context)
 
 def new(request, child_id):
+    child = get_object_or_404(Child, pk=child_id)
     if request.method == 'POST':
         signature_form = SignatureForm(request.POST, request.FILES)
         psychological_exam_form = PsychologicalExamForm(request.POST, request.FILES)
         if signature_form.is_valid() and psychological_exam_form.is_valid():
             signature = signature_form.save()
             if signature:
-                child = get_object_or_404(Child, pk=child_id)
                 psychological_exam = psychological_exam_form.save(commit=False)
                 psychological_exam.signature = signature
                 psychological_exam.child = child
                 if psychological_exam.save():
                     return HttpResponseRedirect(reverse('tracker:psychological_exams'))
     else:
-        child = get_object_or_404(Child, pk=child_id)
         psychological_exam_form = PsychologicalExamForm(initial={
-                'child': child_id,
+                'child': child,
+                'child_id': child_id,
                 'date': datetime.date.today(),
             }
         )
         signature_form = SignatureForm()
     context = {
+        'child': child,
         'child_id': child_id,
         'psychological_exam_form': psychological_exam_form,
         'signature_form': signature_form,

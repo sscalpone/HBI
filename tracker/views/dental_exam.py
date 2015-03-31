@@ -23,27 +23,28 @@ def index(request, child_id):
     return render(request, 'tracker/child_dental_histories.html', context)
 
 def new(request, child_id):
+    child = get_object_or_404(Child, pk=child_id)
     if request.method == 'POST':
         signature_form = SignatureForm(request.POST, request.FILES)
         dental_exam_form = DentalExamForm(request.POST, request.FILES)
         if signature_form.is_valid() and dental_exam_form.is_valid():
             signature = signature_form.save()
             if signature:
-                child = get_object_or_404(Child, pk=child_id)
                 dental_exam = dental_exam_form.save(commit=False)
                 dental_exam.signature = signature
                 dental_exam.child = child
                 if dental_exam.save():
                     return HttpResponseRedirect(reverse('tracker:dental_exams'))
     else:
-        child = get_object_or_404(Child, pk=child_id)
         dental_exam_form = DentalExamForm(initial={
-                'child': child_id,
+                'child': child,
+                'child_id': child_id,
                 'date': datetime.date.today(),
             }
         )
         signature_form = SignatureForm()
     context = {
+        'child': child,
         'child_id': child_id,
         'dental_exam_form': dental_exam_form,
         'signature_form': signature_form,
