@@ -45,7 +45,7 @@ class SocialExamForm(ModelForm):
             'economic_situation': "Situación Económica",
             'general_comments': "Apreciaciones Generales del Niño/a",
             'visitors_allowed': "Recibe Visitas",
-            'visitors_allowed_no_commants': "Comentarios",
+            'visitors_allowed_no_comments': "Comentarios",
             'social_diagnosis': "Diagnostico Social",
             'recommendation': "Recomendaciones",
         }
