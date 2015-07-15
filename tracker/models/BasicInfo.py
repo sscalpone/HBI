@@ -11,3 +11,4 @@ class BasicInfo(models.Model):
     class Meta:
         app_label = 'tracker'
         db_table = 'tracker_basicinfo'
+
