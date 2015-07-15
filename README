@@ -1,7 +1,7 @@
 You'll be happier if you install virtual env.
 https://virtualenv.pypa.io/en/latest/installation.html
 
-We are using Django 1.7.7 and Python 2.7.6.
+We are using Django 1.7.9 and Python 2.7.6.
 
 python --version
 
