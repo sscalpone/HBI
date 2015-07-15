@@ -6,7 +6,7 @@ from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
 
 from django.shortcuts import render, get_object_or_404
-from django.template import RequestContext, loader
+from django.template import loader
 
 from tracker.models import MedicalExamPart1
 from tracker.models import MedicalExamPart1Form
@@ -16,10 +16,10 @@ from tracker.models import Child
 
 def index(request, child_id):
     list = MedicalExamPart1.objects.filter(child_id=child_id)
-    context = RequestContext(request, {
+    context = {
         'Medical Exams': list,
         'child_id': child_id
-    })
+    }
     return render(request, 'tracker/child_medical_exam_part1_histories.html', context)
 
 def new(request, child_id):

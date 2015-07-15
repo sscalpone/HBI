@@ -4,15 +4,15 @@ from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
 
 from django.shortcuts import render, get_object_or_404
-from django.template import RequestContext, loader
+from django.template import loader
 
 from tracker.models import Residence
 
 def index(request):
     residence_list = Residence.objects.order_by('residence_name')
-    context = RequestContext(request, {
+    context = {
 	'residence_list': residence_list,
-    })
+    }
     return render(request, 'tracker/main.html', context)
 
 def view(request, residence_id):

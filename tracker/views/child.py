@@ -4,16 +4,14 @@ from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
 
 from django.shortcuts import render, get_object_or_404
-from django.template import RequestContext, loader
+from django.template import loader
 
 from tracker.models import Child
 from tracker.models import ChildForm
 
 def index(request):
     list_of_children = Child.objects.all()
-    context = RequestContext(request, {
-        'children': list_of_children
-    })
+    context = {'children': list_of_children }
     return render(request, 'tracker/children.html', context)
 
 def new(request):
