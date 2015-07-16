@@ -46,8 +46,8 @@ def new(request, child_id):
     context = {
         'child': child,
         'child_id': child_id,
-        'social_exam_form': social_exam_form,
-        'signature_form': signature_form,
+        'social_exam_form': social_exam_form.as_ul,
+        'signature_form': signature_form.as_ul,
     }
     return render(request, 'tracker/add_child_social_history.html', context)
 

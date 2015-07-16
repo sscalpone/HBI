@@ -11,10 +11,14 @@
 
     <form action="{% url 'tracker:new_psychological_exam' child_id %}" enctype="multipart/form-data" method="post">
         {% csrf_token %}
-        {{ psychological_exam_form }}
+        <ul>
+            {{ psychological_exam_form }}
+        </ul>
         <br />
         <h3>Los Datos del Profesíonal</h3>
+        <ul>
         {{ signature_form }}
+        </ul>
         <input type="submit" value="Enviar" />
     </form>
 {% endblock %}

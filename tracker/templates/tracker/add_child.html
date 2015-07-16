@@ -9,7 +9,9 @@
 
     <form action="{% url 'tracker:add_child' %}" enctype="multipart/form-data" method="post">
         {% csrf_token %}
-        {{ form }}
+        <ul>
+        	{{ form }}
+  	    </ul>
         <input type="submit" value="Enviar" />
     </form>
 {% endblock %}

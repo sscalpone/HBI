@@ -46,8 +46,8 @@ def new(request, child_id):
     context = {
         'child': child,
         'child_id': child_id,
-        'dental_exam_form': dental_exam_form,
-        'signature_form': signature_form,
+        'dental_exam_form': dental_exam_form.as_ul,
+        'signature_form': signature_form.as_ul,
     }
     return render(request, 'tracker/add_child_dental_history.html', context)
 

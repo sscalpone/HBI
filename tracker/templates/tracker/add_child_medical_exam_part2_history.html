@@ -10,10 +10,15 @@
 
     <form action="{% url 'tracker:new_medical_exam_part2' child_id %}" enctype="multipart/form-data" method="post">
         {% csrf_token %}
-        {{ medical_exam_part2_form }}
+        <ul>
+            {{ medical_exam_part2_form }}
+        </ul>
         <br />
         <h3>Los Datos del Profesíonal</h3>
-        {{ signature_form }}
+        <ul>
+            {{ signature_form }}
+        </ul>
+        
         <input type="submit" value="Enviar" />
     </form>
 {% endblock %}

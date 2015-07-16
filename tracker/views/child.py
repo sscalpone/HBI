@@ -24,7 +24,7 @@ def new(request):
     else:
         form = ChildForm()
     context = {
-        'form': form,
+        'form': form.as_ul,
     }
     return render(request, 'tracker/add_child.html', context)
 
