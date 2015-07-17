@@ -1,0 +1,21 @@
+From the list of kids page, add a new kid.
+
+From list of kids page, pick a kid.  Navigate to the kid page.
+
+From the kid page, go back to list of kids.
+
+From the kid page, pick a thing from the left column & visit that (empty) form.
+
+From the form page, navigate back to the kid page.
+
+From the form page, navigate back to the list of kids.
+
+On the bottom of the kid page, show a list of fill-out forms.
+
+From the kid page, from the list of forms, select report and visit that form (filled out).
+
+From a form page, make sure all fields are filled out before saving.
+ - Ask the user if they want to cancel, and don't leave.
+ - Ask the user if they want to leave anyway, and save the work-in-progress
+ - Ask the user if they want to leave anyway and forget their work.
+
