@@ -4,8 +4,7 @@
 
 {% block content %}
 
-    <h1>Información Odontológico</h1>
-    <h2>{{ child.first_name }} {{ child.last_name }}</h2>
+    <h2><span>{{ child.first_name }} {{ child.last_name }}:</span> Información Odontológico</h2>
     {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
 
     <form action="{% url 'tracker:new_dental_exam' child_id %}" enctype="multipart/form-data" method="post">

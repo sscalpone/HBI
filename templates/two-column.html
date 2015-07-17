@@ -15,7 +15,7 @@
         </header>
 
         <div id="menu">
-            {% block menu %}{% endblock %}
+            {% block menu %}<span class="button"><a href="{% url 'tracker:children' %}">Elija un niño diferente...</a></span>{% endblock %}
         </div>
 
         <div class="two-column">
@@ -30,8 +30,5 @@
                 {% block content %}{% endblock %}
             </div>
         </div>
-        <footer id="footer">
-            <a href="{% url 'tracker:children' %}"><p>Volver a Elija un niño!</p></a>
-        </footer>
     </body>
 </html>

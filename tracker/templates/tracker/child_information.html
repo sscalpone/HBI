@@ -4,7 +4,7 @@
 
 {% block content %}
     <div id="child-info">
-        <h2>{{ child.first_name }} {{ child.last_name }}</h2>
+        <h2><span>{{ child.first_name }} {{ child.last_name }}:</span> Información General</h2>
         <img src="{{ child.photo.url }}" />
         <dl>
             <dt>Fecha de Naciemiento</dt><dd>{{ child.birthdate }}</dd>

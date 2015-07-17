@@ -1,30 +1,53 @@
-/*! normalize.css v3.0.2 | MIT License | git.io/normalize */ 
-img,legend{border:0}legend,td,th{padding:0}html{font-family:sans-serif;-ms-text-size-adjust:100%;-webkit-text-size-adjust:100%}body{margin:0}article,aside,details,figcaption,figure,footer,header,hgroup,main,menu,nav,section,summary{display:block}audio,canvas,progress,video{display:inline-block;vertical-align:baseline}audio:not([controls]){display:none;height:0}[hidden],template{display:none}a{background-color:transparent}a:active,a:hover{outline:0}abbr[title]{border-bottom:1px dotted}b,optgroup,strong{font-weight:700}dfn{font-style:italic}h1{font-size:2em;margin:.67em 0}mark{background:#ff0;color:#000}small{font-size:80%}sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}sup{top:-.5em}sub{bottom:-.25em}svg:not(:root){overflow:hidden}figure{margin:1em 40px}hr{-moz-box-sizing:content-box;box-sizing:content-box;height:0}pre,textarea{overflow:auto}code,kbd,pre,samp{font-family:monospace,monospace;font-size:1em}button,input,optgroup,select,textarea{color:inherit;font:inherit;margin:0}button{overflow:visible}button,select{text-transform:none}button,html input[type=button],input[type=reset],input[type=submit]{-webkit-appearance:button;cursor:pointer}button[disabled],html input[disabled]{cursor:default}button::-moz-focus-inner,input::-moz-focus-inner{border:0;padding:0}input{line-height:normal}input[type=checkbox],input[type=radio]{box-sizing:border-box;padding:0}input[type=number]::-webkit-inner-spin-button,input[type=number]::-webkit-outer-spin-button{height:auto}input[type=search]{-webkit-appearance:textfield;-moz-box-sizing:content-box;-webkit-box-sizing:content-box;box-sizing:content-box}input[type=search]::-webkit-search-cancel-button,input[type=search]::-webkit-search-decoration{-webkit-appearance:none}fieldset{border:1px solid silver;margin:0 2px;padding:.35em .625em .75em}table{border-collapse:collapse;border-spacing:0}
+/* http://meyerweb.com/eric/tools/css/reset/ 
+   v2.0 | 20110126
+   License: none (public domain)
+*/
 
-
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed, 
+figure, figcaption, footer, header, hgroup, 
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 100%;
+  font: inherit;
+  vertical-align: baseline;
+}
 /* HTML5 display-role reset for older browsers */
-article, aside, details, figcaption, figure,
+article, aside, details, figcaption, figure, 
 footer, header, hgroup, menu, nav, section {
-	display: block;
+  display: block;
 }
 body {
-	line-height: 1;
+  line-height: 1;
 }
 ol, ul {
-	list-style: none;
+  list-style: none;
 }
 blockquote, q {
-	quotes: none;
+  quotes: none;
 }
 blockquote:before, blockquote:after,
 q:before, q:after {
-	content: '';
-	content: none;
+  content: '';
+  content: none;
 }
 table {
-	border-collapse: collapse;
-	border-spacing: 0;
+  border-collapse: collapse;
+  border-spacing: 0;
 }
+
+
 
 /*
   HBI Tracker Styles
@@ -35,110 +58,92 @@ GENERAL STYLES
 ******************/
 
 html {
-    font-family: "Lucida Grande", "DejaVu Sans", "Bitstream Vera Sans", Verdana, Arial, sans-serif;
-    background: #b8a079;
+  font-family: "Lucida Grande", 
+               "DejaVu Sans", 
+               "Bitstream Vera Sans", 
+               Verdana, Arial, sans-serif;
+  background: #b8a079;
 }
 
 h1 {
-    font-size: 2.3em;
-    line-height: 1.5em;
+  font-size: 2.3em;
 }
 
 h2 {
-    font-size: 2em;
-    line-height: 1.5em;
+  font-size: 2em;
+}
+
+.two-column h2 {
+  margin-bottom: 10px;
+  padding-right: 10px;
+}
+
+h2 span {
+  font-weight: bold;
 }
 
 li {
-    list-style: none;
+  list-style: none;
+}
+
+img {
+  width: 100%;
 }
 
 #header {
-    background: #4A2E20;
-    padding: 1em;
-    color: #ffffff;
+  background: #4A2E20;
+  padding: 1em;
+  color: #ffffff;
 }
 
-div#menu {
-    height: 4.33em;
-    padding: 0;
-    background: #bfa98c;
-    background: -webkit-linear-gradient(#bfa98c, #b8a079);
-    background: -o-linear-gradient(#bfa98c, #b8a079);
-    background: -moz-linear-gradient(#bfa98c, #b8a079);
-    background: linear-gradient(#bfa98c, #b8a079);
-    border-bottom: 1px #4A2E20 solid;
+#menu {
+  background: #bfa98c;
+  border-bottom: 1px #4A2E20 solid;
+  padding: 10px;
 }
 
-div#content {
-    padding: 2em;
-    background: #b8a079;
+#content {
+  padding: 2em;
+  background: #b8a079;
 }
 
-span.button a {
-    display: inline-block;
-    border: 1px solid #333;
-    border-radius: 0.33em;
-    font-size: 2em;
-    padding: 0.165em;
-    margin: 0.33em;
-    background: #ddd;
-    background: -webkit-linear-gradient(#eee, #ddd);
-    background: -o-linear-gradient(#eee, #ddd);
-    background: -moz-linear-gradient(#eee, #ddd);
-    background: linear-gradient(#eee, #ddd);
-    text-decoration: none;
-    color: #000;
+.button a, input[type="submit"] {
+  display: inline-block;
+  border: 1px solid #333;
+  border-radius: 1em;
+  padding: 5px 10px;
+  margin: 0.33em;
+  background: #ddd;
+  text-decoration: none;
+  color: #000;
 }
 
+/************************
+CHILDREN GRID LIST STYLES 
+*************************/
 
-/* Main Student Grid */
-ul.grid-list {
-    margin: 0 -2em;
-    background: #222;
+.grid-list li img.green {
+  border: 4px #2e804d solid;
 }
 
-ul.grid-list li {
-    display: inline-block;
-    height: 30em;
-    width: 25em;
-    overflow: hidden;
+.grid-list li img.yellow {
+  border: 4px #eadf39 solid;
 }
 
-ul.grid-list li a {
-    color: #fff;
-    text-shadow: #ffffff 2px;
-    margin: 1.5em 2.5em  1.5em 2.5em;
-    text-decoration: none;
+.grid-list li img.red {
+  border: 4px #ec1a15 solid;
 }
 
-ul.grid-list li img {
-    display: block;
-    width: 20em;
-    height:20em;
-    max-width: 20em;
-    max-height:20em;
-    margin: 1.5em 2.5em  1.5em 2.5em;
-    border-radius: 2em;
+.grid-list li {
+  float: left;
+  width: 20%;
+  margin: 10px 2.5%;
+  text-align: center;
+  font-size: 1.5em;
 }
 
-ul.grid-list li img.green {
-    border: 4px #2e804d solid;
-}
-
-ul.grid-list li img.yellow {
-    border: 4px #eadf39 solid;
-}
-
-ul.grid-list li img.red {
-    border: 4px #ec1a15 solid;
-}
-
-ul.grid-list li p {
-    display: block;
-    text-align: center;
-    /*font-size: 1.5em;*/
-    margin: 1.5em 2.5em  1.5em 2.5em;
+.grid-list img {
+  max-width: 300px;
 }
 
 /******************
@@ -154,14 +159,17 @@ TWO-COLUMN AND SIDEBAR STYLES
 
 .two-column #content {
   float: left;
-  width: 70%;
+  width: 69%;
   padding: 0;
+  padding-left: 1%;
   margin: 0;
 }
 
 .two-column #sidebar {
   float: left;
   width: 30%;
+  background: #4A2E20;
+  padding: 10px 0;
 
 }
 
@@ -223,91 +231,69 @@ form {
     display: block;
 }
 
-form label {
-  margin-top: 5px;
-  display: inline-block;
+form ul {
+  margin: 0 10%;
 }
-
-form input[type="text"], form input[type="password"], form input[type="number"] {
-    outline: none;
-    background: transparent;
-    border-radius: 1em;
-    padding: 0.33em 0.66em;
-    margin: 3px;
-    border: 1px #4A2E20 solid;
-    width: 40em;
+.two-column form ul {
+  margin: 0;
 }
 
 form ul li {
     margin-bottom: 3px;
 }
 
-form input[type="radio"] {
+form label {
+  margin-top: 5px;
+  display: inline-block;
 }
 
-form input[type="text"], form textarea, form input[type="number"] {
+form input[type="text"], 
+form textarea, 
+form input[type="number"] {
     display: block;
 }
 
-form input[type="text"]:focus, form input[type="password"]:focus, form input[type="number"]:focus {
-    outline: none;
-    margin: 0px;
-    border: 4px #4A2E20 solid;
-    background: #bfa98c;
+form input[type="text"], 
+form input[type="password"], 
+form input[type="number"],
+form textarea {
+    /*outline: none;*/
+  background: transparent;
+  border-radius: 1em;
+  padding: 5px ;
+  margin: 3px;
+/*  margin-left: 5%;*/
+  border: 1px #4A2E20 solid;
+  width: 100%;
+  font-size: 1em;
+}
+
+.two-column form input[type="text"], 
+.two-column form input[type="password"], 
+.two-column form input[type="number"],
+.two-column form textarea {
+  width: 70%;
 }
 
 form textarea {
-    outline: none;
-    background: transparent;
-    border-radius: 1em;
-    padding: 0.33em 0.66em;
-    margin: 3px;
-    border: 1px #4A2E20 solid;
-    width: 40em;
-    height: 4em;
+  height: 4em;
 }
 
+form input[type="text"]:focus, 
+form input[type="password"]:focus, 
+form input[type="number"]:focus,
 form textarea:focus {
-    outline: none;
-    margin: 0px;
-    border: 4px #4A2E20 solid;
-    background: #bfa98c;
+  border: 4px #4A2E20 solid;
+  background: #bfa98c;
 }
 
 form input[type="submit"] {
-    border-radius: 1em;
-    border: 1px #4A2E20 solid;
+  font-size: 1.5em;
+  padding: 5px 15px;
+/*  margin-left: 100px;*/
+  margin-top: 10px;
 }
 
-/*form ul {
-    font-size: 1em;
-    margin: 0em 1.66em;
-    padding: 0em;
-    display: inline-block;
-}*/
-
-/*form label[for='id_has_birth_certificate_0'],
-form label[for='id_dni_0'],
-form label[for='id_sis_0']
-{
-    display: block;
-}
-*/
-
-
-/*form ul li {
-    font-size: 1em;
-    margin: 0.33em;
-    padding: 0em;
-    display: block;
-}*/
-
-/*form ul li * {
-    margin: 0em;
-    padding: 0em;
-    display: inline-block;
-}
-*/
 
 
 

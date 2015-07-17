@@ -2,9 +2,11 @@
 
 {% block title %}Poner un Niño{% endblock %}
 
+{% block menu %}<span class="button"><a href="{% url 'tracker:children' %}">Volver a la lista de los niños...</a></span>{% endblock %}
+
 {% block content %}
 
-    <h1>Poner un Niño</h1>
+    <h2>Poner un Niño</h2>
     {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
 
     <form action="{% url 'tracker:add_child' %}" enctype="multipart/form-data" method="post">
