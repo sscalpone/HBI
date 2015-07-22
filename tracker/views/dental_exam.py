@@ -33,8 +33,9 @@ def new(request, child_id):
                 dental_exam = dental_exam_form.save(commit=False)
                 dental_exam.signature = signature
                 dental_exam.child = child
-                if dental_exam.save():
-                    return HttpResponseRedirect(reverse('tracker:dental_exams'))
+                dental_exam.save()
+                dental_exam_form.save_m2m()
+                return HttpResponseRedirect(reverse('tracker:children'))
     else:
         dental_exam_form = DentalExamForm(initial={
                 'child': child,
