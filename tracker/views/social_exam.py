@@ -33,8 +33,8 @@ def new(request, child_id):
                 social_exam = social_exam_form.save(commit=False)
                 social_exam.signature = signature
                 social_exam.child = child
-                if social_exam.save():
-                    return HttpResponseRedirect(reverse('tracker:social_exams'))
+                social_exam_form.save_m2m()
+                return HttpResponseRedirect(reverse('tracker:child', kwargs={'child_id': child_id}))
     else:
         social_exam_form = SocialExamForm(initial={
                 'child': child,

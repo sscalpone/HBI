@@ -33,8 +33,8 @@ def new(request, child_id):
                 medical_exam_part1 = medical_exam_part1_form.save(commit=False)
                 medical_exam_part1.signature = signature
                 medical_exam_part1.child = child
-                if medical_exam_part1.save():
-                    return HttpResponseRedirect(reverse('tracker:medical_exam_part1s'))
+                medical_exam_part1_form.save_m2m()
+                return HttpResponseRedirect(reverse('tracker:child', kwargs={'child_id': child_id}))
     else:
         medical_exam_part1_form = MedicalExamPart1Form(initial={
                 'child': child,

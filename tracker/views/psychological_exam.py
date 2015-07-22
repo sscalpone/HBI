@@ -33,8 +33,8 @@ def new(request, child_id):
                 psychological_exam = psychological_exam_form.save(commit=False)
                 psychological_exam.signature = signature
                 psychological_exam.child = child
-                if psychological_exam.save():
-                    return HttpResponseRedirect(reverse('tracker:psychological_exams'))
+                psychological_exam_form.save_m2m()
+                return HttpResponseRedirect(reverse('tracker:child', kwargs={'child_id': child_id}))
     else:
         psychological_exam_form = PsychologicalExamForm(initial={
                 'child': child,

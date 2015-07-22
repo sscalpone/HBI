@@ -35,7 +35,7 @@ def new(request, child_id):
                 dental_exam.child = child
                 dental_exam.save()
                 dental_exam_form.save_m2m()
-                return HttpResponseRedirect(reverse('tracker:children'))
+                return HttpResponseRedirect(reverse('tracker:child', kwargs={'child_id': child_id}))
     else:
         dental_exam_form = DentalExamForm(initial={
                 'child': child,
