@@ -16,11 +16,13 @@ from tracker.models import Child
 
 def index(request, child_id):
     list = MedicalExamPart1.objects.filter(child_id=child_id)
+    child = get_object_or_404(Child, pk=child_id)
     context = {
-        'Medical Exams': list,
-        'child_id': child_id
+        'MedicalExams': list,
+        'child_id': child_id,
+        'child': child
     }
-    return render(request, 'tracker/child_medical_exam_part1_histories.html', context)
+    return render(request, 'tracker/medical_exam_part1_history.html', context)
 
 def new(request, child_id):
     child = get_object_or_404(Child, pk=child_id)

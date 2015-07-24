@@ -5,8 +5,9 @@ from django.http import HttpResponse
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
 
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, render_to_response, get_object_or_404
 from django.template import loader
+import django.template.loader
 
 from tracker.models import DentalExam
 from tracker.models import DentalExamForm
@@ -16,11 +17,13 @@ from tracker.models import Child
 
 def index(request, child_id):
     list = DentalExam.objects.filter(child_id=child_id)
+    child = get_object_or_404(Child, pk=child_id)
     context = {
         'DentalExams': list,
-        'child_id': child_id
+        'child': child,
+        'child_id': child_id,
     }
-    return render(request, 'tracker/child_dental_histories.html', context)
+    return render(request, 'tracker/dental_exam_history.html', context)
 
 def new(request, child_id):
     child = get_object_or_404(Child, pk=child_id)
@@ -35,7 +38,7 @@ def new(request, child_id):
                 dental_exam.child = child
                 dental_exam.save()
                 dental_exam_form.save_m2m()
-                return HttpResponseRedirect(reverse('tracker:child', kwargs={'child_id': child_id}))
+                return HttpResponseRedirect(reverse('tracker:child', kwargs={'child_id': child_id}))  
     else:
         dental_exam_form = DentalExamForm(initial={
                 'child': child,
@@ -54,7 +57,9 @@ def new(request, child_id):
 
 def view(request, exam_id):
     p = get_object_or_404(DentalExam, pk=exam_id)
+
     context = {
-        'exam': p,
+        'dental_exam': p,
+        'exam_id': p.id
     }
     return render(request, 'tracker/child_dental_history.html', context)

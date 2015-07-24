@@ -1,0 +1,21 @@
+{% extends 'child-screen.html' %}
+
+{% block title %}Evaluaciones Sociales{% endblock %}
+
+{% block menu %}
+<span class="button"><a href="{% url 'tracker:add_child' %}">Poner un otro niño...</a></span>
+<span class="button"><a href="{% url 'tracker:new_social_exam' child_id %}">Nuevo Evaluación Social...</a></span>
+{% endblock %}
+
+
+{% block content %}
+
+<h2><span>{{ child.first_name }} {{ child.last_name }}:</span> 
+<h3>Evaluaciónes Sociales</h3>
+<ol class="exam-list">
+{% for exam in SocialExams %}
+	<li><a href="">{{ exam.date }}</a></li>
+{% endfor%}
+</ol>
+
+{% endblock %}

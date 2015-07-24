@@ -16,11 +16,13 @@ from tracker.models import Child
 
 def index(request, child_id):
     list = SocialExam.objects.filter(child_id=child_id)
+    child = get_object_or_404(Child, pk=child_id)
     context = {
         'SocialExams': list,
-        'child_id': child_id
+        'child_id': child_id,
+        'child': child
     }
-    return render(request, 'tracker/child_social_histories.html', context)
+    return render(request, 'tracker/social_exam_history.html', context)
 
 def new(request, child_id):
     child = get_object_or_404(Child, pk=child_id)

@@ -1,0 +1,21 @@
+{% extends 'child-screen.html' %}
+
+{% block title %}Exámenes Médicos, Parte 1{% endblock %}
+
+{% block menu %}
+<span class="button"><a href="{% url 'tracker:add_child' %}">Poner un otro niño...</a></span>
+<span class="button"><a href="{% url 'tracker:new_medical_exam_part1' child_id %}">Nuevo examen médico...</a></span>
+{% endblock %}
+
+
+{% block content %}
+
+<h2><span>{{ child.first_name }} {{ child.last_name }}:</span> 
+<h3>Exámenes Médicos, Parte 1</h3>
+<ol class="exam-list">
+{% for exam in MedicalExams %}
+	<li><a href="">{{ exam.date }}</a></li>
+{% endfor%}
+</ol>
+
+{% endblock %}

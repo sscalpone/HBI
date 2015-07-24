@@ -20,20 +20,18 @@ urlpatterns = patterns('',
     url(r'^child/(?P<child_id>\d+)', child.view, name='child'),
 
     url(r'^dental_exam/new/(?P<child_id>\d+)', dental_exam.new, name='new_dental_exam'),
-    url(r'^dental_exam/(?P<child_id>\d+)', dental_exam.view, name='dental_exam'),
+    url(r'^dental_exam/(?P<child_id>\d+)', dental_exam.index, name='dental_exams'),
 
     url(r'^medical_exam_part1/new/(?P<child_id>\d+)', medical_exam_part1.new, name='new_medical_exam_part1'),
-    url(r'^medical_exam_part1/(?P<child_id>\d+)', medical_exam_part1.view, name='medical_exam_part1'),
+    url(r'^medical_exam_part1/(?P<child_id>\d+)', medical_exam_part1.index, name='medical_exam_part1s'),
 
     url(r'^medical_exam_part2/new/(?P<child_id>\d+)', medical_exam_part2.new, name='new_medical_exam_part2'),
-    url(r'^medical_exam_part2/(?P<child_id>\d+)', medical_exam_part2.view, name='medical_exam_part2'),
+    url(r'^medical_exam_part2/(?P<child_id>\d+)', medical_exam_part2.index, name='medical_exam_part2s'),
 
     url(r'^psychological_exam/new/(?P<child_id>\d+)', psychological_exam.new, name='new_psychological_exam'),
-    url(r'^psychological_exam/(?P<child_id>\d+)', psychological_exam.view, name='psychological_exam'),
+    url(r'^psychological_exam/(?P<child_id>\d+)', psychological_exam.index, name='psychological_exams'),
 
-    url(r'^social_exams/new/(?P<child_id>\d+)', social_exam.new, name='new_social_exam'),
-    url(r'^social_exams/(?P<child_id>\d+)', social_exam.index, name='social_exams'),
-    url(r'^social_exam/(?P<exam_id>\d+)', social_exam.view, name='social_exam'),
-
+    url(r'^social_exam/new/(?P<child_id>\d+)', social_exam.new, name='new_social_exam'),
+    url(r'^social_exam/(?P<child_id>\d+)', social_exam.index, name='social_exams'),
 )
 
