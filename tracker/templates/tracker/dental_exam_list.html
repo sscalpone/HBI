@@ -1,0 +1,10 @@
+{% block content %}
+
+<h3>Exámenes Dentales</h3>
+<ol class="exam-list">
+{% for exam in DentalExams %}
+	<li><a href="">{{ exam.date }}</a></li>
+{% endfor%}
+</ol>
+
+{% endblock %}
