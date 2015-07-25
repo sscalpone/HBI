@@ -18,7 +18,7 @@ def index(request, child_id):
     list = MedicalExamPart1.objects.filter(child_id=child_id)
     child = get_object_or_404(Child, pk=child_id)
     context = {
-        'MedicalExams': list,
+        'MedicalExamPart1s': list,
         'child_id': child_id,
         'child': child
     }
@@ -35,6 +35,7 @@ def new(request, child_id):
                 medical_exam_part1 = medical_exam_part1_form.save(commit=False)
                 medical_exam_part1.signature = signature
                 medical_exam_part1.child = child
+                medical_exam_part1.save()
                 medical_exam_part1_form.save_m2m()
                 return HttpResponseRedirect(reverse('tracker:child', kwargs={'child_id': child_id}))
     else:

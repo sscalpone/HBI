@@ -11,11 +11,6 @@
 {% block content %}
 
 <h2><span>{{ child.first_name }} {{ child.last_name }}:</span> 
-<h3>Exámenes Médicos, Parte 2</h3>
-<ol class="exam-list">
-{% for exam in MedicalExams %}
-	<li><a href="">{{ exam.date }}</a></li>
-{% endfor%}
-</ol>
+	{% include 'tracker/medical_exam_part2_list.html' %}
 
 {% endblock %}

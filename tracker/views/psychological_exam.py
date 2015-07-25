@@ -35,6 +35,7 @@ def new(request, child_id):
                 psychological_exam = psychological_exam_form.save(commit=False)
                 psychological_exam.signature = signature
                 psychological_exam.child = child
+                psychological_exam.save()
                 psychological_exam_form.save_m2m()
                 return HttpResponseRedirect(reverse('tracker:child', kwargs={'child_id': child_id}))
     else:

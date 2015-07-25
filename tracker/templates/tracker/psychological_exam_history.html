@@ -11,11 +11,7 @@
 {% block content %}
 
 <h2><span>{{ child.first_name }} {{ child.last_name }}:</span> 
-<h3>Evaluaciónes Psicológica</h3>
-<ol class="exam-list">
-{% for exam in PsychologicalExams %}
-	<li><a href="">{{ exam.date }}</a></li>
-{% endfor%}
-</ol>
+
+{% include 'tracker/psychological_exam_list.html' %}
 
 {% endblock %}

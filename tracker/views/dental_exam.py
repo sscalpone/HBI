@@ -15,7 +15,7 @@ from tracker.models import Signature
 from tracker.models import SignatureForm
 from tracker.models import Child
 
-def exam_list(request, child_id):
+def index(request, child_id):
     list = DentalExam.objects.filter(child_id=child_id)
     child = get_object_or_404(Child, pk=child_id)
     context = {
@@ -23,16 +23,7 @@ def exam_list(request, child_id):
         'child': child,
         'child_id': child_id,
     }
-    return context
-
-def index(request, child_id):
-    context = exam_list(request, child_id)
     return render(request, 'tracker/dental_exam_history.html', context)
-
-def global_list(request, child_id):
-    context = exam_list(request, child_id)
-    print context
-    return render(request, 'tracker/child_information.html', context)
 
 def new(request, child_id):
     child = get_object_or_404(Child, pk=child_id)

@@ -8,6 +8,7 @@ from tracker.views import medical_exam_part1
 from tracker.views import medical_exam_part2
 from tracker.views import psychological_exam
 from tracker.views import social_exam
+from tracker.views import exam_views
 
 urlpatterns = patterns('',
     # ex: /tracker/
@@ -18,7 +19,7 @@ urlpatterns = patterns('',
     url(r'^children/$', child.index, name='children'),
     url(r'^child/new/$', child.new, name='add_child'),
     # url(r'^child/(?P<child_id>\d+)', child.view, name='child'),
-    url(r'^child/(?P<child_id>\d+)', dental_exam.global_list, name='child'),
+    url(r'^child/(?P<child_id>\d+)', exam_views.index, name='child'),
 
     url(r'^dental_exam/new/(?P<child_id>\d+)', dental_exam.new, name='new_dental_exam'),
     url(r'^dental_exam/(?P<child_id>\d+)', dental_exam.index, name='dental_exams'),
