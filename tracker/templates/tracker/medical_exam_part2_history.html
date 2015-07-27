@@ -1,6 +1,6 @@
 {% extends 'child-screen.html' %}
 
-{% block title %}Exámenes Médicos, Parte 2{% endblock %}
+{% block title %}Evaluacíon e Informe Médico, Parte 2{% endblock %}
 
 {% block menu %}
 <span class="button"><a href="{% url 'tracker:add_child' %}">Poner un otro niño...</a></span>
@@ -10,7 +10,7 @@
 
 {% block content %}
 
-<h2><span>{{ child.first_name }} {{ child.last_name }}:</span> 
+<h2><span>{{ child.first_name }} {{ child.last_name }}:</span> Evaluacíon e Informe Médico, Parte 2 </h2>
 	{% include 'tracker/medical_exam_part2_list.html' %}
 
 {% endblock %}

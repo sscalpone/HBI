@@ -5,10 +5,20 @@
 {% block content %}
 
     <div id="dental-exam">
-    	<ul>
-    		<li>{{dental_exam.recommendation}}</li><br/>
-    		<li>{{dental_exam.signature}}</li>
-    	</ul>
+    	<h2><span>{{ child.first_name }} {{ child.last_name }}:</span> Información Odontológico, {{ exam.date }}</h2>
+    	<dl>
+            <!-- <dt>Fecha Rellenado</dt><dd>{{ exam.date }}</dd> -->
+            <dt>Recomendaciones:</dt><dd>{{ exam.recommendation }}</dd>
+        </dl>
+
+<!--         <dl>
+        	<dt>Nombres</dt><dd>{{ exam.signature.name }} {{ exam.signature.surname }}</dd>
+        	<dt>EMP</dt><dd>{{ exam.signature.emp }}</dd>
+        	<dt>Dirección</dt><dd>{{ exam.signature.direction }}</dd>
+        	<dt>Celular</dt><dd>{{ exam.signature.cell }}</dd>
+
+
+        </dl> -->
     </div>
     
 {% endblock %}

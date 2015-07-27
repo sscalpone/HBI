@@ -1,9 +1,26 @@
-{% extends 'two-column.html' %}
+{% extends 'child-screen.html' %}
 
 {% block title %}Evaluacíon e Informe Social{% endblock %}
 
 {% block content %}
     <div id="social-exam">
-
+    	<h2><span>{{ child.first_name }} {{ child.last_name }}:</span> Evaluacíon e Informe Social, {{ exam.date }}</h2>
+    	<dl>
+    	    <dt>Partida de Nacimiento: </dt><dd>{{ exam.has_birth_certificate }}</dd>
+    		<dt>Original: </dt><dd>{{ exam.original_birth_certificate }}</dd>
+    		<dt>DNI: </dt><dd>{{ exam.dni }}</dd>
+    		<dt>En El Proceso</dt><dd>{{ exam.dni_in_process }}</dd><dd>{{ exam.dni_no_comments }}</dd>
+    		<dt>SIS: </dt><dd>{{ exam.sis }}</dd>
+    		<dt>En El Proceso</dt><dd>{{ exam.sis_in_process }}</dd><dd>{{ exam.sis_no_comments }}</dd>
+    		<dt>Antecedents</dt><dd>{{ exam.antecedents }}</dd>
+    		<dt>Situación Familiar</dt><dd>{{ exam.family_situation }}</dd>
+    		<dt>Situación de Salud</dt><dd>{{ exam.health_situation }}</dd>
+    		<dt>Situación de la Vivienda</dt><dd>{{ exam.housing_situation }}</dd>
+    		<dt>Situación Económica</dt><dd>{{ exam.economic_situation }}</dd>
+    		<dt>Apreciaciones Generales del Niño</dt><dd>{{ exam.general_comments }}</dd>
+    		<dt>Recibe Visitas</dt><dd>{{ exam.visitors_allowed }}</dd><dd>{{ exam.visitors_allowed_no_comment }}</dd>
+    		<dt>Diagnostico Social</dt><dd>{{ exam.social_diagnosis }}</dd>
+    		<dt>Recomendaciones</dt><dd>{{ exam.recommendation }}</dd>
+    	</dl>
     </div>
 {% endblock %}

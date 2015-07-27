@@ -1,8 +1,36 @@
-{% extends 'two-column.html' %}
+{% extends 'child-screen.html' %}
 
 {% block title %}Evaluacíon e Informe Médico / Parte 1{% endblock %}
 
 {% block content %}
-    <div id="medical-exam-part1">
+<h2><span>{{ child.first_name }} {{ child.last_name }}:</span> Evaluación e Informe Médico, Parte 1, {{ exam.date }}</h2>
+    <div>
+    	<dl>
+    		<dt>Antecedents Familiares Patológicos y de Riesgo Conocidos: </dt><dd>{{ exam.background_notes }}</dd>
+    		<dt>Historia Perinatal y Neonatal: </dt><dd>{{ exam.birth_history }}</dd>
+    		<dt>BCG: </dt><dd>{{ exam.bcg_vaccine }}, {{ exam.bcg_vaccine_date }}</dd>
+    		<dt>Antipoliomielitica: </dt><dd>{{ exam.polio_vaccine }}, {{exam.polio_vaccine_date}}</dd>
+    		<dt>DPT: </dt><dd>{{ exam.dpt_vaccine }}, {{ dpt_vaccine_date }}</dd>
+    		<dt>Hepatitis B: </dt><dd>{{ exam.hepatitis_b_vaccine }}, {{ exam.hepatitis_b_vaccine_date }}</dd>
+    		<dt>Hemofilus Influenza: </dt><dd>{{ exam.flu_vaccine }}, {{ exam.flu_vaccine_date }}</dd>
+    		<dt>Fiebre Amarilla: </dt><dd>{{ exam.yellow_fever_vaccine }}, {{ exam.yellow_fever_vaccine_date }}</dd>
+    		<dt>SPR: </dt><dd>{{ exam.spr_vaccine }}, {{ exam.spr_vaccine_date }}</dd>
+    		<dt>HPV: </dt><dd>{{ exam.hpv_vaccine }}, {{ exam.hpv_vaccine_date }}</dd>
+    		<dt>Neumococo: </dt><dd>{{ exam.pneumococcal_vaccine }}, {{ exam.pneumococcal_vaccine_date }}</dd>
+    		<dt>Peso: </dt><dd>{{ exam.weight }}</dd>
+    		<dt>Estatura: </dt><dd>{{ exam.height }}</dd>
+    		<dt>Hemoglobina: </dt><dd>{{ exam.hemoglobin_normal }}</dd><dd>{{ exam.hemoglobin_notes }}</dd>
+    		<dt>Elisa VH1: </dt><dd>{{ exam.elisa_vh1_positive }}</dd>
+    		<dt>Hepatitis B: </dt><dd>{{ exam.hepatitisB_positive }}</dd>
+    		<dt>PPD: </dt><dd>{{ exam.PPD_positive }}</dd>
+    		<dt>Parasitos Heces: </dt><dd>{{ stool_parasites_positive }}</dd><dd>exam.stool_parasites_notes</dd>
+    		<dt>Leucocitos: </dt><dd>{{ exam.leukocytes_normal }}</dd><dd>{{ exam.comentarios }}</dd>
+    		<dt>Nitritos: </dt><dd>{{ exam.nitrites_normal }}</dd><dd>{{exam.nitrites_notes}}</dd>
+    		<dt>Urobilinógeno: </dt><dd>{{ exam.urobilinogen_normal }}</dd><dd>{{ exam.urobilinogen_notes }}</dd>
+    		<dt>Proteína: </dt><dd>{{ exam.protein_normal }}</dd><dd>exam.protein_notes</dd>
+    		<dt>pH: </dt><dd>{{ exam.pH_normal }}</dd><dd>{{ exam.pH_notes }}</dd>
+    		<dt>Densidad: </dt><dd>{{ exam.density_normal }}</dd><dd>{{ exam.density_notes }}</dd>
+    		<dt>Glucosa: </dt><dd>{{ exam.glucose_normal }}</dd><dd>{{ exam.glucose_notes }}</dd>
+    	</dl>
     </div>
 {% endblock %}

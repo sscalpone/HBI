@@ -1,6 +1,6 @@
-<h3>Exámenes Médicos, Parte 2</h3>
+<h3>Evaluacíon e Informe Médico, Parte 2</h3>
 <ol class="exam-list">
 {% for exam in MedicalExamPart2s %}
-	<li><a href="">{{ exam.date }}</a></li>
+	<li><a href="{% url 'tracker:medical_exam_part2' child_id exam.id %}">{{ exam.date }}</a></li>
 {% endfor%}
 </ol>

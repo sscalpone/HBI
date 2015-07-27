@@ -7,16 +7,16 @@ class SignatureForm(ModelForm):
     class Meta:
         model = Signature
         fields = (
-            'nombres',
-            'apellidos',
+            'name',
+            'surname',
             'emp',
-            'direccion',
-            'celular',
+            'direction',
+            'cell',
         )
         labels = {
-            'nombres': 'Nombres',
-            'apellidos': 'Apellidos',
+            'name': 'Nombres',
+            'surname': 'Apellidos',
             'emp': 'EMP',
-            'direccion': 'Direction',
-            'celular': 'Célular',
+            'direction': 'Dirección',
+            'cell': 'Célular',
         }

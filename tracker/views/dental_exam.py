@@ -59,11 +59,9 @@ def new(request, child_id):
 def view(request, child_id, exam_id):
     p = get_object_or_404(DentalExam, pk=exam_id)
     child = get_object_or_404(Child, pk=child_id)
-    print "gobblygook"
     context = {
-        'dental_exam': p,
+        'exam': p,
         'child': child,
         'child_id': child.id
     }
-    print context
     return render(request, 'tracker/dental_exam.html', context)

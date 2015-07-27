@@ -1,10 +1,18 @@
-{% extends 'two-column.html' %}
+{% extends 'child-screen.html' %}
 
 {% block title %}Evaluación e Informe Psicológico{% endblock %}
 
 {% block content %}
     <div id="psychological-exam">
-    	{{exam.date}}
-
+    	<h2><span>{{ child.first_name }} {{ child.last_name }}:</span> Evaluación e Informe Psicológico, {{ exam.date }}</h2>
+    	<dl>
+    	   	<dt>Antecedents Patológicos Personales y Familiares Importantes: </dt><dd>{{ exam.background_notes }}</dd>
+    		<dt>Descripción Fisica y Comportamiento: </dt><dd>{{ exam.physical_description }}</dd>
+    		<dt>Área Intelectual: </dt><dd>{{ exam.intelectual_notes }}</dd>
+    		<dt>Área Organicidad: </dt><dd>{{ exam.organicity_notes }}</dd>
+    		<dt>Área Psciomotor: </dt><dd>{{ exam.psychomotor_notes }}</dd>
+    		<dt>Área Afectiva Emocional: </dt><dd>{{ exam.emotional_notes }}</dd>
+    		<dt>Recomendaciones: </dt><dd>{{ exam.recommendation }}</dd>
+    	</dl>
     </div>
 {% endblock %}
