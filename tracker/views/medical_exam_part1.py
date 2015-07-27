@@ -54,9 +54,12 @@ def new(request, child_id):
     }
     return render(request, 'tracker/add_child_medical_exam_part1_history.html', context)
 
-def view(request, exam_id):
+def view(request, child_id, exam_id):
     p = get_object_or_404(MedicalExamPart1, pk=exam_id)
+    child = get_object_or_404(Child, pk=exam_id)
     context = {
         'exam': p,
+        'child': child,
+        'child_id': child.id
     }
-    return render(request, 'tracker/child_medical_exam_part1_history.html', context)
+    return render(request, 'tracker/medical_exam_part1.html', context)

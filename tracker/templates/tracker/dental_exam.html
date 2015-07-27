@@ -1,9 +1,14 @@
-{% extends 'two-column.html' %}
+{% extends 'child-screen.html' %}
 
 {% block title %}Información Odontológico{% endblock %}
 
 {% block content %}
-    <div id="dental-exam">
 
+    <div id="dental-exam">
+    	<ul>
+    		<li>{{dental_exam.recommendation}}</li><br/>
+    		<li>{{dental_exam.signature}}</li>
+    	</ul>
     </div>
+    
 {% endblock %}

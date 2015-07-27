@@ -21,8 +21,9 @@ def index(request, child_id):
     context = {
         'DentalExams': list,
         'child': child,
-        'child_id': child_id,
+        'child_id': child_id
     }
+    print context
     return render(request, 'tracker/dental_exam_history.html', context)
 
 def new(request, child_id):
@@ -55,11 +56,14 @@ def new(request, child_id):
     }
     return render(request, 'tracker/add_child_dental_history.html', context)
 
-def view(request, exam_id):
+def view(request, child_id, exam_id):
     p = get_object_or_404(DentalExam, pk=exam_id)
-
+    child = get_object_or_404(Child, pk=child_id)
+    print "gobblygook"
     context = {
         'dental_exam': p,
-        'exam_id': p.id
+        'child': child,
+        'child_id': child.id
     }
-    return render(request, 'tracker/child_dental_history.html', context)
+    print context
+    return render(request, 'tracker/dental_exam.html', context)
