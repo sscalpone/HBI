@@ -11,6 +11,8 @@
 {% block content %}
 <h2><span>{{ child.first_name }} {{ child.last_name }}:</span> Información Odontológico</h2>
 
+<div class="exam-list">
 {% include 'tracker/dental_exam_list.html' %}
+</div>
 
 {% endblock %}

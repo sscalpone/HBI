@@ -1,10 +1,6 @@
-{% block content %}
-
-<h3>Exámenes Odontológicos</h3>
-<ol class="exam-list">
-{% for exam in DentalExams %}
-	<li><a href="{% url 'tracker:dental_exam' child_id exam.id %}">{{ exam.date }}</a></li>
-{% endfor%}
-</ol>
-
-{% endblock %}
+	<h3>Exámenes Odontológicos</h3>
+	<ol>
+	{% for exam in DentalExams reversed %}
+		<li><a href="{% url 'tracker:dental_exam' child_id exam.id %}">{{ exam.date }}</a></li>
+	{% endfor%}
+	</ol>

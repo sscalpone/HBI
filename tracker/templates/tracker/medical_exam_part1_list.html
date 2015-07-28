@@ -1,6 +1,6 @@
-<h3>Evaluacíon e Informe Médico, Parte 1</h3>
-<ol class="exam-list">
-{% for exam in MedicalExamPart1s %}
-	<li><a href="{% url 'tracker:medical_exam_part1' child_id exam.id %}">{{ exam.date }}</a></li>
-{% endfor%}
-</ol>
+	<h3>Evaluacíon e Informe Médico, Parte 1</h3>
+	<ol>
+	{% for exam in MedicalExamPart1s reversed %}
+		<li><a href="{% url 'tracker:medical_exam_part1' child_id exam.id %}">{{ exam.date }}</a></li>
+	{% endfor%}
+	</ol>

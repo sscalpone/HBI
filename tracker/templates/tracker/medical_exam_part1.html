@@ -3,8 +3,8 @@
 {% block title %}Evaluacíon e Informe Médico / Parte 1{% endblock %}
 
 {% block content %}
-<h2><span>{{ child.first_name }} {{ child.last_name }}:</span> Evaluación e Informe Médico, Parte 1, {{ exam.date }}</h2>
-    <div>
+<div class="form-info">
+    <h2><span>{{ child.first_name }} {{ child.last_name }}:</span> Evaluación e Informe Médico, Parte 1, {{ exam.date }}</h2>
     	<dl>
     		<dt>Antecedents Familiares Patológicos y de Riesgo Conocidos: </dt><dd>{{ exam.background_notes }}</dd>
     		<dt>Historia Perinatal y Neonatal: </dt><dd>{{ exam.birth_history }}</dd>

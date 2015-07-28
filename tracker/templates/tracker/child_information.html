@@ -3,7 +3,7 @@
 {% block title %}Información General{% endblock %}
 
 {% block content %}
-    <div id="child-info">
+    <div class="child-info">
         <h2><span>{{ child.first_name }} {{ child.last_name }}:</span> Información General</h2>
         <img src="{{ child.photo.url }}">
         <dl>
@@ -14,11 +14,22 @@
             <dt>Lugar de Naciemiento</dt><dd>{{ child.birthplace }}</dd>
         </dl>
     </div>
-    <div>
-    {% include 'tracker/dental_exam_list.html' %}
-    {% include 'tracker/medical_exam_part1_list.html' %}
-    {% include 'tracker/medical_exam_part2_list.html' %}
-    {% include 'tracker/psychological_exam_list.html' %}
-    {% include 'tracker/social_exam_list.html' %}
+    <div id="child-view-lists">
+        <div>
+        {% include 'tracker/dental_exam_list.html' %}
+        </div>
+        <div>
+        {% include 'tracker/medical_exam_part1_list.html' %}
+        </div>
+        <div>
+        {% include 'tracker/medical_exam_part2_list.html' %}
+        </div>
+        <div>
+        {% include 'tracker/psychological_exam_list.html' %}
+        </div>
+        <div>
+        {% include 'tracker/social_exam_list.html' %}
+        </div>
     </div>
 {% endblock %}
+

@@ -1,7 +1,9 @@
-/* http://meyerweb.com/eric/tools/css/reset/ 
-   v2.0 | 20110126
-   License: none (public domain)
-*/
+/**************************
+***************************
+MEYER CSS RESET
+http://meyerweb.com/eric/tools/css/reset/ 
+***************************
+**************************/
 
 html, body, div, span, applet, object, iframe,
 h1, h2, h3, h4, h5, h6, p, blockquote, pre,
@@ -31,7 +33,7 @@ footer, header, hgroup, menu, nav, section {
 body {
   line-height: 1;
 }
-ol, ul {
+ul {
   list-style: none;
 }
 blockquote, q {
@@ -47,11 +49,11 @@ table {
   border-spacing: 0;
 }
 
-
-
-/*
-  HBI Tracker Styles
-*/
+/**************************
+***************************
+HBI TRACKER STYLES
+***************************
+**************************/
 
 /*****************
 GENERAL STYLES
@@ -82,8 +84,8 @@ h2 span {
   font-weight: bold;
 }
 
-li {
-  list-style: none;
+ol li {
+  list-style: decimal-leading-zero inside;
 }
 
 img {
@@ -192,35 +194,91 @@ TWO-COLUMN AND SIDEBAR STYLES
 CHILD VIEW STYLES
 *****************/
 
-#child-info {
+.child-info {
   display: block;
+  
 }
 
-#child-info img {
+.child-info img {
   border-radius: 1px;
   border: 1px #4A2E20 solid;
-  float: left;
   width: 30%;  
   min-width: 220px;    
   max-width: 300px;
 }
 
-#child-info dl {
+.child-info, .form-info {
   margin: 0;
-  float: left;
-  margin-left: 1%;
 
-    }
-#child-info dt {
+}
+
+.child-info dt, .form-info dt {
   padding-bottom: 3px;
 }
 
-#child-info dd {
+.child-info dd, .form-info dd {
   border-radius: 1em;
   padding: 0.33em 0.66em;
   border: 1px #4A2E20 solid;
   margin-bottom: 5px;
   display: inline-block;
+}
+
+#child-view-lists {
+  padding-right: 10px;
+  padding-top: 15px;
+}
+
+#child-view-lists ol {
+  padding: 5px 0 10px 0;
+}
+
+#child-view-lists h3 {
+  font-size: 1.1em;
+  font-weight: bold;
+}
+
+#child-view-lists a {
+  color: #000;
+}
+
+#child-view-lists li {
+  padding: 2px 0;
+}
+
+/* FOR SCREENS WIDER THAN 600PX */
+@media screen and (min-width: 600px) {
+  .child-info dl {
+    margin-left: 225px;
+  }
+  .child-info {
+    min-height: 332px;
+  }
+  .child-info img {
+    float: left;
+  }
+  #child-view-lists div {
+    float: left;
+    width: 33%;
+  }
+
+  #child-view-lists h3 {
+    padding-right: 5px;
+  }
+}
+
+/* FOR SCREENS WIDER THAN 950PX */
+@media screen and (min-width: 950px) {
+  #child-view-lists div {
+    width: 20%;
+  }
+}
+
+/* FOR SCREENS WIDER THAN 600PX */
+@media screen and (min-width: 1050px) {
+  .child-info dl {
+    margin-left: 31%;
+  }
 }
 
 /*************
@@ -257,12 +315,11 @@ form input[type="text"],
 form input[type="password"], 
 form input[type="number"],
 form textarea {
-    /*outline: none;*/
+  outline: none;
   background: transparent;
   border-radius: 1em;
   padding: 5px ;
   margin: 3px;
-/*  margin-left: 5%;*/
   border: 1px #4A2E20 solid;
   width: 100%;
   font-size: 1em;
@@ -290,9 +347,28 @@ form textarea:focus {
 form input[type="submit"] {
   font-size: 1.5em;
   padding: 5px 15px;
-/*  margin-left: 100px;*/
   margin-top: 10px;
 }
+
+/*********************
+LIST STYLES
+**********************/
+
+.exam-list h3 {
+  display: none;
+}
+
+.exam-list li {
+  font-size: 1.3em;
+  padding: 0 0 3px;
+}
+
+.exam-list a {
+  color: #000;
+}
+
+
+
 
 
 

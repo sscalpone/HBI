@@ -11,6 +11,9 @@
 {% block content %}
 
 <h2><span>{{ child.first_name }} {{ child.last_name }}:</span> Evaluacíon e Informe Médico, Parte 2 </h2>
-	{% include 'tracker/medical_exam_part2_list.html' %}
+
+<div class="exam-list">
+{% include 'tracker/medical_exam_part2_list.html' %}
+</div>
 
 {% endblock %}
