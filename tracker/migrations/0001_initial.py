@@ -248,11 +248,11 @@ class Migration(migrations.Migration):
             name='Signature',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('nombres', models.CharField(max_length=200)),
-                ('apellidos', models.CharField(max_length=200)),
+                ('name', models.CharField(max_length=200)),
+                ('surname', models.CharField(max_length=200)),
                 ('emp', models.CharField(max_length=200)),
-                ('direccion', models.CharField(max_length=200)),
-                ('celular', models.CharField(max_length=200)),
+                ('direction', models.CharField(max_length=200)),
+                ('cell', models.CharField(max_length=200)),
             ],
             options={
                 'db_table': 'tracker_signature',

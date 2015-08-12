@@ -11,7 +11,7 @@ sudo easy_install pip
 
 sudo pip install virtualenv
 
-sudo pip install Django==1.7.7
+sudo pip install Django==1.7.9
 
 Install the Python Image Tools:
 sudo pip install Pillow
@@ -33,6 +33,6 @@ Connect to the server with your browser:
 http://127.0.0.1:8000/tracker/
 
 Initialize the db with some data:
-cp media/photos/me.png fixtures/
-python manage.py loaddata fixtures/basic.json 
+cp fixtures/photos/me.png media/photos/
+python manage.py loaddata fixtures/basic.json
 
