@@ -9,6 +9,9 @@ from django.contrib.auth.models import User
 
 from django.core.exceptions import ValidationError
 
+from django.forms import ModelForm
+from django.forms import RadioSelect
+
 class MedicalExamPart1(models.Model):
     child = models.ForeignKey(Child)
     date = models.DateField()
@@ -51,8 +54,6 @@ class MedicalExamPart1(models.Model):
     protein_notes = models.TextField(blank=True, null=True)
     pH_normal = models.BooleanField(default=False)
     pH_notes = models.TextField(blank=True, null=True)
-    hemoglobin_normal = models.BooleanField(default=False)
-    hemoglobin_notes = models.TextField(blank=True, null=True)
     density_normal = models.BooleanField(default=False)
     density_notes = models.TextField(blank=True, null=True)
     glucose_normal = models.BooleanField(default=False)
@@ -62,51 +63,218 @@ class MedicalExamPart1(models.Model):
         app_label = 'tracker'
         db_table = 'tracker_medicalexampart1'
 
+
+class MedicalExamPart1Form(ModelForm):
+    class Meta:
+        model = MedicalExamPart1
+        fields = (
+            'date',
+            'background_notes',
+            'birth_history',
+            'bcg_vaccine',
+            'bcg_vaccine_date',
+            'polio_vaccine',
+            'polio_vaccine_date',
+            'dpt_vaccine',
+            'dpt_vaccine_date',
+            'hepatitis_b_vaccine',
+            'hepatitis_b_vaccine_date',
+            'flu_vaccine',
+            'flu_vaccine_date',
+            'yellow_fever_vaccine',
+            'yellow_fever_vaccine_date',
+            'spr_vaccine',
+            'spr_vaccine_date',
+            'hpv_vaccine',
+            'hpv_vaccine_date',
+            'pneumococcal_vaccine',
+            'pneumococcal_vaccine_date',
+            'weight',
+            'height',
+            'hemoglobin_normal',
+            'hemoglobin_notes',
+            'elisa_vh1_positive',
+            'hepatitisB_positive',
+            'PPD_positive',
+            'stool_parasites_positive',
+            'stool_parasites_notes',
+            'leukocytes_normal',
+            'leukocytes_notes',
+            'nitrites_normal',
+            'nitrites_notes',
+            'urobilinogen_normal',
+            'urobilinogen_notes',
+            'protein_normal',
+            'protein_notes',
+            'pH_normal',
+            'pH_notes',
+            'density_normal',
+            'density_notes',
+            'glucose_normal',
+            'glucose_notes',
+        )
+        labels = {
+            'date': 'Fecha',
+            'background_notes': 'Antecedents Familiares Patologicos y de Riesgo Conocidos',
+            'birth_history': 'Historia Perinatal y Neonatal',
+            'bcg_vaccine': 'BCG',
+            'bcg_vaccine_date': 'Fecha de Administracion',
+            'polio_vaccine': 'Antipoliomielitica',
+            'polio_vaccine_date': 'Fecha de Administracion',
+            'dpt_vaccine': 'DPT',
+            'dpt_vaccine_date': 'Fecha de Administracion',
+            'hepatitis_b_vaccine': 'Hepatitis B',
+            'hepatitis_b_vaccine_date': 'Fecha de Administracion',
+            'flu_vaccine': 'Hemofilus Influenza',
+            'flu_vaccine_date': 'Fecha de Administracion',
+            'yellow_fever_vaccine': 'Fiebre Amarilla',
+            'yellow_fever_vaccine_date': 'Fecha de Administracion',
+            'spr_vaccine': 'SPR',
+            'spr_vaccine_date': 'Fecha de Administracion',
+            'hpv_vaccine': 'HPV',
+            'hpv_vaccine_date': 'Fecha de Administracion',
+            'pneumococcal_vaccine': 'Neumococo',
+            'pneumococcal_vaccine_date': 'Fecha de Administracion',
+            'weight': 'Peso',
+            'height': 'Estatura',
+            'hemoglobin_normal': 'Hemoglobina',
+            'hemoglobin_notes': 'Comentarios',
+            'elisa_vh1_positive': 'Elisa VH1',
+            'hepatitisB_positive': 'Hepatitis B',
+            'PPD_positive': 'PPD',
+            'stool_parasites_positive': 'Parasitos Heces',
+            'stool_parasites_notes': 'Lista si es positivo',
+            'leukocytes_normal': 'Leucocitos',
+            'leukocytes_notes': 'Comentarios',
+            'nitrites_normal': 'Nitritos',
+            'nitrites_notes': 'Comentarios',
+            'urobilinogen_normal': 'Urobilinogeno',
+            'urobilinogen_notes': 'Comentarios',
+            'protein_normal': 'Proteina',
+            'protein_notes': 'Comentarios',
+            'pH_normal': 'pH',
+            'pH_notes': 'Comentarios',
+            'density_normal': 'Densidad',
+            'density_notes': 'Comentarios',
+            'glucose_normal': 'Glucosa',
+            'glucose_notes': 'Comentarios',
+        }
+        widgets = {
+            'bcg_vaccine': RadioSelect(choices=((True, 'Si'),(False, 'No'))),
+            'polio_vaccine': RadioSelect(choices=((True, 'Si'),(False, 'No'))),
+            'dpt_vaccine': RadioSelect(choices=((True, 'Si'),(False, 'No'))),
+            'hepatitis_b_vaccine': RadioSelect(choices=((True, 'Si'),(False, 'No'))),
+            'flu_vaccine': RadioSelect(choices=((True, 'Si'),(False, 'No'))),
+            'yellow_fever_vaccine': RadioSelect(choices=((True, 'Si'),(False, 'No'))),
+            'spr_vaccine': RadioSelect(choices=((True, 'Si'),(False, 'No'))),
+            'hpv_vaccine': RadioSelect(choices=((True, 'Si'),(False, 'No'))),
+            'pneumococcal_vaccine': RadioSelect(choices=((True, 'Si'),(False, 'No'))),
+            'hemoglobin_normal': RadioSelect(choices=((True, 'Anormal'),(False, 'Normal'))),
+            'elisa_vh1_positive': RadioSelect(choices=((True, 'Positivo'),(False, 'Negativo'))),
+            'hepatitisB_positive': RadioSelect(choices=((True, 'Positivo'),(False, 'Negativo'))),
+            'PPD_positive': RadioSelect(choices=((True, 'Positivo'),(False, 'Negativo'))),
+            'stool_parasites_positive': RadioSelect(choices=((True, 'Positivo'),(False, 'Negativo'))),
+            'leukocytes_normal': RadioSelect(choices=((True, 'Aormal'),(False, 'Normal'))),
+            'nitrites_normal': RadioSelect(choices=((True, 'Anormal'),(False, 'Normal'))),
+            'urobilinogen_normal': RadioSelect(choices=((True, 'Anormal'),(False, 'Normal'))),
+            'protein_normal': RadioSelect(choices=((True, 'Anormal'),(False, 'Normal'))),
+            'pH_normal': RadioSelect(choices=((True, 'Anormal'),(False, 'Normal'))),
+            'density_normal': RadioSelect(choices=((True, 'Anormal'),(False, 'Normal'))),
+            'glucose_normal': RadioSelect(choices=((True, 'Anormal'),(False, 'Normal'))),
+        }
+
     def clean(self):
         msg = "This field is required."
+        cleaned_data = super(MedicalExamPart1Form, self).clean()
+         
+        bcg_vaccine = cleaned_data.get('bcg_vaccine')
+        bcg_vaccine_date = cleaned_data.get('bcg_vaccine_date')
+        if bcg_vaccine and bcg_vaccine_date is None:
+            self.add_error('bcg_vaccine_date', msg)
+
+        polio_vaccine = cleaned_data.get('polio_vaccine')
+        polio_vaccine_date = cleaned_data.get('polio_vaccine_date')
+        if polio_vaccine and polio_vaccine_date is None:
+            self.add_error('polio_vaccine_date', msg)
+
+        dpt_vaccine = cleaned_data.get('dpt_vaccine')
+        dpt_vaccine_date = cleaned_data.get('dpt_vaccine_date')
+        if dpt_vaccine and dpt_vaccine_date is None:
+            self.add_error('dpt_vaccine_date', msg)
+
+        hepatitis_b_vaccine = cleaned_data.get('hepatitis_b_vaccine')
+        hepatitis_b_vaccine_date = cleaned_data.get('hepatitis_b_vaccine_date')
+        if hepatitis_b_vaccine and hepatitis_b_vaccine_date is None:
+            self.add_error('hepatitis_b_vaccine_date', msg)
+
+        flu_vaccine = cleaned_data.get('flu_vaccine')
+        flu_vaccine_date = cleaned_data.get('flu_vaccine_date')
+        if flu_vaccine and flu_vaccine_date is None:
+            self.add_error('flu_vaccine_date', msg)
+
+        yellow_fever_vaccine = cleaned_data.get('yellow_fever_vaccine')
+        yellow_fever_vaccine_date = cleaned_data.get('yellow_fever_vaccine_date')
+        if yellow_fever_vaccine and yellow_fever_vaccine_date is None:
+            self.add_error('yellow_fever_vaccine_date', msg)
+
+        spr_vaccine = cleaned_data.get('spr_vaccine')
+        spr_vaccine_date = cleaned_data.get('spr_vaccine_date')
+        if spr_vaccine and spr_vaccine_date is None:
+            self.add_error('spr_vaccine_date', msg)
+
+        hpv_vaccine = cleaned_data.get('hpv_vaccine')
+        hpv_vaccine_date = cleaned_data.get('hpv_vaccine_date')
+        if hpv_vaccine and hpv_vaccine_date is None:
+            self.add_error('hpv_vaccine_date', msg)        
         
-        if self.bcg_vaccine and self.bcg_vaccine_date is None:
-            raise ValidationError(('This field is required'), code='required_error')
-        if self.polio_vaccine and self.polio_vaccine_date is None:
-            raise ValidationError(('This field is required'), code='required_error')
-        if self.dpt_vaccine and self.dpt_vaccine_date is None:
-            raise ValidationError(('This field is required'), code='required_error')
-        if self.hepatitis_b_vaccine and self.hepatitis_b_vaccine_date is None:
-            raise ValidationError(('This field is required'), code='required_error')
-        if self.flu_vaccine and self.flu_vaccine_date is None:
-            raise ValidationError(('This field is required'), code='required_error')
-        if self.yellow_fever_vaccine and self.yellow_fever_vaccine_date is None:
-            raise ValidationError(('This field is required'), code='required_error')
-        if self.spr_vaccine and self.spr_vaccine_date is None:
-            raise ValidationError(('This field is required'), code='required_error')
-        if self.hpv_vaccine and self.hpv_vaccine_date is None:
-            raise ValidationError(('This field is required'), code='required_error')
-        if self.pneumococcal_vaccine and self.pneumococcal_vaccine_date is None:
-            raise ValidationError(('This field is required'), code='required_error')
-        if self.hemoglobin_normal and self.hemoglobin_notes is None:
-            raise ValidationError(('This field is required'), code='required_error')
-        if self.stool_parasites_positive and self.stool_parasites_notes is None:
-            raise ValidationError(('This field is required'), code='required_error')
-        if self.leukocytes_normal and self.leukocytes_notes is None:
-            raise ValidationError(('This field is required'), code='required_error')
-        if self.nitrites_normal and self.nitrites_notes is None:
-            raise ValidationError(('This field is required'), code='required_error')
-        if self.urobilinogen_normal and self.urobilinogen_notes is None:
-            raise ValidationError(('This field is required'), code='required_error')
-        if self.protein_normal and self.protein_notes is None:
-            raise ValidationError(('This field is required'), code='required_error')
-        if self.pH_normal and self.pH_notes is None:
-            raise ValidationError(('This field is required'), code='required_error')
-        if self.hemoglobin_normal and self.hemoglobin_notes is None:
-            raise ValidationError(('This field is required'), code='required_error')
-        if self.density_normal and self.density_notes is None:
-            raise ValidationError(('This field is required'), code='required_error')
-        if self.glucose_normal and self.glucose_notes is None:
-            raise ValidationError(('This field is required'), code='required_error')
+        pneumococcal_vaccine = cleaned_data.get('pneumococcal_vaccine')
+        pneumococcal_vaccine_date = cleaned_data.get('pneumococcal_vaccine_date')
+        if pneumococcal_vaccine and pneumococcal_vaccine_date is None:
+            self.add_error('pneumococcal_vaccine_date', msg)
 
+        # hemoglobin_normal = cleaned_data.get('hemoglobin_normal')
+        # hemoglobin_notes = cleaned_data.get('hemoglobin_notes')
+        # if hemoglobin_normal and hemoglobin_notes is None:
+        #     self.add_error('hemoglobin_notes', msg)
 
+        stool_parasites_positive = cleaned_data.get('stool_parasites_positive')
+        stool_parasites_notes = cleaned_data.get('stool_parasites_notes')
+        if stool_parasites_positive and stool_parasites_notes is None:
+            self.add_error('stool_parasites_notes', msg)
 
+        # leukocytes_normal = cleaned_data.get('leukocytes_normal')
+        # leukocytes_notes = cleaned_data.get('leukocytes_notes')
+        # if leukocytes_normal and leukocytes_notes is None:
+        #     self.add_error('leukocytes_notes', msg)
 
+        # nitrites_normal = cleaned_data.get('nitrites_normal')
+        # nitrites_notes = cleaned_data.get('nitrites_notes')
+        # if nitrites_normal and nitrites_notes is None:
+        #     self.add_error('nitrites_notes', msg)
 
-            
+        # urobilinogen_normal = cleaned_data.get('urobilinogen_normal')
+        # urobilinogen_notes = cleaned_data.get('urobilinogen_notes')
+        # if urobilinogen_normal and urobilinogen_notes is None:
+        #     self.add_error('urobilinogen_notes', msg)
+
+        # protein_normal = cleaned_data.get('protein_normal')
+        # protein_notes = cleaned_data.get('protein_notes')
+        # if protein_normal and protein_notes is None:
+        #     self.add_error('protein_notes', msg)
+
+        # pH_normal = cleaned_data.get('pH_normal')
+        # pH_notes = cleaned_data.get('pH_notes')
+        # if pH_normal and pH_notes is None:
+        #     self.add_error('pH_notes', msg)
+
+        # density_normal = cleaned_data.get('density_normal')
+        # density_notes = cleaned_data.get('density_notes')
+        # if density_normal and density_notes is None:
+        #     self.add_error('density_notes', msg)
+
+        # glucose_normal = cleaned_data.get('glucose_normal')
+        # glucose_notes = cleaned_data.get('glucose_notes')
+        # if glucose_normal and glucose_notes is None:
+        #     self.add_error('glucose_notes', msg)
+
 

@@ -2,6 +2,8 @@ import datetime
 
 from django.db import models
 
+from django.forms import ModelForm
+
 class Signature(models.Model):
     name = models.CharField(max_length=200)
     surname = models.CharField(max_length=200)
@@ -16,3 +18,20 @@ class Signature(models.Model):
     def __unicode__(self):
         return self.name
 
+class SignatureForm(ModelForm):
+    class Meta:
+        model = Signature
+        fields = (
+            'name',
+            'surname',
+            'emp',
+            'direction',
+            'cell',
+        )
+        labels = {
+            'name': 'Nombres',
+            'surname': 'Apellidos',
+            'emp': 'EMP',
+            'direction': 'Direccion',
+            'cell': 'Celular',
+        }

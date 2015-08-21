@@ -1,10 +1,8 @@
 from BasicInfo import BasicInfo
 from Child import Child
 from ChildForm import ChildForm
-from DentalExam import DentalExam
-from DentalExamForm import DentalExamForm
-from MedicalExamPart1 import MedicalExamPart1
-from MedicalExamPart1Form import MedicalExamPart1Form
+from DentalExam import DentalExam, DentalExamForm
+from MedicalExamPart1 import MedicalExamPart1, MedicalExamPart1Form
 from MedicalExamPart2 import MedicalExamPart2
 from MedicalExamPart2Form import MedicalExamPart2Form
 from MedicalExamPart2 import MedicalExamDiagnosis

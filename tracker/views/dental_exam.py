@@ -5,14 +5,12 @@ from django.http import HttpResponse
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
 
-from django.shortcuts import render, render_to_response, get_object_or_404
+from django.shortcuts import render, get_object_or_404
 from django.template import loader
 import django.template.loader
 
-from tracker.models import DentalExam
-from tracker.models import DentalExamForm
-from tracker.models import Signature
-from tracker.models import SignatureForm
+from tracker.models import DentalExam, DentalExamForm
+from tracker.models import Signature, SignatureForm
 from tracker.models import Child
 
 def index(request, child_id):
@@ -23,7 +21,6 @@ def index(request, child_id):
         'child': child,
         'child_id': child_id
     }
-    print context
     return render(request, 'tracker/dental_exam_history.html', context)
 
 def new(request, child_id):

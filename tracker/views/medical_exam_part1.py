@@ -7,11 +7,10 @@ from django.core.urlresolvers import reverse
 
 from django.shortcuts import render, get_object_or_404
 from django.template import loader
+import django.template.loader
 
-from tracker.models import MedicalExamPart1
-from tracker.models import MedicalExamPart1Form
-from tracker.models import Signature
-from tracker.models import SignatureForm
+from tracker.models import MedicalExamPart1, MedicalExamPart1Form
+from tracker.models import Signature, SignatureForm
 from tracker.models import Child
 
 def index(request, child_id):
