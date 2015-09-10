@@ -28,15 +28,18 @@ def new(request, child_id):
     if request.method == 'POST':
         signature_form = SignatureForm(request.POST, request.FILES, request=request)
         medical_exam_part1_form = MedicalExamPart1Form(request.POST, request.FILES, request=request)
-        if signature_form.is_valid() and medical_exam_part1_form.is_valid():
-            signature = signature_form.save()
-            if signature:
-                medical_exam_part1 = medical_exam_part1_form.save(commit=False)
-                medical_exam_part1.signature = signature
-                medical_exam_part1.child = child
-                medical_exam_part1.save()
-                medical_exam_part1_form.save_m2m()
-                return HttpResponseRedirect(reverse('tracker:child', kwargs={'child_id': child_id}))
+        if 'discard' in request.POST:
+            return HttpResponseRedirect(reverse('tracker:child', kwargs={'child_id': child_id}))
+        else:
+            if signature_form.is_valid() and medical_exam_part1_form.is_valid():
+                signature = signature_form.save()
+                if signature:
+                    medical_exam_part1 = medical_exam_part1_form.save(commit=False)
+                    medical_exam_part1.signature = signature
+                    medical_exam_part1.child = child
+                    medical_exam_part1.save()
+                    medical_exam_part1_form.save_m2m()
+                    return HttpResponseRedirect(reverse('tracker:child', kwargs={'child_id': child_id}))
     else:
         medical_exam_part1_form = MedicalExamPart1Form(initial={
                 'child': child,

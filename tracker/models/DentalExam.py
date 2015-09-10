@@ -9,6 +9,7 @@ from django.forms import ModelForm
 from Child import Child
 from Signature import Signature
 
+
 class DentalExam(models.Model):
     child = models.ForeignKey(Child)
     date = models.DateField()
@@ -18,6 +19,7 @@ class DentalExam(models.Model):
         app_label = 'tracker'
         db_table = 'tracker_dentalexam'
 
+
 class DentalExamDiagnosis(models.Model):
     exam = models.ForeignKey(DentalExam)
     diagnosis_notes = models.TextField()
@@ -25,6 +27,7 @@ class DentalExamDiagnosis(models.Model):
     class Meta:
         app_label = 'tracker'
         db_table = 'tracker_dentalexamdiagnosis'
+
 
 class DentalExamForm(ModelForm):
     class Meta:

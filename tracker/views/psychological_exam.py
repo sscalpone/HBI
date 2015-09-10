@@ -27,17 +27,20 @@ def index(request, child_id):
 def new(request, child_id):
     child = get_object_or_404(Child, pk=child_id)
     if request.method == 'POST':
-        signature_form = SignatureForm(request.POST, request.FILES)
-        psychological_exam_form = PsychologicalExamForm(request.POST, request.FILES)
-        if signature_form.is_valid() and psychological_exam_form.is_valid():
-            signature = signature_form.save()
-            if signature:
-                psychological_exam = psychological_exam_form.save(commit=False)
-                psychological_exam.signature = signature
-                psychological_exam.child = child
-                psychological_exam.save()
-                psychological_exam_form.save_m2m()
-                return HttpResponseRedirect(reverse('tracker:child', kwargs={'child_id': child_id}))
+        signature_form = SignatureForm(request.POST, request.FILES, request=request)
+        psychological_exam_form = PsychologicalExamForm(request.POST, request.FILES, request=request)
+        if 'discard' in request.POST:
+            return HttpResponseRedirect(reverse('tracker:child', kwargs={'child_id': child_id}))
+        else:
+            if signature_form.is_valid() and psychological_exam_form.is_valid():
+                signature = signature_form.save()
+                if signature:
+                    psychological_exam = psychological_exam_form.save(commit=False)
+                    psychological_exam.signature = signature
+                    psychological_exam.child = child
+                    psychological_exam.save()
+                    psychological_exam_form.save_m2m()
+                    return HttpResponseRedirect(reverse('tracker:child', kwargs={'child_id': child_id}))
     else:
         psychological_exam_form = PsychologicalExamForm(initial={
                 'child': child,

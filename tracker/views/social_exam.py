@@ -27,17 +27,20 @@ def index(request, child_id):
 def new(request, child_id):
     child = get_object_or_404(Child, pk=child_id)
     if request.method == 'POST':
-        signature_form = SignatureForm(request.POST, request.FILES)
-        social_exam_form = SocialExamForm(request.POST, request.FILES)
-        if signature_form.is_valid() and social_exam_form.is_valid():
-            signature = signature_form.save()
-            if signature:
-                social_exam = social_exam_form.save(commit=False)
-                social_exam.signature = signature
-                social_exam.child = child
-                social_exam.save()
-                social_exam_form.save_m2m()
-                return HttpResponseRedirect(reverse('tracker:child', kwargs={'child_id': child_id}))
+        signature_form = SignatureForm(request.POST, request.FILES, request=request)
+        social_exam_form = SocialExamForm(request.POST, request.FILES, request=request)
+        if 'discard' in request.POST:
+            return HttpResponseRedirect(reverse('tracker:child', kwargs={'child_id': child_id}))
+        else:
+            if signature_form.is_valid() and social_exam_form.is_valid():
+                signature = signature_form.save()
+                if signature:
+                    social_exam = social_exam_form.save(commit=False)
+                    social_exam.signature = signature
+                    social_exam.child = child
+                    social_exam.save()
+                    social_exam_form.save_m2m()
+                    return HttpResponseRedirect(reverse('tracker:child', kwargs={'child_id': child_id}))
     else:
         social_exam_form = SocialExamForm(initial={
                 'child': child,

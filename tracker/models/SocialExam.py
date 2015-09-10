@@ -21,16 +21,16 @@ class SocialExam(models.Model):
     sis = models.BooleanField(default=False)
     sis_in_process = models.BooleanField(default=False)
     sis_no_comments = models.TextField(blank=True, null=True)
-    antecedents = models.TextField(null=True)
-    family_situation = models.TextField(null=True)
-    health_situation = models.TextField(null=True)
-    housing_situation = models.TextField(null=True)
-    economic_situation = models.TextField(null=True)
-    general_comments = models.TextField(null=True)
+    antecedents = models.TextField(blank=True, null=True)
+    family_situation = models.TextField(blank=True, null=True)
+    health_situation = models.TextField(blank=True, null=True)
+    housing_situation = models.TextField(blank=True, null=True)
+    economic_situation = models.TextField(blank=True, null=True)
+    general_comments = models.TextField(blank=True, null=True)
     visitors_allowed = models.BooleanField(default=True)
     visitors_allowed_no_comments = models.TextField(blank=True, null=True)
-    social_diagnosis = models.TextField(null=True)
-    recommendation = models.TextField(null=True)
+    social_diagnosis = models.TextField(blank=True, null=True)
+    recommendation = models.TextField(blank=True, null=True)
 
     class Meta:
         app_label = 'tracker'
@@ -91,3 +91,69 @@ class SocialExamForm(ModelForm):
             'sis_in_process': RadioSelect(choices=((True, 'Sí'),(False, 'No'))),
             'visitors_allowed': RadioSelect(choices=((True, 'Sí'),(False, 'No'))),
         }
+
+    def __init__(self, *args, **kwargs):
+        self.request = kwargs.pop('request', None)
+        super(SocialExamForm, self).__init__(*args, **kwargs)
+
+    def clean(self):
+        msg = "This field is required."
+        cleaned_data = super(SocialExamForm, self).clean()
+        
+        if self.request.method=='POST':
+            
+            if 'submit' in self.request.POST:
+                dni = cleaned_data.get('dni')
+                dni_no_comments = cleaned_data.get('dni_no_comments')
+                if not dni and dni_no_comments=='':
+                    self.add_error('dni_no_comments', msg)
+                
+                sis = cleaned_data.get('sis')
+                sis_no_comments = cleaned_data.get('sis_no_comments')
+                if not sis and sis_no_comments=='':
+                    self.add_error('sis_no_comments', msg)
+                
+                antecedents = cleaned_data.get('antecedents')
+                if antecedents=='':
+                    self.add_error('antecedents', msg)
+                
+                family_situation = cleaned_data.get('family_situation')
+                if family_situation=='':
+                    self.add_error('family_situation', msg)
+                
+                health_situation = cleaned_data.get('health_situation')
+                if health_situation=='':
+                    self.add_error('health_situation', msg)
+                
+                economic_situation = cleaned_data.get('economic_situation')
+                if economic_situation=='':
+                    self.add_error('economic_situation', msg)
+                
+                general_comments = cleaned_data.get('general_comments')
+                if general_comments=='':
+                    self.add_error('general_comments', msg)
+                
+                housing_situation = cleaned_data.get('housing_situation')
+                if housing_situation=='':
+                    self.add_error('housing_situation', msg)
+                
+                visitors_allowed = cleaned_data.get('visitors_allowed')
+                visitors_allowed_no_comments = cleaned_data.get('visitors_allowed_no_comments')
+                if not visitors_allowed and visitors_allowed_no_comments=='':
+                    self.add_error('visitors_allowed_no_comments', msg)
+                
+                social_diagnosis = cleaned_data.get('social_diagnosis')
+                if social_diagnosis=='':
+                    self.add_error('social_diagnosis', msg)
+                
+                recommendation = cleaned_data.get('recommendation')
+                if recommendation=='':
+                    self.add_error('recommendation', msg)
+
+
+
+
+
+
+
+

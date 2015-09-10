@@ -20,7 +20,7 @@ def index(request, child_id):
 		'child_id': child_id,
 		'DentalExams': dental_exam_list,
 		'MedicalExamPart1s': medical_exam_part_1_list,
-		'MedicalExamsPart2s': medical_exam_part_2_list,
+		'MedicalExamPart2s': medical_exam_part_2_list,
 		'PsychologicalExams': psychological_exam_list,
 		'SocialExams': social_exam_list,		
 	}
