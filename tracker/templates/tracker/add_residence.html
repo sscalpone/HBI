@@ -1,0 +1,26 @@
+{% extends 'two-column.html' %}
+
+{% block title %}Añadir Nueva Casa{% endblock %}
+
+{% block sidebar %}
+	<ul>
+		<a href=""><li>Cerrar sesión</li></a>
+		<a href="{% url 'tracker:residences' %}"><li>Welcome</li></a>
+		<a href=""><li class="selected">Añadir Nueva Casa</li></a>
+	</ul>
+{% endblock %}
+
+{% block content %}
+
+    <h2>Añadir Nueva Casa</h2>
+    {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+
+    <form action="{% url 'tracker:add_residence' %}" enctype="multipart/form-data" method="post">
+        {% csrf_token %}
+        <ul>
+        	{{ form }}
+  	    
+            <li><input type="submit" value="Enviar" /></li>
+        </ul>
+    </form>
+{% endblock %}

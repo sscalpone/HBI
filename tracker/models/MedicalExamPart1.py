@@ -1,22 +1,20 @@
+# coding=utf-8
+
 import datetime
+
+from django.contrib.auth.models import User
+from django.db import models
+from django.forms import ModelForm
+from django.forms import RadioSelect
 
 from Child import Child
 from Signature import Signature
 
-from django.db import models
-
-from django.contrib.auth.models import User
-
-from django.core.exceptions import ValidationError
-
-from django.forms import ModelForm
-from django.forms import RadioSelect
-
 class MedicalExamPart1(models.Model):
     child = models.ForeignKey(Child)
     date = models.DateField()
-    background_notes = models.TextField()
-    birth_history = models.TextField()
+    background_notes = models.TextField(blank=True, null=True)
+    birth_history = models.TextField(blank=True, null=True)
     bcg_vaccine = models.BooleanField(default=False)
     bcg_vaccine_date = models.DateField(blank=True, null=True)
     polio_vaccine = models.BooleanField(default=False)
@@ -35,8 +33,8 @@ class MedicalExamPart1(models.Model):
     hpv_vaccine_date = models.DateField(blank=True, null=True)
     pneumococcal_vaccine = models.BooleanField(default=False)
     pneumococcal_vaccine_date = models.DateField(blank=True, null=True)
-    weight = models.FloatField()
-    height = models.FloatField()
+    weight = models.FloatField(blank=True, null=True)
+    height = models.FloatField(blank=True, null=True)
     hemoglobin_normal = models.BooleanField(default=False)
     hemoglobin_notes = models.TextField(blank=True, null=True)
     elisa_vh1_positive = models.BooleanField(default=False)
@@ -174,7 +172,7 @@ class MedicalExamPart1Form(ModelForm):
             'hepatitisB_positive': RadioSelect(choices=((True, 'Positivo'),(False, 'Negativo'))),
             'PPD_positive': RadioSelect(choices=((True, 'Positivo'),(False, 'Negativo'))),
             'stool_parasites_positive': RadioSelect(choices=((True, 'Positivo'),(False, 'Negativo'))),
-            'leukocytes_normal': RadioSelect(choices=((True, 'Aormal'),(False, 'Normal'))),
+            'leukocytes_normal': RadioSelect(choices=((True, 'Anormal'),(False, 'Normal'))),
             'nitrites_normal': RadioSelect(choices=((True, 'Anormal'),(False, 'Normal'))),
             'urobilinogen_normal': RadioSelect(choices=((True, 'Anormal'),(False, 'Normal'))),
             'protein_normal': RadioSelect(choices=((True, 'Anormal'),(False, 'Normal'))),
@@ -183,98 +181,122 @@ class MedicalExamPart1Form(ModelForm):
             'glucose_normal': RadioSelect(choices=((True, 'Anormal'),(False, 'Normal'))),
         }
 
+    def __init__(self, *args, **kwargs):
+        self.request = kwargs.pop('request', None)
+        super(MedicalExamPart1Form, self).__init__(*args, **kwargs)
+
     def clean(self):
         msg = "This field is required."
         cleaned_data = super(MedicalExamPart1Form, self).clean()
-         
-        bcg_vaccine = cleaned_data.get('bcg_vaccine')
-        bcg_vaccine_date = cleaned_data.get('bcg_vaccine_date')
-        if bcg_vaccine and bcg_vaccine_date is None:
-            self.add_error('bcg_vaccine_date', msg)
 
-        polio_vaccine = cleaned_data.get('polio_vaccine')
-        polio_vaccine_date = cleaned_data.get('polio_vaccine_date')
-        if polio_vaccine and polio_vaccine_date is None:
-            self.add_error('polio_vaccine_date', msg)
+        if self.request.method=='POST':
+            if 'submit' in self.request.POST:
 
-        dpt_vaccine = cleaned_data.get('dpt_vaccine')
-        dpt_vaccine_date = cleaned_data.get('dpt_vaccine_date')
-        if dpt_vaccine and dpt_vaccine_date is None:
-            self.add_error('dpt_vaccine_date', msg)
+                background_notes = cleaned_data.get('background_notes')
+                if background_notes=='':
+                    self.add_error('background_notes', msg)
 
-        hepatitis_b_vaccine = cleaned_data.get('hepatitis_b_vaccine')
-        hepatitis_b_vaccine_date = cleaned_data.get('hepatitis_b_vaccine_date')
-        if hepatitis_b_vaccine and hepatitis_b_vaccine_date is None:
-            self.add_error('hepatitis_b_vaccine_date', msg)
+                birth_history = cleaned_data.get('birth_history')
+                if birth_history=='':
+                    self.add_error('birth_history', msg)
 
-        flu_vaccine = cleaned_data.get('flu_vaccine')
-        flu_vaccine_date = cleaned_data.get('flu_vaccine_date')
-        if flu_vaccine and flu_vaccine_date is None:
-            self.add_error('flu_vaccine_date', msg)
+                weight = cleaned_data.get('weight')
+                if weight is None:
+                    self.add_error('weight', msg)
 
-        yellow_fever_vaccine = cleaned_data.get('yellow_fever_vaccine')
-        yellow_fever_vaccine_date = cleaned_data.get('yellow_fever_vaccine_date')
-        if yellow_fever_vaccine and yellow_fever_vaccine_date is None:
-            self.add_error('yellow_fever_vaccine_date', msg)
+                height = cleaned_data.get('height')
+                if height is None:
+                    self.add_error('height', msg)
 
-        spr_vaccine = cleaned_data.get('spr_vaccine')
-        spr_vaccine_date = cleaned_data.get('spr_vaccine_date')
-        if spr_vaccine and spr_vaccine_date is None:
-            self.add_error('spr_vaccine_date', msg)
 
-        hpv_vaccine = cleaned_data.get('hpv_vaccine')
-        hpv_vaccine_date = cleaned_data.get('hpv_vaccine_date')
-        if hpv_vaccine and hpv_vaccine_date is None:
-            self.add_error('hpv_vaccine_date', msg)        
-        
-        pneumococcal_vaccine = cleaned_data.get('pneumococcal_vaccine')
-        pneumococcal_vaccine_date = cleaned_data.get('pneumococcal_vaccine_date')
-        if pneumococcal_vaccine and pneumococcal_vaccine_date is None:
-            self.add_error('pneumococcal_vaccine_date', msg)
+                bcg_vaccine = cleaned_data.get('bcg_vaccine')
+                bcg_vaccine_date = cleaned_data.get('bcg_vaccine_date')
+                if bcg_vaccine and bcg_vaccine_date is None:
+                    self.add_error('bcg_vaccine_date', msg)
 
-        # hemoglobin_normal = cleaned_data.get('hemoglobin_normal')
-        # hemoglobin_notes = cleaned_data.get('hemoglobin_notes')
-        # if hemoglobin_normal and hemoglobin_notes is None:
-        #     self.add_error('hemoglobin_notes', msg)
+                polio_vaccine = cleaned_data.get('polio_vaccine')
+                polio_vaccine_date = cleaned_data.get('polio_vaccine_date')
+                if polio_vaccine and polio_vaccine_date is None:
+                    self.add_error('polio_vaccine_date', msg)
 
-        stool_parasites_positive = cleaned_data.get('stool_parasites_positive')
-        stool_parasites_notes = cleaned_data.get('stool_parasites_notes')
-        if stool_parasites_positive and stool_parasites_notes is None:
-            self.add_error('stool_parasites_notes', msg)
+                dpt_vaccine = cleaned_data.get('dpt_vaccine')
+                dpt_vaccine_date = cleaned_data.get('dpt_vaccine_date')
+                if dpt_vaccine and dpt_vaccine_date is None:
+                    self.add_error('dpt_vaccine_date', msg)
 
-        # leukocytes_normal = cleaned_data.get('leukocytes_normal')
-        # leukocytes_notes = cleaned_data.get('leukocytes_notes')
-        # if leukocytes_normal and leukocytes_notes is None:
-        #     self.add_error('leukocytes_notes', msg)
+                hepatitis_b_vaccine = cleaned_data.get('hepatitis_b_vaccine')
+                hepatitis_b_vaccine_date = cleaned_data.get('hepatitis_b_vaccine_date')
+                if hepatitis_b_vaccine and hepatitis_b_vaccine_date is None:
+                    self.add_error('hepatitis_b_vaccine_date', msg)
 
-        # nitrites_normal = cleaned_data.get('nitrites_normal')
-        # nitrites_notes = cleaned_data.get('nitrites_notes')
-        # if nitrites_normal and nitrites_notes is None:
-        #     self.add_error('nitrites_notes', msg)
+                flu_vaccine = cleaned_data.get('flu_vaccine')
+                flu_vaccine_date = cleaned_data.get('flu_vaccine_date')
+                if flu_vaccine and flu_vaccine_date is None:
+                    self.add_error('flu_vaccine_date', msg)
 
-        # urobilinogen_normal = cleaned_data.get('urobilinogen_normal')
-        # urobilinogen_notes = cleaned_data.get('urobilinogen_notes')
-        # if urobilinogen_normal and urobilinogen_notes is None:
-        #     self.add_error('urobilinogen_notes', msg)
+                yellow_fever_vaccine = cleaned_data.get('yellow_fever_vaccine')
+                yellow_fever_vaccine_date = cleaned_data.get('yellow_fever_vaccine_date')
+                if yellow_fever_vaccine and yellow_fever_vaccine_date is None:
+                    self.add_error('yellow_fever_vaccine_date', msg)
 
-        # protein_normal = cleaned_data.get('protein_normal')
-        # protein_notes = cleaned_data.get('protein_notes')
-        # if protein_normal and protein_notes is None:
-        #     self.add_error('protein_notes', msg)
+                spr_vaccine = cleaned_data.get('spr_vaccine')
+                spr_vaccine_date = cleaned_data.get('spr_vaccine_date')
+                if spr_vaccine and spr_vaccine_date is None:
+                    self.add_error('spr_vaccine_date', msg)
 
-        # pH_normal = cleaned_data.get('pH_normal')
-        # pH_notes = cleaned_data.get('pH_notes')
-        # if pH_normal and pH_notes is None:
-        #     self.add_error('pH_notes', msg)
+                hpv_vaccine = cleaned_data.get('hpv_vaccine')
+                hpv_vaccine_date = cleaned_data.get('hpv_vaccine_date')
+                if hpv_vaccine and hpv_vaccine_date is None:
+                    self.add_error('hpv_vaccine_date', msg)        
+                
+                pneumococcal_vaccine = cleaned_data.get('pneumococcal_vaccine')
+                pneumococcal_vaccine_date = cleaned_data.get('pneumococcal_vaccine_date')
+                if pneumococcal_vaccine and pneumococcal_vaccine_date is None:
+                    self.add_error('pneumococcal_vaccine_date', msg)
 
-        # density_normal = cleaned_data.get('density_normal')
-        # density_notes = cleaned_data.get('density_notes')
-        # if density_normal and density_notes is None:
-        #     self.add_error('density_notes', msg)
+                hemoglobin_normal = cleaned_data.get('hemoglobin_normal')
+                hemoglobin_notes = cleaned_data.get('hemoglobin_notes')
+                if hemoglobin_normal and hemoglobin_notes=='':
+                    self.add_error('hemoglobin_notes', msg)
 
-        # glucose_normal = cleaned_data.get('glucose_normal')
-        # glucose_notes = cleaned_data.get('glucose_notes')
-        # if glucose_normal and glucose_notes is None:
-        #     self.add_error('glucose_notes', msg)
+                stool_parasites_positive = cleaned_data.get('stool_parasites_positive')
+                stool_parasites_notes = cleaned_data.get('stool_parasites_notes')
+                if stool_parasites_positive and stool_parasites_notes=='':
+                    self.add_error('stool_parasites_notes', msg)
+
+                leukocytes_normal = cleaned_data.get('leukocytes_normal')
+                leukocytes_notes = cleaned_data.get('leukocytes_notes')
+                if leukocytes_normal and leukocytes_notes=='':
+                    self.add_error('leukocytes_notes', msg)
+
+                nitrites_normal = cleaned_data.get('nitrites_normal')
+                nitrites_notes = cleaned_data.get('nitrites_notes')
+                if nitrites_normal and nitrites_notes=='':
+                    self.add_error('nitrites_notes', msg)
+
+                urobilinogen_normal = cleaned_data.get('urobilinogen_normal')
+                urobilinogen_notes = cleaned_data.get('urobilinogen_notes')
+                if urobilinogen_normal and urobilinogen_notes=='':
+                    self.add_error('urobilinogen_notes', msg)
+
+                protein_normal = cleaned_data.get('protein_normal')
+                protein_notes = cleaned_data.get('protein_notes')
+                if protein_normal and protein_notes=='':
+                    self.add_error('protein_notes', msg)
+
+                pH_normal = cleaned_data.get('pH_normal')
+                pH_notes = cleaned_data.get('pH_notes')
+                if pH_normal and pH_notes=='':
+                    self.add_error('pH_notes', msg)
+
+                density_normal = cleaned_data.get('density_normal')
+                density_notes = cleaned_data.get('density_notes')
+                if density_normal and density_notes=='':
+                    self.add_error('density_notes', msg)
+
+                glucose_normal = cleaned_data.get('glucose_normal')
+                glucose_notes = cleaned_data.get('glucose_notes')
+                if glucose_normal and glucose_notes=='':
+                    self.add_error('glucose_notes', msg)
 
 

@@ -18,7 +18,7 @@ def login(request):
     if user is not None:
         if user.is_active:
             auth_login(request, user)
-            return HttpResponseRedirect(reverse('tracker:children'))
+            return HttpResponseRedirect(reverse('tracker:residences'))
         else:
             # Return a 'disabled account' error message
             return render(request, 'tracker/index.html', {

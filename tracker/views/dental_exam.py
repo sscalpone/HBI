@@ -26,17 +26,22 @@ def index(request, child_id):
 def new(request, child_id):
     child = get_object_or_404(Child, pk=child_id)
     if request.method == 'POST':
-        signature_form = SignatureForm(request.POST, request.FILES)
-        dental_exam_form = DentalExamForm(request.POST, request.FILES)
-        if signature_form.is_valid() and dental_exam_form.is_valid():
-            signature = signature_form.save()
-            if signature:
-                dental_exam = dental_exam_form.save(commit=False)
-                dental_exam.signature = signature
-                dental_exam.child = child
-                dental_exam.save()
-                dental_exam_form.save_m2m()
-                return HttpResponseRedirect(reverse('tracker:child', kwargs={'child_id': child_id}))  
+        signature_form = SignatureForm(request.POST, request.FILES, request=request)
+        dental_exam_form = DentalExamForm(request.POST, request.FILES, request=request)
+        if 'discard' in request.POST:
+            return HttpResponseRedirect(reverse('tracker:child', kwargs={'child_id': child_id}))
+
+        else:
+            if signature_form.is_valid() and dental_exam_form.is_valid():
+                signature = signature_form.save()
+                if signature:
+                    dental_exam = dental_exam_form.save(commit=False)
+                    dental_exam.signature = signature
+                    dental_exam.child = child
+                    dental_exam.save()
+                    dental_exam_form.save_m2m()
+                    return HttpResponseRedirect(reverse('tracker:child', kwargs={'child_id': child_id}))  
+        
     else:
         dental_exam_form = DentalExamForm(initial={
                 'child': child,

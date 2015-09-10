@@ -1,18 +1,35 @@
-{% extends 'child-screen.html' %}
+{% extends 'two-column.html' %}
 
 {% block title %}Información General{% endblock %}
 
+{% block sidebar %}
+    <ul>
+        <a href=""><li>Cerrar sesión</li></a>
+        <a href="{% url 'tracker:residences' %}"><li>Bienvenidos</li></a>
+        <a href="{% url 'tracker:children' %}"><li>Detalle Orfanato</li></a>
+        <a href="{% url 'tracker:child' child_id %}"><li class="selected">Resumen Niño</li></a>
+        <li>Evaluaciones</li>
+        <span id="secondary">
+            <li><a href="{% url 'tracker:dental_exams' child_id %}">Evaluacíon e Informe Odontológico</a></li>
+            <li><a href="{% url 'tracker:medical_exam_part1s' child_id %}">Evaluacíon e Informe Médico / Parte 1</a></li>
+            <li><a href="{% url 'tracker:medical_exam_part2s' child_id %}">Evaluacíon e Informe Médico / Parte 2</a></li>
+            <li><a href="{% url 'tracker:psychological_exams' child_id %}">Evaluacíon e Informe Psicológico</a></li>
+            <li><a href="{% url 'tracker:social_exams' child_id %}">Evaluacíon e Informe Social</a></li>
+        </span>
+    </ul>
+{% endblock %}
+
 {% block content %}
     <div class="child-info">
-        <h2><span>{{ child.first_name }} {{ child.last_name }}:</span> Información General</h2>
         <img src="{{ child.photo.url }}">
-        <dl>
-            <dt>Fecha de Naciemiento</dt><dd>{{ child.birthdate }}</dd>
-            <dt>Años</dt><dd>{{ child.age }}</dd>
-            <dt>Casa Girasoles</dt><dd>{{ child.residence.residence_name }}</dd>
-            <dt>Fecha de Ingreso</dt><dd>{{ child.intake_date }}</dd>
-            <dt>Lugar de Naciemiento</dt><dd>{{ child.birthplace }}</dd>
-        </dl>
+        <ul>
+            <li><span>Nombre:</span> {{ child.first_name }} {{ child.last_name }}</li>
+            <li><span>Fecha de Naciemiento:</span> {{ child.birthdate }}</li>
+            <li><span>Años:</span> {{ child.age }}</li>
+            <li><span>Casa Girasoles:</span> {{ child.residence.residence_name }}</li>
+            <li><span>Fecha de Ingreso:</span> {{ child.intake_date }}</li>
+            <li><span>Lugar de Naciemiento:</span> {{ child.birthplace }}</li>
+        </ul>
     </div>
     <div id="child-view-lists">
         <div>

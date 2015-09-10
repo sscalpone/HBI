@@ -26,8 +26,8 @@ def index(request, child_id):
 def new(request, child_id):
     child = get_object_or_404(Child, pk=child_id)
     if request.method == 'POST':
-        signature_form = SignatureForm(request.POST, request.FILES)
-        medical_exam_part1_form = MedicalExamPart1Form(request.POST, request.FILES)
+        signature_form = SignatureForm(request.POST, request.FILES, request=request)
+        medical_exam_part1_form = MedicalExamPart1Form(request.POST, request.FILES, request=request)
         if signature_form.is_valid() and medical_exam_part1_form.is_valid():
             signature = signature_form.save()
             if signature:

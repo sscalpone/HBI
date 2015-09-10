@@ -1,0 +1,307 @@
+html {
+  font-family: "Lucida Grande", 
+               "DejaVu Sans", 
+               "Bitstream Vera Sans", 
+               Verdana, Arial, sans-serif;
+  background: #b8a079;
+}
+
+h1 {
+  font-size: 2.3em;
+}
+
+h2 {
+  font-size: 2em;
+}
+
+.two-column h2 {
+  margin-bottom: 10px;
+  padding-right: 10px;
+}
+
+h2 span {
+  font-weight: bold;
+}
+
+ol li {
+  list-style: decimal-leading-zero inside;
+}
+
+img {
+  width: 100%;
+}
+
+#header {
+  background: #4A2E20;
+  padding: 1em;
+  color: #ffffff;
+}
+
+#menu {
+  background: #bfa98c;
+  border-bottom: 1px #4A2E20 solid;
+  padding: 10px;
+}
+
+#content {
+  padding: 2em;
+  background: #b8a079;
+}
+
+.button a, input[type="submit"] {
+  display: inline-block;
+  border: 1px solid #333;
+  border-radius: 1em;
+  padding: 5px 10px;
+  margin: 0.33em;
+  background: #ddd;
+  text-decoration: none;
+  color: #000;
+}
+
+/************************
+CHILDREN GRID LIST STYLES 
+*************************/
+
+.grid-list li img.green {
+  border: 4px #2e804d solid;
+}
+
+.grid-list li img.yellow {
+  border: 4px #eadf39 solid;
+}
+
+.grid-list li img.red {
+  border: 4px #ec1a15 solid;
+}
+
+.grid-list li {
+  float: left;
+  width: 20%;
+  margin: 10px 2.5%;
+  text-align: center;
+  font-size: 1.5em;
+}
+
+.grid-list img {
+  max-width: 300px;
+}
+
+/******************
+TWO-COLUMN AND SIDEBAR STYLES
+******************/
+
+.two-column {
+  display: block;
+  height: 100%;
+  background: #4A2E20;
+  background: linear-gradient(#4A2E20, #5d3b26);
+}
+
+.two-column #content {
+  float: left;
+  width: 69%;
+  padding: 0;
+  padding-left: 1%;
+  margin: 0;
+}
+
+.two-column #sidebar {
+  float: left;
+  width: 30%;
+  background: #4A2E20;
+  padding: 10px 0;
+
+}
+
+.two-column #sidebar ul {
+  margin-right: 5%;
+  padding: 0;
+
+}
+
+.two-column #sidebar ul li {
+  line-height: 2em;
+  text-align: right;
+}
+
+.two-column #sidebar ul li a {
+  color: #fff;
+}
+
+/****************
+CHILD VIEW STYLES
+*****************/
+
+.child-info {
+  display: block;
+  
+}
+
+.child-info img {
+  border-radius: 1px;
+  border: 1px #4A2E20 solid;
+  width: 30%;  
+  min-width: 220px;    
+  max-width: 300px;
+}
+
+.child-info, .form-info {
+  margin: 0;
+
+}
+
+.child-info dt, .form-info dt {
+  padding-bottom: 3px;
+}
+
+.child-info dd, .form-info dd {
+  border-radius: 1em;
+  padding: 0.33em 0.66em;
+  border: 1px #4A2E20 solid;
+  margin-bottom: 5px;
+  display: inline-block;
+}
+
+#child-view-lists {
+  padding-right: 10px;
+  padding-top: 15px;
+}
+
+#child-view-lists ol {
+  padding: 5px 0 10px 0;
+}
+
+#child-view-lists h3 {
+  font-size: 1.1em;
+  font-weight: bold;
+}
+
+#child-view-lists a {
+  color: #000;
+}
+
+#child-view-lists li {
+  padding: 2px 0;
+}
+
+/* FOR SCREENS WIDER THAN 600PX */
+@media screen and (min-width: 600px) {
+  .child-info dl {
+    margin-left: 225px;
+  }
+  .child-info {
+    min-height: 332px;
+  }
+  .child-info img {
+    float: left;
+  }
+  #child-view-lists div {
+    float: left;
+    width: 33%;
+  }
+
+  #child-view-lists h3 {
+    padding-right: 5px;
+  }
+}
+
+/* FOR SCREENS WIDER THAN 950PX */
+@media screen and (min-width: 950px) {
+  #child-view-lists div {
+    width: 20%;
+  }
+}
+
+/* FOR SCREENS WIDER THAN 600PX */
+@media screen and (min-width: 1050px) {
+  .child-info dl {
+    margin-left: 31%;
+  }
+}
+
+/*************
+FORM STYLES
+*************/
+
+form {
+    display: block;
+}
+
+form ul {
+  margin: 0 10%;
+}
+.two-column form ul {
+  margin: 0;
+}
+
+form ul li {
+    margin-bottom: 3px;
+}
+
+form label {
+  margin-top: 5px;
+  display: inline-block;
+}
+
+form input[type="text"], 
+form textarea, 
+form input[type="number"] {
+    display: block;
+}
+
+form input[type="text"], 
+form input[type="password"], 
+form input[type="number"],
+form textarea {
+  outline: none;
+  background: transparent;
+  border-radius: 1em;
+  padding: 5px ;
+  margin: 3px;
+  border: 1px #4A2E20 solid;
+  width: 100%;
+  font-size: 1em;
+}
+
+.two-column form input[type="text"], 
+.two-column form input[type="password"], 
+.two-column form input[type="number"],
+.two-column form textarea {
+  width: 70%;
+}
+
+form textarea {
+  height: 4em;
+}
+
+form input[type="text"]:focus, 
+form input[type="password"]:focus, 
+form input[type="number"]:focus,
+form textarea:focus {
+  border: 4px #4A2E20 solid;
+  background: #bfa98c;
+}
+
+form input[type="submit"] {
+  font-size: 1.5em;
+  padding: 5px 15px;
+  margin-top: 10px;
+}
+
+/*********************
+LIST STYLES
+**********************/
+
+.exam-list h3 {
+  display: none;
+}
+
+.exam-list li {
+  font-size: 1.3em;
+  padding: 0 0 3px;
+}
+
+.exam-list a {
+  color: #000;
+}

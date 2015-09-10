@@ -1,16 +1,9 @@
 from BasicInfo import BasicInfo
-from Child import Child
-from ChildForm import ChildForm
+from Child import Child, ChildForm
 from DentalExam import DentalExam, DentalExamForm
 from MedicalExamPart1 import MedicalExamPart1, MedicalExamPart1Form
-from MedicalExamPart2 import MedicalExamPart2
-from MedicalExamPart2Form import MedicalExamPart2Form
-from MedicalExamPart2 import MedicalExamDiagnosis
-from PsychologicalExam import PsychologicalExam
-from PsychologicalExam import PsychologicalExamDiagnosis
-from PsychologicalExamForm import PsychologicalExamForm
-from Residence import Residence
-from SocialExam import SocialExam
-from SocialExamForm import SocialExamForm
-from Signature import Signature
-from SignatureForm import SignatureForm
+from MedicalExamPart2 import MedicalExamPart2, MedicalExamPart2Form, MedicalExamDiagnosis
+from PsychologicalExam import PsychologicalExam, PsychologicalExamDiagnosis, PsychologicalExamForm
+from Residence import Residence, ResidenceForm
+from SocialExam import SocialExam, SocialExamForm
+from Signature import Signature, SignatureForm

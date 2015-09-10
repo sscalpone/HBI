@@ -1,18 +1,18 @@
+# coding=utf-8
+
 import datetime
+
+from django.contrib.auth.models import User
+from django.db import models
+from django.forms import ModelForm
 
 from Child import Child
 from Signature import Signature
 
-from django.db import models
-
-from django.contrib.auth.models import User
-
-from django.forms import ModelForm
-
 class DentalExam(models.Model):
     child = models.ForeignKey(Child)
     date = models.DateField()
-    recommendation = models.TextField()
+    recommendation = models.TextField(blank=True, null=True)
 
     class Meta:
         app_label = 'tracker'
@@ -37,4 +37,20 @@ class DentalExamForm(ModelForm):
             'date': 'Fecha',
             'recommendation': 'Recomendaciones',
         }
+
+    def __init__(self, *args, **kwargs):
+        self.request = kwargs.pop('request', None)
+        super(DentalExamForm, self).__init__(*args, **kwargs)
+
+    def clean(self):
+        msg = "This field is required."
+        cleaned_data = super(DentalExamForm, self).clean()
+
+        if self.request.method == 'POST':
+            recommendation = cleaned_data.get('recommendation')
+            if 'submit' in self.request.POST:
+                if recommendation=='':
+                    self.add_error('recommendation', msg)
+
+
 

@@ -16,16 +16,16 @@
         </header>
         <div id="border"></div>
 
-        <div id="menu">
-            {% block menu %}{% endblock %}
-        </div>
-
-        <div class="two-column">
+        <div class="three-column">
             <div id="sidebar">
                 {% block sidebar %}
                  <ul>
                     <li>Ohai! I'm a menu item.</li>
                 </ul>
+                {% endblock %}
+            </div>
+            <div id="details">
+                {% block details %}
                 {% endblock %}
             </div>
             <div id="content">

@@ -1,8 +1,10 @@
+# coding=utf-8
+
 import datetime
 
-from django.db import models
-
 from django.contrib.auth.models import User
+from django.db import models
+from django.forms import ModelForm
 
 class Residence(models.Model):
     residence_name = models.CharField(max_length=200)
@@ -14,3 +16,12 @@ class Residence(models.Model):
         app_label = 'tracker'
         db_table = 'tracker_residence'
 
+class ResidenceForm(ModelForm):
+	class Meta:
+		model = Residence
+		fields = (
+			'residence_name',
+			)
+		labels = {
+			'residence_name': 'Casa Girasoles',
+			}

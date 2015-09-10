@@ -1,14 +1,25 @@
-{% extends 'base.html' %}
+{% extends 'two-column.html' %}
 
 {% block title %}¿Cuál Casa?{% endblock %}
 
+{% block sidebar %}
+	<ul>
+		<a href=""><li>Cerrar sesión</li></a>
+		<a href="{% url 'tracker:residences' %}" ><li class="selected">Bienvenidos</li></a>
+		<a href="{% url 'tracker:add_residence' %}"><li>Añadir Nueva Casa</li></a>
+	</ul>
+{% endblock %}
+
 {% block content %}
-<form action="{% url 'tracker:residence' %}" method="post">
-{% csrf_token %}
-{% for choice in residence_list %}
-	<input type="radio" name="choice" id="choice{{ forloop.counter }}" value="{{ choice.id }}" />
-	<label for="choice{{ forloop.counter }}">{{ choice.residence_text }}</label><br />
-{% endfor %}
-<input type="submit" value="Residence" />
+<form action="{% url 'tracker:children' %}" method="post">
+	{% csrf_token %}
+	{% for choice in residences %}
+	<ul>
+		<li><input type="radio" name="choice" id="choice{{ forloop.counter }}" value="{{ choice.id }}" />
+		<label for="choice{{ forloop.counter }}">{{ choice.residence_name }}</label><br /></li>
+	
+	{% endfor %}
+		<li><input type="submit" value="Residencia" /></li>
+	</ul>
 </form>
 {% endblock %}

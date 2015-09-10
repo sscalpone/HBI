@@ -1,19 +1,21 @@
+# coding=utf-8
+
 import datetime
+
+from django.contrib.auth.models import User
+from django.db import models
+from django.forms import ModelForm
 
 from Residence import Residence
 
-from django.db import models
-
-from django.contrib.auth.models import User
-
 class Child(models.Model):
     residence = models.ForeignKey(Residence)
-    first_name = models.CharField(max_length=200)
-    last_name = models.CharField(max_length=200)
-    birthdate = models.DateField()
-    birthplace = models.CharField(max_length=200)
-    intake_date = models.DateField()
-    photo = models.ImageField(upload_to='photos')
+    first_name = models.CharField(max_length=200, null=True)
+    last_name = models.CharField(max_length=200, null=True)
+    birthdate = models.DateField(null=True)
+    birthplace = models.CharField(max_length=200, null=True)
+    intake_date = models.DateField(null=True)
+    photo = models.ImageField(upload_to='photos', null=True)
 
     class Meta:
         app_label = 'tracker'
@@ -39,4 +41,27 @@ class Child(models.Model):
             if to_date < anniversary:
                 computed_age -= 1
         return computed_age
+
+
+class ChildForm(ModelForm):
+    class Meta:
+        model = Child
+        fields = (
+            'residence',
+            'first_name',
+            'last_name',
+            'birthdate',
+            'birthplace',
+            'intake_date',
+            'photo',
+        )
+        labels = {
+            'residence': 'Casa Girasoles',
+            'first_name': 'Nombres',
+            'last_name': 'Apellidos',
+            'birthdate': 'Fecha de Naciemiento',
+            'birthplace': 'Lugar de Naciemiento',
+            'intake_date': 'Fecha de Ingreso',
+            'photo': 'Fotografía',
+        }
 

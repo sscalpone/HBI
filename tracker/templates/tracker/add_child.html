@@ -1,8 +1,17 @@
-{% extends 'base.html' %}
+{% extends 'two-column.html' %}
 
 {% block title %}Poner un Niño{% endblock %}
 
-{% block menu %}<span class="button"><a href="{% url 'tracker:children' %}">Volver a la lista de los niños...</a></span>{% endblock %}
+{% block sidebar %}
+	<ul>
+		<a href=""><li>Cerrar sesión</li></a>
+		<a href="{% url 'tracker:residences' %}"><li>Welcome</li></a>
+		<a href=""><li>Detalle Orfanato</li></a>
+		<a href="{% url 'tracker:add_child' %}"><li class="selected">Añadir Nuevo Niño</li></a>
+		<a href="{% url 'tracker:children' %}"><li>Volver a la lista de los niños</li></a>
+	</ul>
+
+{% endblock %}
 
 {% block content %}
 
@@ -13,7 +22,8 @@
         {% csrf_token %}
         <ul>
         	{{ form }}
-  	    </ul>
-        <input type="submit" value="Enviar" />
+  	    
+        	<li><input type="submit" value="Enviar" /></li>
+    	</ul>
     </form>
 {% endblock %}
