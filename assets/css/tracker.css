@@ -198,6 +198,17 @@ CHILDREN LIST STYLES
   font-size: 1.5em;
 }
 
+#children-list #add-new-child span {
+  font-size: .8em;
+}
+
+#children-list #add-new-child div {
+  height: 100px;
+  border: 4px #666 solid;
+  font-size: 4em;
+  color: #666;
+}
+
 /*********************************
 TWO-COLUMN and THREE-COLUMN STYLES
 *********************************/
@@ -286,7 +297,7 @@ CHILD PAGE STYLES
 }
 
 #sidebar #secondary li {
-  border-left: none;
+  /*border-left: none;*/
   padding-left: 10px;
   font-size: .8em;
 }

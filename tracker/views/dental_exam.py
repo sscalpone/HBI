@@ -53,6 +53,7 @@ def new(request, child_id):
     context = {
         'child': child,
         'child_id': child_id,
+        'residence_id': child.residence_id,
         'dental_exam_form': dental_exam_form.as_ul,
         'signature_form': signature_form.as_ul,
     }
@@ -64,6 +65,7 @@ def view(request, child_id, exam_id):
     context = {
         'exam': p,
         'child': child,
-        'child_id': child.id
+        'child_id': child.id,
+        'residence_id': child.residence_id,
     }
     return render(request, 'tracker/dental_exam.html', context)

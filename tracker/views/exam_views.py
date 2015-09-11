@@ -10,6 +10,8 @@ from tracker.models import SocialExam
 
 def index(request, child_id):
 	child = get_object_or_404(Child, pk=child_id)
+	residence_id = child.residence_id
+	print residence_id
 	dental_exam_list = DentalExam.objects.filter(child_id=child_id)
 	medical_exam_part_1_list = MedicalExamPart1.objects.filter(child_id=child_id)
 	medical_exam_part_2_list = MedicalExamPart2.objects.filter(child_id=child_id)
@@ -18,6 +20,7 @@ def index(request, child_id):
 	context = {
 		'child': child,
 		'child_id': child_id,
+		'residence_id': residence_id,
 		'DentalExams': dental_exam_list,
 		'MedicalExamPart1s': medical_exam_part_1_list,
 		'MedicalExamPart2s': medical_exam_part_2_list,

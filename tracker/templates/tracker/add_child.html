@@ -6,9 +6,7 @@
 	<ul>
 		<a href=""><li>Cerrar sesión</li></a>
 		<a href="{% url 'tracker:residences' %}"><li>Welcome</li></a>
-		<a href=""><li>Detalle Orfanato</li></a>
-		<a href="{% url 'tracker:add_child' %}"><li class="selected">Añadir Nuevo Niño</li></a>
-		<a href="{% url 'tracker:children' %}"><li>Volver a la lista de los niños</li></a>
+		<a href="{% url 'tracker:residence' residence_id %}"><li>Detalle Orfanato</li></a>
 	</ul>
 
 {% endblock %}
@@ -18,7 +16,7 @@
     <h2>Poner un Niño</h2>
     {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
 
-    <form action="{% url 'tracker:add_child' %}" enctype="multipart/form-data" method="post">
+    <form action="{% url 'tracker:add_child' residence_id %}" enctype="multipart/form-data" method="post">
         {% csrf_token %}
         <ul>
         	{{ form }}

@@ -14,11 +14,12 @@ urlpatterns = patterns('',
     # ex: /tracker/
     url(r'^$', main.index, name='index'),
     url(r'^login/$', main.login, name='login'),
+    
     url(r'^residences/$', residence.index, name='residences'),
     url(r'^residences/new/$', residence.new, name='add_residence'),
     url(r'^residence/(?P<residence_id>\d+)', residence.view, name='residence'),
-    url(r'^children/?', child.index, name='children'),
-    url(r'^child/new/$', child.new, name='add_child'),
+    
+    url(r'^child/new/(?P<residence_id>\d+)', child.new, name='add_child'),
     url(r'^child/(?P<child_id>\d+)', exam_views.index, name='child'),
 
     url(r'^dental_exam/(?P<child_id>\d+)/(?P<exam_id>\d+)', dental_exam.view, name='dental_exam'),

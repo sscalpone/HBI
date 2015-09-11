@@ -6,7 +6,7 @@
     <ul>
         <a href=""><li>Cerrar sesión</li></a>
         <a href="{% url 'tracker:residences' %}"><li>Bienvenidos</li></a>
-        <a href="{% url 'tracker:children' %}"><li>Detalle Orfanato</li></a>
+        <a href="{% url 'tracker:residence' residence_id %}"><li>Detalle Orfanato</li></a>
         <a href="{% url 'tracker:child' child_id %}"><li class="selected">Resumen Niño</li></a>
         <li>Evaluaciones</li>
         <span id="secondary">

@@ -8,8 +8,7 @@
 	<ul>
 		<a href=""><li>Cerrar sesión</li></a>
 		<a href="{% url 'tracker:residences' %}"><li>Welcome</li></a>
-		<a href=""><li class="selected">Detalle Orfanato</li></a>
-		<a href="{% url 'tracker:add_child' %}"><li>Añadir Nuevo Niño</li></a>
+		<a href="{% url 'tracker:residence' residence_id %}"><li class="selected">Detalle Orfanato</li></a>
 	</ul>
 
 {% endblock %}
@@ -29,8 +28,9 @@
 	    <h2>Elija un niño</h2>
 	    <ul>
 	    {% for child in children %}
-		    <li><a href="{% url 'tracker:child' child.id child.residence_id %}"><img class="red" src="{{ child.photo.url }}" /><p>{{ child.first_name }} {{ child.last_name }}</p></a></li>
+	    	<a href="{% url 'tracker:child' child.id %}"><li><img class="red" src="{{ child.photo.url }}">{{ child.first_name }} {{ child.last_name }}</li></a>
 	    {% endfor %}
+	    	<a href="{% url 'tracker:add_child' residence_id %}"><li id="add-new-child"><div>+</div><span>Añadir Nuevo Niño</span></li></a>
 	    </ul>
     </div>
 {% endblock %}

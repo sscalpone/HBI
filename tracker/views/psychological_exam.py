@@ -52,6 +52,7 @@ def new(request, child_id):
     context = {
         'child': child,
         'child_id': child_id,
+        'residence_id': child.residence_id,
         'psychological_exam_form': psychological_exam_form.as_ul,
         'signature_form': signature_form.as_ul,
     }
@@ -63,6 +64,7 @@ def view(request, child_id, exam_id):
     context = {
         'exam': p,
         'child': child,
-        'child_id': child.id
+        'child_id': child.id,
+        'residence_id': child.residence_id,
     }
     return render(request, 'tracker/psychological_exam.html', context)

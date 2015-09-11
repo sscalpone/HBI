@@ -11,15 +11,11 @@
 {% endblock %}
 
 {% block content %}
-<form action="{% url 'tracker:children' %}" method="post">
-	{% csrf_token %}
-	{% for choice in residences %}
 	<ul>
-		<li><input type="radio" name="choice" id="choice{{ forloop.counter }}" value="{{ choice.id }}" />
-		<label for="choice{{ forloop.counter }}">{{ choice.residence_name }}</label><br /></li>
+	{% for residence in residences %}
+		<a href="{% url 'tracker:residence' residence.id %}"><li>{{ residence.residence_name }}</li></a>
 	
 	{% endfor %}
-		<li><input type="submit" value="Residencia" /></li>
 	</ul>
-</form>
+
 {% endblock %}

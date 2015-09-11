@@ -8,6 +8,7 @@ from django.template import loader
 
 from tracker.models import Residence
 from tracker.models import ResidenceForm
+from tracker.models import Child
 
 def index(request):
     list_of_residences = Residence.objects.all()
@@ -30,13 +31,15 @@ def new(request):
 
 def view(request, residence_id):
     p = get_object_or_404(Residence, pk=residence_id)
-    try:
-        selected_choice = p.choice_set.get(pk=request.POST['choice'])
-    except (KeyError, Choice.DoesNotExist):
-        # Redisplay the residence choosing form.
-        return render(request, 'tracker/main.html', {
-            'poll' : p,
-            'error_message': "You didn't select a choice.",
-        })
-    else:
-        return HttpResponseRedirect(reverse('polls:results', args=(p.id,)))
+    children = Child.objects.filter(residence_id=residence_id)
+    context = {
+        'residence': p,
+        'children': children,
+        'residence_id': p.id,
+    }
+    return render(request, 'tracker/residence.html', context)
+
+
+
+
+
