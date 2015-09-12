@@ -17,11 +17,14 @@ def index(request):
 
 def new(request):
     if request.method == 'POST':
-        form = ResidenceForm(request.POST, request.FILES)
-        if form.is_valid():
-            saved_residence = form.save()
-            if saved_residence:
-                return HttpResponseRedirect(reverse('tracker:residences'))
+        form = ResidenceForm(request.POST, request.FILES, request=request)
+        if 'discard' in request.POST:
+            return HttpResponseRedirect(reverse('tracker:residences'))
+        else:
+            if form.is_valid():
+                saved_residence = form.save()
+                if saved_residence:
+                    return HttpResponseRedirect(reverse('tracker:residences'))
     else:
         form = ResidenceForm()
     context = {
@@ -32,10 +35,14 @@ def new(request):
 def view(request, residence_id):
     p = get_object_or_404(Residence, pk=residence_id)
     children = Child.objects.filter(residence_id=residence_id)
+    boys = Child.objects.filter(residence_id=residence_id).filter(gender='m')
+    girls = Child.objects.filter(residence_id=residence_id).filter(gender='f')
     context = {
         'residence': p,
         'children': children,
         'residence_id': p.id,
+        'boys': boys,
+        'girls': girls
     }
     return render(request, 'tracker/residence.html', context)
 

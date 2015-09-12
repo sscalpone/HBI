@@ -94,6 +94,11 @@ img {
   width: 100%;
 }
 
+a {
+  text-decoration: none;
+  color: #000;
+}
+
 .selected {
   background: #95bcf2 ;
 }
@@ -142,7 +147,7 @@ img {
   font-size: 1em;
 }
 
-#login input[type="submit"] {
+#login input[type="submit"], .add-new-exam {
   background: #fff;
   text-align: center;
   font-size: 1em;
@@ -151,32 +156,28 @@ img {
   box-shadow: 5px 5px 10px #000;
 }
 
-#login input[type="submit"]:active {
-  box-shadow: 0 0 0;
+.add-new-exam {
+  display: inline-block;
+  margin: 5px 0 15px;
 }
 
-@media screen and (min-width: 510px) {
-
-  #header {
-    min-height: 99px;
-  }
-
-  h1 {
-    font-size: 2.2em;
-    text-align: right;
-    margin-top: 25px;
-  }  
-  #logo {
-    display: inline-block;
-    width: 250px;
-    float: left;
-  }
-
+#login input[type="submit"]:active {
+  box-shadow: 0 0 0;
 }
 
 /************************
 CHILDREN LIST STYLES 
 *************************/
+
+/*.residences img {
+  width: 100px;
+}*/
+
+#children-list h3 {
+  text-align: center;
+  padding: 10px 0;
+  font-size: 1.7em;
+}
 
 #children-list ul li img.green {
   border: 4px #2e804d solid;
@@ -190,24 +191,37 @@ CHILDREN LIST STYLES
   border: 4px #ec1a15 solid;
 }
 
-#children-list ul li {
+#children-list ul li, #residences ul li {
   float: left;
+}
+
+#children-list ul li, #residences ul li {
   width: 100px;
   margin: 10px 2.5%;
   text-align: center;
   font-size: 1.5em;
 }
 
-#children-list #add-new-child span {
+.add-new span {
   font-size: .8em;
 }
 
-#children-list #add-new-child div {
+.add-new div, #residences img {
+  width: 100px;
   height: 100px;
   border: 4px #666 solid;
   font-size: 4em;
   color: #666;
 }
+
+/*.add-new-exam {
+  display: inline-block;
+  border: 1px #000 solid;
+  box-shadow: 5px 5px 10px #000;
+  border-radius: 5px;
+  margin-bottom: 15px;
+  padding: 4px;
+}*/
 
 /*********************************
 TWO-COLUMN and THREE-COLUMN STYLES
@@ -238,13 +252,13 @@ TWO-COLUMN and THREE-COLUMN STYLES
   padding-bottom: 10px;
 }
 
-.two-column #content, .three-column #children-list {
+.two-column #content, .three-column #children-list, #residences {
   display: block;
   width: 100%;
 }
 
 .two-column #content li {
-  padding: 10px;
+  padding: 5px;
 }
 
 .two-column #content label {
@@ -252,9 +266,15 @@ TWO-COLUMN and THREE-COLUMN STYLES
   width: 166px;
 }
 
-.two-column #content input[type="text"] {
+.two-column #content input[type="text"],
+.two-column #content textarea {
   font-size: 1em;
   padding: 4px;
+  border: 2px #666 solid;
+}
+
+.two-column #content textarea {
+  height: 100px;
 }
 
 .two-column #content #id_photo {
@@ -263,23 +283,24 @@ TWO-COLUMN and THREE-COLUMN STYLES
 
 .two-column #content input[type="submit"] {
   display: block;
+  width: 160px;
   background: #fff;
   text-align: center;
   font-size: 1em;
   padding: 0;
-  padding: 5px;
+  padding: 10px;
   box-shadow: 5px 5px 10px #000;
-  margin-left: auto;
-  margin-right: auto;
+  margin: 5px auto;
+}
+
+.two-column #content input[type="radio"] {
+  display: inline;
+  float: left;
 }
 
 /************************
 CHILD PAGE STYLES
 *************************/
-
-/*.child-info, #child-view-lists {
-  width: 79%;
-}*/
 
 .child-info img {
   display: block;
@@ -297,19 +318,46 @@ CHILD PAGE STYLES
 }
 
 #sidebar #secondary li {
-  /*border-left: none;*/
-  padding-left: 10px;
-  font-size: .8em;
+  border: none;
+  margin-left: 25px;
+  /*font-size: .8em;*/
 }
 
 #child-view-lists {
   padding-left: 10px;
 }
 
+
 /**********************
 MEDIA QUERIES
 **********************/
 
+@media screen and (min-width: 510px) {
+
+  #header {
+    min-height: 99px;
+  }
+
+  h1, h2 {
+    text-align: right;
+    margin-top: 25px;
+  }  
+
+  h1 {
+    font-size: 2.2em;
+  }
+
+  h2 {
+    font-size: 1.7em;
+  }
+
+  #logo {
+    display: inline-block;
+    width: 250px;
+    float: left;
+  }
+
+}
 
 @media screen and (min-width: 550px) {
 
@@ -336,15 +384,25 @@ MEDIA QUERIES
     display: block;
     text-align: left;
     border-bottom: 1px solid #000;
-    border-left: 1px solid #000;
   }
 
-  .two-column #content input[type="text"] {
+  .two-column #content input[type="text"],
+  .two-column #content textarea {
     width: 60%;
+  }
+
+  .two-column #content input[type="submit"] {
+    float: left;
+    margin: 10px 20px;
   }
 
   .child-info, #child-view-lists {
     width: 79%;
+  }
+
+  .child-info {
+    min-height: 200px;
+    padding-bottom: 10px;
   }
 
   .child-info img {
@@ -383,6 +441,19 @@ MEDIA QUERIES
   .child-info img {
     width: 200px;
     float: right;
+  }
+
+  .exam-list {
+    width: 150px;
+    float: left;
+  }
+
+  .exam-list h3 {
+    text-align: center;
+  }
+
+  .exam {
+    padding-left: 155px;
   }
 
 }

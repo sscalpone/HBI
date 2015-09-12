@@ -1,21 +1,32 @@
 {% extends 'two-column.html' %}
 
-{% block title %}¿Cuál Casa?{% endblock %}
+{% block title %}Residencias{% endblock %}
+
+{% block h2 %}Bienvenidos{% endblock %}
 
 {% block sidebar %}
 	<ul>
 		<a href=""><li>Cerrar sesión</li></a>
-		<a href="{% url 'tracker:residences' %}" ><li class="selected">Bienvenidos</li></a>
-		<a href="{% url 'tracker:add_residence' %}"><li>Añadir Nueva Casa</li></a>
+		<a href="{% url 'tracker:residences' %}" ><li class="selected">Residencias</li></a>
 	</ul>
 {% endblock %}
 
 {% block content %}
-	<ul>
-	{% for residence in residences %}
-		<a href="{% url 'tracker:residence' residence.id %}"><li>{{ residence.residence_name }}</li></a>
-	
-	{% endfor %}
-	</ul>
+
+	<div id="residences">
+		<ul>
+		{% for residence in residences %}
+			<a href="{% url 'tracker:residence' residence.id %}"><li><img src="/media/photos/house-icon.svg">
+				{% if residence.residence_name == '' %}
+					Unknown Name
+				{% else %}
+					{{ residence.residence_name }}
+				{% endif %}
+
+			</li></a>
+		{% endfor %}
+		<a href="{% url 'tracker:add_residence' %}"><li class="add-new"><div>+</div><span>Añadir Nueva Casa</span></li></a>
+		</ul>
+	</div>
 
 {% endblock %}

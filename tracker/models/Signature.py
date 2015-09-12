@@ -40,7 +40,7 @@ class SignatureForm(ModelForm):
         super(SignatureForm, self).__init__(*args, **kwargs)
 
     def clean(self):
-        msg = "This field is required."
+        msg = "Este campo es obligatorio."
         cleaned_data = super(SignatureForm, self).clean()
 
         if self.request.method == 'POST':

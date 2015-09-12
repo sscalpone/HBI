@@ -19,9 +19,10 @@ def index(request, child_id):
     context = {
         'DentalExams': list,
         'child': child,
-        'child_id': child_id
+        'child_id': child_id,
+        'residence_id': child.residence_id,
     }
-    return render(request, 'tracker/dental_exam_history.html', context)
+    return render(request, 'tracker/add_child_dental_history.html', context)
 
 def new(request, child_id):
     child = get_object_or_404(Child, pk=child_id)
@@ -50,12 +51,14 @@ def new(request, child_id):
             }
         )
         signature_form = SignatureForm()
+    dental_exam_list = DentalExam.objects.filter(child_id=child_id)
     context = {
         'child': child,
         'child_id': child_id,
         'residence_id': child.residence_id,
         'dental_exam_form': dental_exam_form.as_ul,
         'signature_form': signature_form.as_ul,
+        'DentalExams': dental_exam_list,
     }
     return render(request, 'tracker/add_child_dental_history.html', context)
 

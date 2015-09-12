@@ -46,7 +46,7 @@ class DentalExamForm(ModelForm):
         super(DentalExamForm, self).__init__(*args, **kwargs)
 
     def clean(self):
-        msg = "This field is required."
+        msg = "Este campo es obligatorio."
         cleaned_data = super(DentalExamForm, self).clean()
 
         if self.request.method == 'POST':

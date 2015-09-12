@@ -1,0 +1,13 @@
+    <div class="child-info">
+        <img src="{{ child.photo.url }}">
+        <ul>
+            <li><span>Nombre:</span> {{ child.first_name }} {{ child.last_name }}</li>
+            <li><span>Fecha de Naciemiento:</span> {{ child.birthdate }}</li>
+            {% if child.birthdate %}
+                <li><span>Años:</span> {{ child.age }}</li>
+            {% endif %}
+            <li><span>Casa Girasoles:</span> {{ child.residence.residence_name }}</li>
+            <li><span>Fecha de Ingreso:</span> {{ child.intake_date }}</li>
+            <li><span>Lugar de Naciemiento:</span> {{ child.birthplace }}</li>
+        </ul>
+    </div>

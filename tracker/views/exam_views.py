@@ -11,20 +11,35 @@ from tracker.models import SocialExam
 def index(request, child_id):
 	child = get_object_or_404(Child, pk=child_id)
 	residence_id = child.residence_id
-	print residence_id
-	dental_exam_list = DentalExam.objects.filter(child_id=child_id)
-	medical_exam_part_1_list = MedicalExamPart1.objects.filter(child_id=child_id)
-	medical_exam_part_2_list = MedicalExamPart2.objects.filter(child_id=child_id)
-	psychological_exam_list = PsychologicalExam.objects.filter(child_id=child_id)
-	social_exam_list = SocialExam.objects.filter(child_id=child_id)
+	try:
+		latest_dental_exam = DentalExam.objects.filter(child_id=child_id).latest('date')
+	except:
+		latest_dental_exam = None
+	try:
+		latest_medical_exam_part1 = MedicalExamPart1.objects.filter(child_id=child_id).latest('date')
+	except:
+		latest_medical_exam_part1 = None
+	try:
+		latest_medical_exam_part2 = MedicalExamPart2.objects.filter(child_id=child_id).latest('date')
+	except:
+		latest_medical_exam_part2 = None
+	try:
+		latest_pyschological_exam = PsychologicalExam.objects.filter(child_id=child_id).latest('date')
+	except:
+		latest_psychological_exam = None
+	try:
+		latest_social_exam = SocialExam.objects.filter(child_id=child_id).latest('date')
+	except:
+		latest_social_exam = None
+
 	context = {
 		'child': child,
 		'child_id': child_id,
 		'residence_id': residence_id,
-		'DentalExams': dental_exam_list,
-		'MedicalExamPart1s': medical_exam_part_1_list,
-		'MedicalExamPart2s': medical_exam_part_2_list,
-		'PsychologicalExams': psychological_exam_list,
-		'SocialExams': social_exam_list,		
+		'dental_exam': latest_dental_exam,
+		'medical_exam_part1': latest_medical_exam_part1,
+		'medical_exam_part2': latest_medical_exam_part2,
+		'psychological_exam': latest_psychological_exam,
+		'social_exam': latest_social_exam,		
 	}
 	return render(request, 'tracker/child_information.html', context)

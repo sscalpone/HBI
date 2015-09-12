@@ -1,6 +1,8 @@
-<h3>Evaluaciónes Psicológica</h3>
-	<ol>
-	{% for exam in PsychologicalExams reversed %}
-		<li><a href="{% url 'tracker:psychological_exam' child_id exam.id %}">{{ exam.date }}</a></li>
-	{% endfor%}
-	</ol>
+	<div class="exam-list">
+		<h3>Informes Psicológicos</h3>
+		<ol>
+		{% for exam in PsychologicalExams reversed %}
+			<li><a href="{% url 'tracker:psychological_exam' child_id exam.id %}">{{ exam.date }}</a></li>
+		{% endfor%}
+		</ol>
+	</div>

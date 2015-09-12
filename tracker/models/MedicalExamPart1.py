@@ -186,7 +186,7 @@ class MedicalExamPart1Form(ModelForm):
         super(MedicalExamPart1Form, self).__init__(*args, **kwargs)
 
     def clean(self):
-        msg = "This field is required."
+        msg = "Este campo es obligatorio."
         cleaned_data = super(MedicalExamPart1Form, self).clean()
 
         if self.request.method=='POST':

@@ -49,12 +49,14 @@ def new(request, child_id):
             }
         )
         signature_form = SignatureForm()
+    medical_exam_part_2_list = MedicalExamPart2.objects.filter(child_id=child_id)
     context = {
         'child': child,
         'child_id': child_id,
         'residence_id': child.residence_id,
         'medical_exam_part2_form': medical_exam_part2_form.as_ul,
         'signature_form': signature_form.as_ul,
+        'MedicalExamPart2s': medical_exam_part_2_list,
     }
     return render(request, 'tracker/add_child_medical_exam_part2_history.html', context)
 

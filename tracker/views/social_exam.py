@@ -49,12 +49,14 @@ def new(request, child_id):
             }
         )
         signature_form = SignatureForm()
+    social_exam_list = SocialExam.objects.filter(child_id=child_id)
     context = {
         'child': child,
         'child_id': child_id,
         'residence_id': child.residence_id,
         'social_exam_form': social_exam_form.as_ul,
         'signature_form': signature_form.as_ul,
+        'SocialExams': social_exam_list,
     }
     return render(request, 'tracker/add_child_social_history.html', context)
 

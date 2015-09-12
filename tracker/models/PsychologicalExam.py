@@ -64,7 +64,7 @@ class PsychologicalExamForm(ModelForm):
         super(PsychologicalExamForm, self).__init__(*args, **kwargs)
 
     def clean(self):
-        msg = "This field is required."
+        msg = "Este campo es obligatorio."
         cleaned_data = super(PsychologicalExamForm, self).clean()
         if self.request.method=='POST':
             if 'submit' in self.request.POST:

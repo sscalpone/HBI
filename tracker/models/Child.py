@@ -9,13 +9,22 @@ from django.forms import ModelForm
 from Residence import Residence
 
 class Child(models.Model):
-    residence = models.ForeignKey(Residence)
-    first_name = models.CharField(max_length=200, null=True)
-    last_name = models.CharField(max_length=200, null=True)
-    birthdate = models.DateField(null=True)
-    birthplace = models.CharField(max_length=200, null=True)
-    intake_date = models.DateField(null=True)
-    photo = models.ImageField(upload_to='photos', null=True)
+    MALE = 'm'
+    FEMALE = 'f'
+    GENDER_CHOICES = (
+        (MALE, 'Hombre'),
+        (FEMALE, 'Mujer')
+    )
+    residence = models.ForeignKey(Residence, default=1, blank=True, null=True)
+    first_name = models.CharField(max_length=200, blank=True, null=True)
+    last_name = models.CharField(max_length=200, blank=True, null=True)
+    birthdate = models.DateField(blank=True, null=True)
+    gender = models.CharField(max_length=6, 
+                              choices=GENDER_CHOICES, 
+                              default=MALE)
+    birthplace = models.CharField(max_length=200, blank=True, null=True)
+    intake_date = models.DateField(blank=True, null=True)
+    photo = models.ImageField(upload_to='photos', default='/media/photos/person-icon.svg', blank=True, null=True)
 
     class Meta:
         app_label = 'tracker'
@@ -51,6 +60,7 @@ class ChildForm(ModelForm):
             'first_name',
             'last_name',
             'birthdate',
+            'gender',
             'birthplace',
             'intake_date',
             'photo',
@@ -60,8 +70,42 @@ class ChildForm(ModelForm):
             'first_name': 'Nombres',
             'last_name': 'Apellidos',
             'birthdate': 'Fecha de Naciemiento',
+            'gender': 'Género',
             'birthplace': 'Lugar de Naciemiento',
             'intake_date': 'Fecha de Ingreso',
             'photo': 'Fotografía',
         }
+
+    def __init__(self, *args, **kwargs):
+        self.request = kwargs.pop('request', None)
+        super(ChildForm, self).__init__(*args, **kwargs)
+
+
+    def clean(self):
+        msg = "Este campo es obligatorio."
+        cleaned_data = super(ChildForm, self).clean()
+
+        if self.request.method=='POST':
+            if 'submit' in self.request.POST:
+                residence = cleaned_data.get('residence')
+                if residence is None:
+                    self.add_error('residence', msg)
+                first_name = cleaned_data.get('first_name')
+                if first_name=='':
+                    self.add_error('first_name', msg)
+                last_name = cleaned_data.get('last_name')
+                if last_name=='':
+                    self.add_error('last_name', msg)
+                birthdate = cleaned_data.get('birthdate')
+                if birthdate=='':
+                    self.add_error('birthdate', msg)
+                birthplace = cleaned_data.get('birthplace')
+                if birthplace=='':
+                    self.add_error('birthplace', msg)
+                intake_date = cleaned_data.get('intake_date')
+                if intake_date=='':
+                    self.add_error('intake_date', msg)
+                photo = cleaned_data.get('photo')
+                if photo is None:
+                    self.add_error('photo', msg)
 

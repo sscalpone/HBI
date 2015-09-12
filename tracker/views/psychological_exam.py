@@ -49,12 +49,14 @@ def new(request, child_id):
             }
         )
         signature_form = SignatureForm()
+    psychological_exam_list = PsychologicalExam.objects.filter(child_id=child_id)
     context = {
         'child': child,
         'child_id': child_id,
         'residence_id': child.residence_id,
         'psychological_exam_form': psychological_exam_form.as_ul,
         'signature_form': signature_form.as_ul,
+        'PsychologicalExams': psychological_exam_list,
     }
     return render(request, 'tracker/add_child_psychological_history.html', context)
 

@@ -1,13 +1,13 @@
 {% extends 'three-column.html' %}
 
-{% block title %}Los Niños{% endblock %}
+{% block title %}Detalle Orfanato{% endblock %}
 
-{% block menu %}<span class="button"><a href="{% url 'tracker:add_child' %}">Poner un otro niño...</a></span>{% endblock %}
+{% block h2 %}Detalle Orfanato{% endblock %}
 
 {% block sidebar %}
 	<ul>
 		<a href=""><li>Cerrar sesión</li></a>
-		<a href="{% url 'tracker:residences' %}"><li>Welcome</li></a>
+		<a href="{% url 'tracker:residences' %}"><li>Residencias</li></a>
 		<a href="{% url 'tracker:residence' residence_id %}"><li class="selected">Detalle Orfanato</li></a>
 	</ul>
 
@@ -15,22 +15,29 @@
 
 {% block details %}
 	<ul>
-		<li>Dummy Content</li>
-		<li>Because</li>
-		<li>We Don't Have</li>
-		<li>That Yet</li>
+		<li>Residencia: {{ residence.residence_name }}</li>
+		<li>Administrador: {{residence.administrator}}</li>
+		<li>Niños: {{ boys.count }}</li>
+		<li>Niñas: {{ girls.count }}</li>
+		<li>En riesgo: ? </li>
 	</ul>
 
 {% endblock %}
 
 {% block content %}
 	<div id="children-list">
-	    <h2>Elija un niño</h2>
+		<h3>Activo Niños</h3>
 	    <ul>
 	    {% for child in children %}
-	    	<a href="{% url 'tracker:child' child.id %}"><li><img class="red" src="{{ child.photo.url }}">{{ child.first_name }} {{ child.last_name }}</li></a>
+	    	<a href="{% url 'tracker:child' child.id %}"><li><img class="red" src="{{ child.photo.url }}">
+	    		{% if child.first_name == '' %}
+	    			Unknown Name
+	    		{% else %}
+	    			{{ child.first_name }} {{ child.last_name }}
+	    		{% endif %}
+	    		</li></a>
 	    {% endfor %}
-	    	<a href="{% url 'tracker:add_child' residence_id %}"><li id="add-new-child"><div>+</div><span>Añadir Nuevo Niño</span></li></a>
+	    	<a href="{% url 'tracker:add_child' residence_id %}"><li class="add-new"><div>+</div><span>Añadir Nuevo Niño</span></li></a>
 	    </ul>
     </div>
 {% endblock %}

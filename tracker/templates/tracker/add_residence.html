@@ -2,11 +2,12 @@
 
 {% block title %}Añadir Nueva Casa{% endblock %}
 
+{% block h2 %}Añadir Nueva Casa{% endblock %}
+
 {% block sidebar %}
 	<ul>
 		<a href=""><li>Cerrar sesión</li></a>
-		<a href="{% url 'tracker:residences' %}"><li>Welcome</li></a>
-		<a href=""><li class="selected">Añadir Nueva Casa</li></a>
+		<a href="{% url 'tracker:residences' %}"><li class="selected">Residencias</li></a>
 	</ul>
 {% endblock %}
 
@@ -19,8 +20,9 @@
         {% csrf_token %}
         <ul>
         	{{ form }}
-  	    
-            <li><input type="submit" value="Enviar" /></li>
         </ul>
+        <input type="submit" name="submit" value="Enviar">
+        <input type="submit" name="save" value="Guardar Cambios">
+        <input type="submit" name="discard" value="Descartar Cambios">
     </form>
 {% endblock %}

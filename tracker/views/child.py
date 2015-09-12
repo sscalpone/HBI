@@ -10,24 +10,28 @@ from tracker.models import Child
 from tracker.models import ChildForm
 from tracker.models import Residence
 
-def index(request):
-    list_of_children = Child.objects.all()
-    context = {'children': list_of_children }
-    return render(request, 'tracker/residence.html', context)
-
 def new(request, residence_id):
     if request.method == 'POST':
-        form = ChildForm(request.POST, request.FILES)
-        if form.is_valid():
-            saved_child = form.save()
-            if saved_child:
-                context = {
-                    'child': saved_child,
-                    'child_id': saved_child.id,
-                    'residence_id': saved_child.residence_id
-                }
-                return render(request, 'tracker/child_information.html', context)
-                # return HttpResponseRedirect(reverse('tracker:child', kwargs={'child_id': child.id, 'residence_id': child.residence_id}))
+        form = ChildForm(request.POST, request.FILES, request=request)
+        if 'discard' in request.POST:
+            p = get_object_or_404(Residence, pk=residence_id)
+            children = Child.objects.filter(residence_id=residence_id)
+            boys = Child.objects.filter(residence_id=residence_id).filter(gender='m')
+            girls = Child.objects.filter(residence_id=residence_id).filter(gender='f')
+            context = {
+                'residence': p,
+                'children': children,
+                'residence_id': p.id,
+                'boys': boys,
+                'girls': girls
+            }
+            return render(request, 'tracker/residence.html', context)
+        else: 
+            if form.is_valid():
+                saved_child = form.save()
+                if saved_child:
+                    child_id = saved_child.id
+                    return HttpResponseRedirect(reverse('tracker:child', kwargs={'child_id': child_id}))
     else:
         form = ChildForm()
     context = {
@@ -44,7 +48,7 @@ def view(request, child_id):
         'residence_id': p.residence_id
     }
     return render(request, 'tracker/child_information.html', context)
-    # return HttpResponseRedirect(reverse('tracker:child', kwargs={'child_id': child.id, 'residence_id': residence.id}))
+    
 
 
 
