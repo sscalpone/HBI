@@ -318,9 +318,14 @@ CHILD PAGE STYLES
   margin: 0 auto;
 }
 
-.child-info span {
+.child-info span, #form-info span {
   display: inline-block;
   width: 166px;
+}
+
+#signature span {
+  display: inline-block;
+  width: 73px;
 }
 
 .child-info li {

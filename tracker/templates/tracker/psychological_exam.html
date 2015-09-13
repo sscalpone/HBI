@@ -12,11 +12,12 @@
         <a href="{% url 'tracker:child' child_id %}"><li>Resumen Niño</li></a>
         <li class="selected">Evaluaciones</li>
         <span id="secondary">
-            <li><a href="{% url 'tracker:dental_exams' child_id %}">EInforme Odontológico</a></li>
-            <li><a href="{% url 'tracker:medical_exam_part1s' child_id %}">Informe Médico / Parte 1</a></li>
-            <li><a href="{% url 'tracker:medical_exam_part2s' child_id %}">Informe Médico / Parte 2</a></li>
-            <li class="selected"><a href="{% url 'tracker:psychological_exams' child_id %}">Informe Psicológico</a></li>
-            <li><a href="{% url 'tracker:social_exams' child_id %}">Informe Social</a></li>
+            <li><a href="{% url 'tracker:new_dental_exam' child_id %}">Informe Odontológico</a></li>
+            <li><a href="{% url 'tracker:new_medical_exam_part1' child_id %}">Informe Médico / Parte 1</a></li>
+            <li><a href="{% url 'tracker:new_medical_exam_part2' child_id %}">Informe Médico / Parte 2</a></li>
+            <li class="selected"><a href="{% url 'tracker:new_psychological_exam' child_id %}">Informe Psicológico</a></li>
+            <li><a href="{% url 'tracker:new_social_exam' child_id %}">Informe Social</a></li>
+        </span>
         </span>
     </ul>
 {% endblock %}
@@ -24,23 +25,23 @@
 {% block content %}
     {% include 'tracker/basic-info.html' %}
 
-    <div class="form-info">
-    	<dl>
-    	   	<dt>Antecedents Patológicos Personales y Familiares Importantes: </dt><dd>{{ exam.background_notes }}</dd>
-    		<dt>Descripción Fisica y Comportamiento: </dt><dd>{{ exam.physical_description }}</dd>
-    		<dt>Área Intelectual: </dt><dd>{{ exam.intelectual_notes }}</dd>
-    		<dt>Área Organicidad: </dt><dd>{{ exam.organicity_notes }}</dd>
-    		<dt>Área Psciomotor: </dt><dd>{{ exam.psychomotor_notes }}</dd>
-    		<dt>Área Afectiva Emocional: </dt><dd>{{ exam.emotional_notes }}</dd>
-    		<dt>Recomendaciones: </dt><dd>{{ exam.recommendation }}</dd>
-    	</dl>
-        <h3>Los Datos del Profesíonal</h3>
-        <dl>
-            <dt>Nombre:</dt><dd>{{ signature.name }} {{ signature.surname }}</dd>
-            <dt>EMP:</dt><dd>{{ signature.emp }}</dd>
-            <dt>Direccion:</dt><dd>{{ signature.direction }}</dd>
-            <dt>Celular:</dt><dd>{{ signature.cell }}</dd>
-        </dl>
+    <div>
+    	<ul id="form-info">
+    	   	<li><span>Antecedents Patológicos Personales y Familiares Importantes:</span> {{ exam.background_notes }}</li>
+    		<li><span>Descripción Fisica y Comportamiento:</span> {{ exam.physical_description }}</li>
+    		<li><span>Área Intelectual:</span> {{ exam.intelectual_notes }}</li>
+    		<li><span>Área Organicidad:</span> {{ exam.organicity_notes }}</li>
+    		<li><span>Área Psciomotor:</span> {{ exam.psychomotor_notes }}</li>
+    		<li><span>Área Afectiva Emocional:</span> {{ exam.emotional_notes }}</li>
+    		<li><span>Recomendaciones:</span> {{ exam.recommendation }}</li>
+    	</ul>
+        <ul id="signature">
+            <li><h3>Los Datos del Profesíonal</h3></li>
+            <li><span>Nombre:</span> {{ signature.name }} {{ signature.surname }}</li>
+            <li><span>EMP:</span> {{ signature.emp }}</li>
+            <li><span>Direccion:</span> {{ signature.direction }}</li>
+            <li><span>Celular:</span> {{ signature.cell }}</li>
+        </ul>
         <a href="{% url 'tracker:edit_psychological_exam' child_id exam.id %}">Edita Detalles</a>
     </div>
 {% endblock %}

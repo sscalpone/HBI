@@ -118,13 +118,15 @@ class SocialExamForm(ModelForm):
             
             if 'submit' in self.request.POST:
                 dni = cleaned_data.get('dni')
+                dni_in_process = cleaned_data.get('dni_in_process')
                 dni_no_comments = cleaned_data.get('dni_no_comments')
-                if not dni and dni_no_comments=='':
+                if not dni and not dni_in_process and dni_no_comments=='':
                     self.add_error('dni_no_comments', msg)
                 
                 sis = cleaned_data.get('sis')
+                sis_in_process = cleaned_data.get('sis_in_process')
                 sis_no_comments = cleaned_data.get('sis_no_comments')
-                if not sis and sis_no_comments=='':
+                if not sis and not sis_in_process and sis_no_comments=='':
                     self.add_error('sis_no_comments', msg)
                 
                 antecedents = cleaned_data.get('antecedents')

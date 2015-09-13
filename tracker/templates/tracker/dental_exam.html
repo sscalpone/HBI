@@ -24,18 +24,19 @@
 {% block content %}
 
     {% include 'tracker/basic-info.html' %}
-    <div class="form-info">
-    	<dl>
-            <dt>Recomendaciones:</dt><dd>{{ exam.recommendation }}</dd>
-        </dl>
-            <h3>Los Datos del Profesíonal</h3>
-        <dl>
-            <dt>Nombre:</dt><dd>{{ signature.name }} {{ signature.surname }}</dd>
-            <dt>EMP:</dt><dd>{{ signature.emp }}</dd>
-            <dt>Direccion:</dt><dd>{{ signature.direction }}</dd>
-            <dt>Celular:</dt><dd>{{ signature.cell }}</dd>
-        </dl>
+    <div>
+    	<ul id="form-info">
+            <li><span>Recomendaciones:</span> {{ exam.recommendation }}</li>
+        </ul>
+        <ul id="signature">
+            <li><h3>Los Datos del Profesíonal</h3></li>
+            <li><span>Nombre:</span> {{ signature.name }} {{ signature.surname }}</li>
+            <li><span>EMP:</span> {{ signature.emp }}</li>
+            <li><span>Direccion:</span> {{ signature.direction }}</li>
+            <li><span>Celular:</span> {{ signature.cell }}</li>
+        </ul>
         <a href="{% url 'tracker:edit_dental_exam' child_id exam.id %}">Edita Detalles</a>
+
     </div>
     
 {% endblock %}

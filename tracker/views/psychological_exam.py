@@ -70,7 +70,6 @@ def view(request, child_id, exam_id):
         'child_id': child.id,
         'residence_id': child.residence_id,
         'signature': signature,
-
     }
     return render(request, 'tracker/psychological_exam.html', context)
 

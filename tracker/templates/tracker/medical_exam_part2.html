@@ -12,11 +12,11 @@
         <a href="{% url 'tracker:child' child_id %}"><li>Resumen Niño</li></a>
         <li class="selected">Evaluaciones</li>
         <span id="secondary">
-            <li><a href="{% url 'tracker:dental_exams' child_id %}">Informe Odontológico</a></li>
-            <li><a href="{% url 'tracker:medical_exam_part1s' child_id %}">Informe Médico / Parte 1</a></li>
-            <li class="selected"><a href="{% url 'tracker:medical_exam_part2s' child_id %}">Informe Médico / Parte 2</a></li>
-            <li><a href="{% url 'tracker:psychological_exams' child_id %}">Informe Psicológico</a></li>
-            <li><a href="{% url 'tracker:social_exams' child_id %}">Informe Social</a></li>
+            <li><a href="{% url 'tracker:new_dental_exam' child_id %}">Informe Odontológico</a></li>
+            <li><a href="{% url 'tracker:new_medical_exam_part1' child_id %}">Informe Médico / Parte 1</a></li>
+            <li class="selected"><a href="{% url 'tracker:new_medical_exam_part2' child_id %}">Informe Médico / Parte 2</a></li>
+            <li><a href="{% url 'tracker:new_psychological_exam' child_id %}">Informe Psicológico</a></li>
+            <li><a href="{% url 'tracker:new_social_exam' child_id %}">Informe Social</a></li>
         </span>
     </ul>
 {% endblock %}
@@ -25,35 +25,46 @@
 
 	{% include 'tracker/basic-info.html' %}
 
-    <div class="form-info">
-	    <dl>
-			<dt>Enfermedad Actual: </dt><dd>{{ exam.illness_notes }}</dd>
-			<dt>Apetito: </dt><dd>{{ exam.appetite_notes }}</dd>
-			<dt>Sueño: </dt><dd>{{ exam.sleep_notes }}</dd>
-			<dt>Otras Problemas de Salud: </dt><dd>{{ exams.concerns_notes }}</dd>
-			<dt>Presión Arterial: </dt><dd>{{ exam.blood_pressure }}</dd>
-			<dt>Pulso: </dt><dd>{{ exam.pulse }}</dd>
-			<dt>Agudeza Visual Izquierdo: </dt><dd>{{ exam.visual_acuity_left }}</dd>
-			<dt>Agudeza Visual Derecha: </dt><dd>{{ exam.visual_acuity_right }}</dd>
-			<dt>Aspecto General: </dt><dd>{{ exam.appearance_normal }}</dd><dd>{{ exam.appearance_notes }}</dd>
-			<dt>Piel y Mucosas: </dt><dd>{{ exam.skin_mucosa_normal }}</dd><dd>{{ exam.skin_mucosa_notes }}</dd>
-			<dt>TCSC y G. Linfaticos: </dt><dd>{{ exam.TCSC_lymph_normal }}</dd><dd>{{ exam.TCSC_lymph_notes }}</dd>
-			<dt>Cabeza y Cuello: </dt><dd>{{ exam.head_neck_normal }}</dd><dd>{{ exam.head_neck_notes }}</dd>
-			<dt>Tórax y Pulmones: </dt><dd>{{ exam.thorax_lungs_normal }}</dd><dd>{{ exam.thorax_lungs_notes }}</dd>
-			<dt>Cardiovascular: </dt><dd>{{ exam.cardio_normal }}</dd><dd>{{ exam.cardio_notes }}</dd>
-			<dt>Abdomen: </dt><dd>{{ exam.abdomen_normal }}</dd><dd>{{ exam.abdomen_notes }}</dd>
-			<dt>Genitourinario y Ano: </dt><dd>{{ exam.genitourinary_normal }}</dd><dd>{{ exam.genitourinary_notes }}</dd>
-			<dt>Extremidades: </dt><dd>{{ exam.extremities_normal }}</dd><dd>{{ exam.extremities_notes }}</dd>
-			<dt>Neurological: </dt><dd>{{ exam.neurological_normal }}</dd><dd>{{ exam.neurological_notes }}</dd>
-			<dt>Otres Recomendaciones: </dt><dd>{{ exam.recommendations }}</dd>
-		</dl>
-		<h3>Los Datos del Profesíonal</h3>
-	    <dl>
-	        <dt>Nombre:</dt><dd>{{ signature.name }} {{ signature.surname }}</dd>
-	        <dt>EMP:</dt><dd>{{ signature.emp }}</dd>
-	        <dt>Direccion:</dt><dd>{{ signature.direction }}</dd>
-	        <dt>Celular:</dt><dd>{{ signature.cell }}</dd>
-	    </dl>
+    <div>
+	    <ul id="form-info">
+			<li><span>Enfermedad Actual:</span> {{ exam.illness_notes }}</li>
+			<li><span>Apetito:</span>{{ exam.appetite_notes }}</li>
+			<li><span>Sueño:</span> {{ exam.sleep_notes }}</li>
+			<li><span>Otras Problemas de Salud:</span> {{ exams.concerns_notes }}</li>
+			<li><span>Presión Arterial: </span>{{ exam.blood_pressure }}</li>
+			<li><span>Pulso:</span> {{ exam.pulse }}</li>
+			<li><span>Agudeza Visual Izquierdo:</span> {{ exam.visual_acuity_left }}</li>
+			<li><span>Agudeza Visual Derecha:</span> {{ exam.visual_acuity_right }}</li>
+			
+			<li><span>Aspecto General:</span> {{ exam.appearance_normal }}{% if exam.appearance_normal %}, {{ exam.appearance_notes }}{% endif %}</li>
+			
+			<li><span>Piel y Mucosas:</span> {{ exam.skin_mucosa_normal }}{% if exam.skin_mucosa_normal %}, {{ exam.skin_mucosa_notes }}{% endif %}</li>
+			
+			<li>TCSC y G. Linfaticos:</span> {{ exam.TCSC_lymph_normal }}{% if exam.TCSC_lymph_normal %}, {{ exam.TCSC_lymph_notes }}{% endif %}</li>
+			
+			<li><span>Cabeza y Cuello: </span>{{ exam.head_neck_normal }}{% if exam.head_neck_normal %}, {{ exam.head_neck_notes }}{% endif %}</li>
+			
+			<li><span>Tórax y Pulmones:</span> {{ exam.thorax_lungs_normal }}{% if exam.thorax_lungs_normal %}, {{ exam.thorax_lungs_notes }}{% endif %}</li>
+			
+			<li><span>Cardiovascular:</span> {{ exam.cardio_normal }}{% if exam.cardio_normal %}, {{ exam.cardio_notes }}{% endif %}</li>
+			
+			<li><span>Abdomen:</span> {{ exam.abdomen_normal }}{% if exam.abdomen_normal %}, {{ exam.abdomen_notes }}{% endif %}</li>
+			
+			<li><span>Genitourinario y Ano:</span> {{ exam.genitourinary_normal }}{% if exam.genitourinary_normal %}, {{ exam.genitourinary_notes }}{% endif %}</li>
+			
+			<li><span>Extremidades:</span> {{ exam.extremities_normal }}{% if exam.extremities_normal %}, {{ exam.extremities_notes }}{% endif %}</li>
+			
+			<li>Neurological:</span> {{ exam.neurological_normal }}{% if exam.neurological_normal %}, {{ exam.neurological_notes }}{% endif %}</li>
+			
+			<li>Otres Recomendaciones:</span> {{ exam.recommendations }}</li>
+		</ul>
+		<ul id="signature">
+            <li><h3>Los Datos del Profesíonal</h3></li>
+            <li><span>Nombre:</span> {{ signature.name }} {{ signature.surname }}</li>
+            <li><span>EMP:</span> {{ signature.emp }}</li>
+            <li><span>Direccion:</span> {{ signature.direction }}</li>
+            <li><span>Celular:</span> {{ signature.cell }}</li>
+        </ul>
 	    <a href="{% url 'tracker:edit_medical_exam_part2' child_id exam.id %}">Edita Detalles</a>
 	</div>
 {% endblock %}

@@ -12,11 +12,11 @@
         <a href="{% url 'tracker:child' child_id %}"><li>Resumen Niño</li></a>
         <li class="selected">Evaluaciones</li>
         <span id="secondary">
-            <li><a href="{% url 'tracker:dental_exams' child_id %}">Informe Odontológico</a></li>
-            <li class="selected"><a href="{% url 'tracker:medical_exam_part1s' child_id %}">Informe Médico / Parte 1</a></li>
-            <li><a href="{% url 'tracker:medical_exam_part2s' child_id %}">Informe Médico / Parte 2</a></li>
-            <li><a href="{% url 'tracker:psychological_exams' child_id %}">Informe Psicológico</a></li>
-            <li><a href="{% url 'tracker:social_exams' child_id %}">Informe Social</a></li>
+            <li><a href="{% url 'tracker:new_dental_exam' child_id %}">Informe Odontológico</a></li>
+            <li class="selected"><a href="{% url 'tracker:new_medical_exam_part1' child_id %}">Informe Médico / Parte 1</a></li>
+            <li><a href="{% url 'tracker:new_medical_exam_part2' child_id %}">Informe Médico / Parte 2</a></li>
+            <li><a href="{% url 'tracker:new_psychological_exam' child_id %}">Informe Psicológico</a></li>
+            <li><a href="{% url 'tracker:new_social_exam' child_id %}">Informe Social</a></li>
         </span>
     </ul>
 {% endblock %}
@@ -25,41 +25,63 @@
 
     {% include 'tracker/basic-info.html' %}
 
-    <div class="form-info">
-    	<dl>
-    		<dt>Antecedents Familiares Patológicos y de Riesgo Conocidos: </dt><dd>{{ exam.background_notes }}</dd>
-    		<dt>Historia Perinatal y Neonatal: </dt><dd>{{ exam.birth_history }}</dd>
-    		<dt>BCG: </dt><dd>{{ exam.bcg_vaccine }}, {{ exam.bcg_vaccine_date }}</dd>
-    		<dt>Antipoliomielitica: </dt><dd>{{ exam.polio_vaccine }}, {{exam.polio_vaccine_date}}</dd>
-    		<dt>DPT: </dt><dd>{{ exam.dpt_vaccine }}, {{ dpt_vaccine_date }}</dd>
-    		<dt>Hepatitis B: </dt><dd>{{ exam.hepatitis_b_vaccine }}, {{ exam.hepatitis_b_vaccine_date }}</dd>
-    		<dt>Hemofilus Influenza: </dt><dd>{{ exam.flu_vaccine }}, {{ exam.flu_vaccine_date }}</dd>
-    		<dt>Fiebre Amarilla: </dt><dd>{{ exam.yellow_fever_vaccine }}, {{ exam.yellow_fever_vaccine_date }}</dd>
-    		<dt>SPR: </dt><dd>{{ exam.spr_vaccine }}, {{ exam.spr_vaccine_date }}</dd>
-    		<dt>HPV: </dt><dd>{{ exam.hpv_vaccine }}, {{ exam.hpv_vaccine_date }}</dd>
-    		<dt>Neumococo: </dt><dd>{{ exam.pneumococcal_vaccine }}, {{ exam.pneumococcal_vaccine_date }}</dd>
-    		<dt>Peso: </dt><dd>{{ exam.weight }}</dd>
-    		<dt>Estatura: </dt><dd>{{ exam.height }}</dd>
-    		<dt>Hemoglobina: </dt><dd>{{ exam.hemoglobin_normal }}</dd><dd>{{ exam.hemoglobin_notes }}</dd>
-    		<dt>Elisa VH1: </dt><dd>{{ exam.elisa_vh1_positive }}</dd>
-    		<dt>Hepatitis B: </dt><dd>{{ exam.hepatitisB_positive }}</dd>
-    		<dt>PPD: </dt><dd>{{ exam.PPD_positive }}</dd>
-    		<dt>Parasitos Heces: </dt><dd>{{ stool_parasites_positive }}</dd><dd>exam.stool_parasites_notes</dd>
-    		<dt>Leucocitos: </dt><dd>{{ exam.leukocytes_normal }}</dd><dd>{{ exam.comentarios }}</dd>
-    		<dt>Nitritos: </dt><dd>{{ exam.nitrites_normal }}</dd><dd>{{exam.nitrites_notes}}</dd>
-    		<dt>Urobilinógeno: </dt><dd>{{ exam.urobilinogen_normal }}</dd><dd>{{ exam.urobilinogen_notes }}</dd>
-    		<dt>Proteína: </dt><dd>{{ exam.protein_normal }}</dd><dd>exam.protein_notes</dd>
-    		<dt>pH: </dt><dd>{{ exam.pH_normal }}</dd><dd>{{ exam.pH_notes }}</dd>
-    		<dt>Densidad: </dt><dd>{{ exam.density_normal }}</dd><dd>{{ exam.density_notes }}</dd>
-    		<dt>Glucosa: </dt><dd>{{ exam.glucose_normal }}</dd><dd>{{ exam.glucose_notes }}</dd>
-        </dl>
-        <h3>Los Datos del Profesíonal</h3>
-        <dl>
-            <dt>Nombre:</dt><dd>{{ signature.name }} {{ signature.surname }}</dd>
-            <dt>EMP:</dt><dd>{{ signature.emp }}</dd>
-            <dt>Direccion:</dt><dd>{{ signature.direction }}</dd>
-            <dt>Celular:</dt><dd>{{ signature.cell }}</dd>
-        </dl>
+    <div>
+    	<ul id="form-info">
+    		<li><span>Antecedents Familiares Patológicos y de Riesgo Conocidos:</span> {{ exam.background_notes }}</li>
+    		<li><span>Historia Perinatal y Neonatal:</span> {{ exam.birth_history }}</li>
+    		
+            <li><span>BCG:</span> {{ exam.bcg_vaccine }}{% if exam.bcg_vaccine %}, {{ exam.bcg_vaccine_date }}{% endif %}</li>
+    		
+            <li><span>Antipoliomielitica:</span> {{ exam.polio_vaccine }}{% if exam.polio_vaccine %}, {{exam.polio_vaccine_date}}{% endif %}</li>
+    		
+            <li><span>DPT:</span> {{ exam.dpt_vaccine }}{% if exam.dpt_vaccine %}, {{ dpt_vaccine_date }}{% endif %}</li>
+    		
+            <li><span>Hepatitis B:</span> {{ exam.hepatitis_b_vaccine }}{% if exam.hepatitis_b_vaccine %}, {{ exam.hepatitis_b_vaccine_date }}{% endif %}</li>
+    		
+            <li><span>Hemofilus Influenza:</span> {{ exam.flu_vaccine }}{% if exam.flue_vaccine %}, {{ exam.flu_vaccine_date }}{% endif %}</li>
+    		
+            <li><span>Fiebre Amarilla:</span> {{ exam.yellow_fever_vaccine }}{% if exam.yellow_fever_vaccine %}, {{ exam.yellow_fever_vaccine_date }}{% endif %}</li>
+    		
+            <li><span>SPR:</span> {{ exam.spr_vaccine }}{% if exam.spr_vaccine %}, {{ exam.spr_vaccine_date }}{% endif %}</li>
+    		
+            <li><span>HPV:</span> {{ exam.hpv_vaccine }}{% if exam.hpv_vaccine %}, {{ exam.hpv_vaccine_date }}{% endif %}</li>
+    		
+            <li><span>Neumococo:</span> {{ exam.pneumococcal_vaccine }}{% if exam.pneumococcal_vaccine %}, {{ exam.pneumococcal_vaccine_date }}{% endif %}</li>
+    		
+            <li><span>Peso:</span> {{ exam.weight }}</li>
+    		<li><span>Estatura:</span> {{ exam.height }}</li>
+    		
+            <li><span>Hemoglobina:</span> {{ exam.hemoglobin_normal }}{% if exam.hemoglobin_normal %}, {{ exam.hemoglobin_notes }}{% endif %}</li>
+    		
+            <li><span>Elisa VH1:</span> {{ exam.elisa_vh1_positive }}</li>
+    		<li><span>Hepatitis B:</span> {{ exam.hepatitisB_positive }}</li>
+    		<li><span>PPD:</span> {{ exam.PPD_positive }}</li>
+    		
+            <li><span>Parasitos Heces:</span> {{ stool_parasites_positive }}{% if exam.stool_parasites_positive %}, exam.stool_parasites_notes{% endif %}</li>
+    		
+            <li><span>Leucocitos: </span>{{ exam.leukocytes_normal }}{% if exam.leukocytes_normal %}, {{ exam.comentarios }}{% endif %}</li>
+    		
+            <li><span>Nitritos:</span> {{ exam.nitrites_normal }}{% if exam.nitrites_normal %}, {{exam.nitrites_notes}}{% endif %}</li>
+    		
+            <li><span>Urobilinógeno:</span> {{ exam.urobilinogen_normal }}{% if exam.urobilinogen_normal %}, {{ exam.urobilinogen_notes }}{% endif %}</li>
+    		
+            <li><span>Proteína:</span> {{ exam.protein_normal }}{% if exam.protein_normal %}, exam.protein_notes{% endif %}</li>
+    		
+            <li><span>pH:</span> {{ exam.pH_normal }}{% if exam.pH_normal %}, {{ exam.pH_notes }}{% endif %}</li>
+    		
+            <li><span>Densidad:</span> {{ exam.density_normal }}{% if exam.density_normal %}, {{ exam.density_notes }}{% endif %}</li>
+    		
+            <li><span>Glucosa:</span> {{ exam.glucose_normal }}{% if exam.glucose_normal %}, {{ exam.glucose_notes }}{% endif %}</li>
+        </ul>
+        <ul id="signature">
+            <li><h3>Los Datos del Profesíonal</h3></li>
+            <li><span>Nombre:</span> {{ signature.name }} {{ signature.surname }}</li>
+            <li><span>EMP:</span> {{ signature.emp }}</li>
+            <li><span>Direccion:</span> {{ signature.direction }}</li>
+            <li><span>Celular:</span> {{ signature.cell }}</li>
+        </ul>
         <a href="{% url 'tracker:edit_medical_exam_part1' child_id exam.id %}">Edita Detalles</a>
+
+
     </div>
 {% endblock %}
