@@ -1,27 +1,25 @@
 {% extends 'two-column.html' %}
 
-{% block title %}Añadir Nuevo Niño{% endblock %}
+{% block title %}Editar Residencia{% endblock %}
 
-{% block h2 %}Añadir Nuevo Niño{% endblock %}
+{% block h2 %}Editar Residencia{% endblock %}
 
 {% block sidebar %}
 	<ul>
 		<a href=""><li>Cerrar sesión</li></a>
-		<a href="{% url 'tracker:residences' %}"><li>Residencias</li></a>
-		<a href="{% url 'tracker:residence' residence_id %}"><li>Detalle Orfanato</li></a>
+		<a href="{% url 'tracker:residences' %}"><li class="selected">Residencias</li></a>
 	</ul>
-
 {% endblock %}
 
 {% block content %}
 
     {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
 
-    <form action="{% url 'tracker:add_child' residence_id %}" enctype="multipart/form-data" method="post">
+    <form action="{% url 'tracker:edit_residence' residence_id %}" enctype="multipart/form-data" method="post">
         {% csrf_token %}
         <ul>
         	{{ form }}
-    	</ul>
+        </ul>
         <input type="submit" name="submit" value="Enviar">
         <input type="submit" name="save" value="Guardar Cambios">
         <input type="submit" name="discard" value="Descartar Cambios">

@@ -9,5 +9,6 @@
             <li><span>Casa Girasoles:</span> {{ child.residence.residence_name }}</li>
             <li><span>Fecha de Ingreso:</span> {{ child.intake_date }}</li>
             <li><span>Lugar de Naciemiento:</span> {{ child.birthplace }}</li>
+            <a href="{% url 'tracker:edit_child' child_id %}"><li>Edita Detalles</li></a>
         </ul>
     </div>

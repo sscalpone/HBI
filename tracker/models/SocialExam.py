@@ -11,6 +11,15 @@ from Child import Child
 from Signature import Signature
 
 class SocialExam(models.Model):
+    HIGH = 1
+    MEDIUM = 2
+    LOW = 3
+    PRIORITY_CHOICES = (
+        (HIGH, 'Alta Prioridad'),
+        (MEDIUM, 'Prioridad Media'),
+        (LOW, 'Prioridad Baja')
+    )
+
     child = models.ForeignKey(Child)
     date = models.DateField()
     has_birth_certificate = models.BooleanField(default=False)
@@ -31,6 +40,9 @@ class SocialExam(models.Model):
     visitors_allowed_no_comments = models.TextField(blank=True, null=True)
     social_diagnosis = models.TextField(blank=True, null=True)
     recommendation = models.TextField(blank=True, null=True)
+    priority = models.IntegerField(choices=PRIORITY_CHOICES, 
+                                   default=HIGH)
+    signature = models.ForeignKey(Signature, blank=True, null=True)
 
     class Meta:
         app_label = 'tracker'
@@ -60,6 +72,7 @@ class SocialExamForm(ModelForm):
             'visitors_allowed_no_comments',
             'social_diagnosis',
             'recommendation',
+            'priority'
         )
         labels = {
             'date': "Fecha",
@@ -81,6 +94,7 @@ class SocialExamForm(ModelForm):
             'visitors_allowed_no_comments': "Comentarios",
             'social_diagnosis': "Diagnostico Social",
             'recommendation': "Recomendaciones",
+            'priority': 'Prioridad',
         }
         widgets = {
             'has_birth_certificate': RadioSelect(choices=((True, 'Sí'),(False, 'No'))),

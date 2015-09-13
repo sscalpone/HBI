@@ -58,8 +58,6 @@ HBI TRACKER STYLES
 GENERAL STYLES
 ******************/
 
-/* red: cf2a27; black: #000; white: #fff; */
-
 html {
   font-family: "Trebuchet MS", 
                Helvetica, 
@@ -74,16 +72,7 @@ h1 {
 }
 
 h2 {
-  font-size: 2em;
-}
-
-.two-column h2 {
-  margin-bottom: 10px;
-  padding-right: 10px;
-}
-
-h2 span {
-  font-weight: bold;
+  font-size: 1.4em;
 }
 
 ol li {
@@ -95,13 +84,12 @@ img {
 }
 
 a {
-  text-decoration: none;
   color: #000;
 }
 
-.selected {
-  background: #95bcf2 ;
-}
+/*********************
+HEADER STYLES
+**********************/
 
 #header {
   background: #fff;
@@ -124,6 +112,10 @@ a {
   width: 250px;
 
 }
+
+/************************
+LOGIN STYLES
+*************************/
 
 #login {
   display: block;
@@ -169,33 +161,39 @@ a {
 CHILDREN LIST STYLES 
 *************************/
 
-/*.residences img {
-  width: 100px;
-}*/
+.children-list {
+  height: 100%;
+  display: inline-block;
+}
 
-#children-list h3 {
+.children-list h3 {
   text-align: center;
   padding: 10px 0;
   font-size: 1.7em;
+  display: block;
 }
 
-#children-list ul li img.green {
-  border: 4px #2e804d solid;
+.children-list ul li img.green {
+  border: 4px #009e0f solid;
 }
 
-#children-list ul li img.yellow {
-  border: 4px #eadf39 solid;
+.children-list ul li img.yellow {
+  border: 4px #ffff00 solid;
 }
 
-#children-list ul li img.red {
-  border: 4px #ec1a15 solid;
+.children-list ul li img.red {
+  border: 4px #cf2a27 solid;
 }
 
-#children-list ul li, #residences ul li {
+.children-list ul li img.gray {
+  border: 4px #666 solid;
+}
+
+.children-list li, #residences ul li {
   float: left;
 }
 
-#children-list ul li, #residences ul li {
+.children-list li, #residences ul li {
   width: 100px;
   margin: 10px 2.5%;
   text-align: center;
@@ -214,14 +212,9 @@ CHILDREN LIST STYLES
   color: #666;
 }
 
-/*.add-new-exam {
-  display: inline-block;
-  border: 1px #000 solid;
-  box-shadow: 5px 5px 10px #000;
-  border-radius: 5px;
-  margin-bottom: 15px;
-  padding: 4px;
-}*/
+#active {
+  padding-bottom: 10px;
+}
 
 /*********************************
 TWO-COLUMN and THREE-COLUMN STYLES
@@ -232,29 +225,9 @@ TWO-COLUMN and THREE-COLUMN STYLES
   height: 100%;
 }
 
-.two-column #sidebar, .three-column #sidebar {
-  display: block;
-  width: 100%;
-}
-
-.two-column #sidebar ul, .three-column #sidebar ul {
-  text-align: center;
-}
-
-.two-column #sidebar li, .three-column #sidebar li {
-  display: inline-block;
-  padding: 10px 5px;
-  font-size: 1.1em;
-}
-
-.three-column #details {
-  text-align: center;
-  padding-bottom: 10px;
-}
-
-.two-column #content, .three-column #children-list, #residences {
-  display: block;
-  width: 100%;
+.two-column h2 {
+  margin-bottom: 10px;
+  padding-right: 10px;
 }
 
 .two-column #content li {
@@ -265,6 +238,13 @@ TWO-COLUMN and THREE-COLUMN STYLES
   display: inline-block;
   width: 166px;
 }
+
+.three-column #details {
+  text-align: center;
+  padding-bottom: 10px;
+}
+
+/* FORM STYLES */
 
 .two-column #content input[type="text"],
 .two-column #content textarea {
@@ -298,6 +278,36 @@ TWO-COLUMN and THREE-COLUMN STYLES
   float: left;
 }
 
+
+/* MENU STYLES */
+
+.selected {
+  background: #95bcf2 ;
+}
+
+#sidebar {
+  display: block;
+  width: 100%;
+}
+
+#sidebar a {
+  text-decoration: none;
+}
+#sidebar ul {
+  text-align: center;
+}
+
+#sidebar li {
+  display: inline-block;
+  padding: 10px 5px;
+  font-size: 1.1em;
+}
+
+#sidebar #secondary li {
+  border: none;
+  margin-left: 25px;
+}
+
 /************************
 CHILD PAGE STYLES
 *************************/
@@ -317,14 +327,57 @@ CHILD PAGE STYLES
   padding: 5px 0;
 }
 
-#sidebar #secondary li {
-  border: none;
-  margin-left: 25px;
-  /*font-size: .8em;*/
-}
-
 #child-view-lists {
   padding-left: 10px;
+}
+
+/**********************
+CHILD INFORMATION STYLES:
+SUMMARY AND RISK ASSESSMENT;
+**********************/
+
+.summary {
+  width: 90%;
+  margin: 10px 5%;
+}
+
+.summary .priority {
+  width: 50px;
+  height: 132px;
+  float: left;
+  border: 1px #666 solid;
+  padding: 4px;
+}
+
+.summary .priority .circle {
+  display: inline-block;
+  border-radius: 50%;
+  border: 1px #666 solid;
+  width: 40px;
+  height: 40px;
+  margin: 0 5px;
+}
+
+.high {
+  background-color: #cf2a27;
+}
+
+.medium {
+  background-color: #ffff00;
+}
+
+.low {
+  background-color: #009e0f;
+}
+
+.summary .recommendation {
+  display: inline-block;
+  border: 1px #666 solid;
+  width: 80%;
+  height: 132px;
+  padding: 4px;
+  overflow: auto;
+  margin-left: 1%;
 }
 
 
@@ -333,6 +386,8 @@ MEDIA QUERIES
 **********************/
 
 @media screen and (min-width: 510px) {
+
+  /* Updates HEADER */
 
   #header {
     min-height: 99px;
@@ -347,10 +402,6 @@ MEDIA QUERIES
     font-size: 2.2em;
   }
 
-  h2 {
-    font-size: 1.7em;
-  }
-
   #logo {
     display: inline-block;
     width: 250px;
@@ -361,6 +412,17 @@ MEDIA QUERIES
 
 @media screen and (min-width: 550px) {
 
+  /* Updates TWO-COLUMN STYLES */
+
+  .two-column #content {
+    display: inline-block;
+    float: left;
+    padding-left: 10px;
+    width: 78%;
+  }
+
+  /* Updates MENU */
+
   .two-column #sidebar {
     display: block;
     min-width: 100px;
@@ -370,14 +432,7 @@ MEDIA QUERIES
     float: left;
     border-bottom: 1px solid #000;
     border-right: 1px solid #000;
-    height: 400px;
-  }
-
-  .two-column #content {
-    display: inline-block;
-    float: left;
-    padding-left: 10px;
-    width: 78%;
+    height: 100%;
   }
 
   .two-column #sidebar li {
@@ -396,6 +451,8 @@ MEDIA QUERIES
     margin: 10px 20px;
   }
 
+  /* Updates CHILD INFORMATION STYLES*/
+
   .child-info, #child-view-lists {
     width: 79%;
   }
@@ -413,6 +470,20 @@ MEDIA QUERIES
 }
 
 @media screen and (min-width: 775px) {
+
+  /* Updates CHILDREN LIST STYLES */
+
+  .children-list {
+    width: 100%;
+  }
+
+  /* Updates THREE COLUMN STYLES
+     Children List Page */
+
+  .three-column #content {
+    margin-left: 21%;
+  }
+
   .three-column #sidebar, .three-column #details {
     display: block;
     min-width: 100px;
@@ -422,7 +493,8 @@ MEDIA QUERIES
     float: left;
     border-bottom: 1px solid #000;
     border-right: 1px solid #000;
-    height: 400px;
+    min-height: 400px;
+    height: 100%;
   }
 
   .three-column #sidebar li {
@@ -437,6 +509,8 @@ MEDIA QUERIES
     text-align: left;
     padding: 10px ;
   }
+
+  /* Update CHILD INFORMATION STYLES */
 
   .child-info img {
     width: 200px;
@@ -454,6 +528,10 @@ MEDIA QUERIES
 
   .exam {
     padding-left: 155px;
+  }
+
+  .summary .recommendation {
+    width: 80%;
   }
 
 }

@@ -20,9 +20,10 @@ def index(request, child_id):
     context = {
         'MedicalExamPart2s': list,
         'child_id': child_id,
-        'child': child
+        'child': child,
+        'residence_id': child.residence_id,
     }
-    return render(request, 'tracker/medical_exam_part2_history.html', context)
+    return render(request, 'tracker/add_medical_exam_part2.html', context)
 
 def new(request, child_id):
     child = get_object_or_404(Child, pk=child_id)
@@ -58,15 +59,63 @@ def new(request, child_id):
         'signature_form': signature_form.as_ul,
         'MedicalExamPart2s': medical_exam_part_2_list,
     }
-    return render(request, 'tracker/add_child_medical_exam_part2_history.html', context)
+    return render(request, 'tracker/add_medical_exam_part2.html', context)
 
 def view(request, child_id, exam_id):
     p = get_object_or_404(MedicalExamPart2, pk=exam_id)
     child = get_object_or_404(Child, pk=child_id)
+    signature = get_object_or_404(Signature, pk=p.signature_id)
     context = {
         'exam': p,
         'child': child,
         'child_id': child.id,
-        'residence_id': child.residence_id,   
+        'residence_id': child.residence_id,
+        'signature': signature,   
     }
     return render(request, 'tracker/medical_exam_part2.html', context)
+
+def edit(request, child_id, exam_id):
+    child = get_object_or_404(Child, pk=child_id)
+    exam = get_object_or_404(MedicalExamPart2, pk=exam_id)
+    signature = get_object_or_404(Signature, pk=exam.signature_id)
+    if request.method == 'POST':
+        signature_form = SignatureForm(request.POST, request.FILES, instance=signature, request=request)
+        medical_exam_part2_form = MedicalExamPart2Form(request.POST, request.FILES, instance=exam, request=request)
+        
+        if 'discard' in request.POST:
+            return HttpResponseRedirect(reverse('tracker:child', kwargs={'child_id': child_id}))
+        
+        else:
+            if signature_form.is_valid() and medical_exam_part2_form.is_valid():
+                saved_signature = signature_form.save()
+                if saved_signature:
+                    medical_exam_part2 = medical_exam_part2_form.save(commit=False)
+                    medical_exam_part2.signature = saved_signature
+                    medical_exam_part2.child = child
+                    medical_exam_part2.save()
+                    medical_exam_part2_form.save_m2m()
+                    return HttpResponseRedirect(reverse('tracker:child', kwargs={'child_id': child_id}))
+    
+    else:
+        medical_exam_part2_form = MedicalExamPart2Form(initial={
+                'child': child,
+                'child_id': child_id,
+                'date': datetime.date.today(),
+            }, instance=exam
+        )
+        signature_form = SignatureForm(instance=signature)
+    medical_exam_part_2_list = MedicalExamPart2.objects.filter(child_id=child_id)
+    context = {
+        'child': child,
+        'child_id': child_id,
+        'residence_id': child.residence_id,
+        'exam_id': exam.id,
+        'medical_exam_part2_form': medical_exam_part2_form.as_ul,
+        'signature_form': signature_form.as_ul,
+        'MedicalExamPart2s': medical_exam_part_2_list,
+    }
+    return render(request, 'tracker/edit_medical_exam_part2.html', context)
+
+
+
+

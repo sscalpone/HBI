@@ -1,8 +1,8 @@
 {% extends 'two-column.html' %}
 
-{% block title %}Añadir Nueva Casa{% endblock %}
+{% block title %}Añadir Nueva Residencia{% endblock %}
 
-{% block h2 %}Añadir Nueva Casa{% endblock %}
+{% block h2 %}Añadir Nueva Residencia{% endblock %}
 
 {% block sidebar %}
 	<ul>
@@ -13,7 +13,6 @@
 
 {% block content %}
 
-    <h2>Añadir Nueva Casa</h2>
     {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
 
     <form action="{% url 'tracker:add_residence' %}" enctype="multipart/form-data" method="post">

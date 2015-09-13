@@ -11,6 +11,15 @@ from Child import Child
 from Signature import Signature
 
 class MedicalExamPart2(models.Model):
+    HIGH = 1
+    MEDIUM = 2
+    LOW = 3
+    PRIORITY_CHOICES = (
+        (HIGH, 'Alta Prioridad'),
+        (MEDIUM, 'Prioridad Media'),
+        (LOW, 'Prioridad Baja')
+    )
+
     child = models.ForeignKey(Child)
     date = models.DateField()
     illness_notes = models.TextField(blank=True, null=True)
@@ -42,6 +51,9 @@ class MedicalExamPart2(models.Model):
     neurological_normal = models.BooleanField(default=False)
     neurological_notes = models.TextField(blank=True, null=True)
     recommendations = models.TextField(blank=True, null=True)
+    priority = models.IntegerField(choices=PRIORITY_CHOICES, 
+                                   default=HIGH)
+    signature = models.ForeignKey(Signature, blank=True, null=True)
 
     class Meta:
         app_label = 'tracker'
@@ -118,6 +130,7 @@ class MedicalExamPart2Form(ModelForm):
             'neurological_normal',
             'neurological_notes',
             'recommendations',
+            'priority',
         )
         labels = {
             'date': 'Fecha',
@@ -150,6 +163,7 @@ class MedicalExamPart2Form(ModelForm):
             'neurological_normal': 'Neurological',
             'neurological_notes': 'Comentarios',
             'recommendations': 'Otres Recomendaciones',
+            'priority': 'Prioridad',
         }
         widgets = {
             'appearance_normal': RadioSelect(choices=((True, 'Anormal'),(False, 'Normal'))),

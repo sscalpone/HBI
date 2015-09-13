@@ -56,6 +56,7 @@ class MedicalExamPart1(models.Model):
     density_notes = models.TextField(blank=True, null=True)
     glucose_normal = models.BooleanField(default=False)
     glucose_notes = models.TextField(blank=True, null=True)
+    signature = models.ForeignKey(Signature, blank=True, null=True)
 
     class Meta:
         app_label = 'tracker'

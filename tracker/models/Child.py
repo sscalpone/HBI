@@ -5,6 +5,7 @@ import datetime
 from django.contrib.auth.models import User
 from django.db import models
 from django.forms import ModelForm
+from django.forms import CheckboxInput
 
 from Residence import Residence
 
@@ -14,6 +15,14 @@ class Child(models.Model):
     GENDER_CHOICES = (
         (MALE, 'Hombre'),
         (FEMALE, 'Mujer')
+    )
+    HIGH = 1
+    MEDIUM = 2
+    LOW = 3
+    PRIORITY_CHOICES = (
+        (HIGH, 'Alta Prioridad'),
+        (MEDIUM, 'Prioridad Media'),
+        (LOW, 'Prioridad Baja')
     )
     residence = models.ForeignKey(Residence, default=1, blank=True, null=True)
     first_name = models.CharField(max_length=200, blank=True, null=True)
@@ -25,6 +34,9 @@ class Child(models.Model):
     birthplace = models.CharField(max_length=200, blank=True, null=True)
     intake_date = models.DateField(blank=True, null=True)
     photo = models.ImageField(upload_to='photos', default='/media/photos/person-icon.svg', blank=True, null=True)
+    priority = models.IntegerField(choices=PRIORITY_CHOICES, 
+                                default=LOW)
+    active = models.BooleanField(default=True)
 
     class Meta:
         app_label = 'tracker'
@@ -64,6 +76,7 @@ class ChildForm(ModelForm):
             'birthplace',
             'intake_date',
             'photo',
+            'active',
         )
         labels = {
             'residence': 'Casa Girasoles',
@@ -74,6 +87,10 @@ class ChildForm(ModelForm):
             'birthplace': 'Lugar de Naciemiento',
             'intake_date': 'Fecha de Ingreso',
             'photo': 'Fotografía',
+            'active': 'Activo',
+        }
+        widgets = {
+            'active': CheckboxInput(),
         }
 
     def __init__(self, *args, **kwargs):

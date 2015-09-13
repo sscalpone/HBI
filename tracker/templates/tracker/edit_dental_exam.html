@@ -1,8 +1,8 @@
 {% extends 'two-column.html' %}
 
-{% block title %}Informe Odontológico{% endblock %}
+{% block title %}Editar Informe Odontológico{% endblock %}
 
-{% block h2 %}Informe Odontológico, {{exam.date}}{% endblock %}
+{% block h2 %}Editar Informe Odontológico{% endblock %}
 
 {% block sidebar %}
     <ul>
@@ -24,18 +24,22 @@
 {% block content %}
 
     {% include 'tracker/basic-info.html' %}
-    <div class="form-info">
-    	<dl>
-            <dt>Recomendaciones:</dt><dd>{{ exam.recommendation }}</dd>
-        </dl>
-            <h3>Los Datos del Profesíonal</h3>
-        <dl>
-            <dt>Nombre:</dt><dd>{{ signature.name }} {{ signature.surname }}</dd>
-            <dt>EMP:</dt><dd>{{ signature.emp }}</dd>
-            <dt>Direccion:</dt><dd>{{ signature.direction }}</dd>
-            <dt>Celular:</dt><dd>{{ signature.cell }}</dd>
-        </dl>
-        <a href="{% url 'tracker:edit_dental_exam' child_id exam.id %}">Edita Detalles</a>
-    </div>
-    
+    {% include 'tracker/dental_exam_list.html' %}
+
+    {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+
+    <form action="{% url 'tracker:edit_dental_exam' child_id exam_id %}" enctype="multipart/form-data" method="post" class="exam">
+        {% csrf_token %}
+        <ul>
+            {{ dental_exam_form }}
+        
+            <li><h3>Los Datos del Profesíonal</h3></li>
+
+            {{ signature_form }}
+        </ul>
+        <input type="submit" name="submit" value="Enviar">
+        <input type="submit" name="save" value="Guardar Cambios">
+        <input type="submit" name="discard" value="Descartar Cambios">
+        
+    </form>
 {% endblock %}

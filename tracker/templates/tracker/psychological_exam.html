@@ -22,8 +22,9 @@
 {% endblock %}
 
 {% block content %}
+    {% include 'tracker/basic-info.html' %}
+
     <div class="form-info">
-    	<h2><span>{{ child.first_name }} {{ child.last_name }}:</span> Evaluación e Informe Psicológico, {{ exam.date }}</h2>
     	<dl>
     	   	<dt>Antecedents Patológicos Personales y Familiares Importantes: </dt><dd>{{ exam.background_notes }}</dd>
     		<dt>Descripción Fisica y Comportamiento: </dt><dd>{{ exam.physical_description }}</dd>
@@ -33,5 +34,13 @@
     		<dt>Área Afectiva Emocional: </dt><dd>{{ exam.emotional_notes }}</dd>
     		<dt>Recomendaciones: </dt><dd>{{ exam.recommendation }}</dd>
     	</dl>
+        <h3>Los Datos del Profesíonal</h3>
+        <dl>
+            <dt>Nombre:</dt><dd>{{ signature.name }} {{ signature.surname }}</dd>
+            <dt>EMP:</dt><dd>{{ signature.emp }}</dd>
+            <dt>Direccion:</dt><dd>{{ signature.direction }}</dd>
+            <dt>Celular:</dt><dd>{{ signature.cell }}</dd>
+        </dl>
+        <a href="{% url 'tracker:edit_psychological_exam' child_id exam.id %}">Edita Detalles</a>
     </div>
 {% endblock %}

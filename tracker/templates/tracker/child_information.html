@@ -25,15 +25,37 @@
 
     {% include 'tracker/basic-info.html' %}
 
-    {{ dental_exam.recommendation }}
-
-    {{ medical_exam_part1.recommendation }}
-
-    {{ medical_exam_part2.recommendation }}
-
-    {{ psychological_exam.recommendation }}
-
-    {{ social_exam.recommendation }}    
-    
+    <div class="summary">
+        <span class="priority">
+            <span class="circle {% if dental_exam.priority == 1 %} high {% endif %}"></span>
+            <span class="circle {% if dental_exam.priority == 2 %} medium {% endif %}"></span>
+            <span class="circle {% if dental_exam.priority == 3 %} low {% endif %}"></span>
+        </span>
+        <span class="recommendation">{{ dental_exam.recommendation }}</span>
+    </div>
+    <div class="summary">
+        <span class="priority">
+            <span class="circle {% if medical_exam_part2.priority == 1 %} high {% endif %}"></span>
+            <span class="circle {% if medical_exam_part2.priority == 2 %} medium {% endif %}"></span>
+            <span class="circle {% if medical_exam_part2.priority == 3 %} low {% endif %}"></span>
+        </span>
+        <span class="recommendation">{{ medical_exam_part2.recommendations }}</span>
+    </div>
+    <div class="summary">
+        <span class="priority">
+            <span class="circle {% if psychological_exam.priority == 1 %} high {% endif %}"></span>
+            <span class="circle {% if psychological_exam.priority == 2 %} medium {% endif %}"></span>
+            <span class="circle {% if psychological_exam.priority == 3 %} low {% endif %}"></span>
+        </span>
+        <span class="recommendation">{{ psychological_exam.recommendation }}</span>
+    </div>
+    <div class="summary">
+        <span class="priority">
+            <span class="circle {% if social_exam.priority == 1 %} high {% endif %}"></span>
+            <span class="circle {% if social_exam.priority == 2 %} medium {% endif %}"></span>
+            <span class="circle {% if social_exam.priority == 3 %} low {% endif %}"></span>
+        </span>
+        <span class="recommendation">{{ social_exam.recommendation }}<span>  
+    </div>
 {% endblock %}
 

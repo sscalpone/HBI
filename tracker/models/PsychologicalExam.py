@@ -10,6 +10,14 @@ from Signature import Signature
 
 
 class PsychologicalExam(models.Model):
+    HIGH = 1
+    MEDIUM = 2
+    LOW = 3
+    PRIORITY_CHOICES = (
+        (HIGH, 'Alta Prioridad'),
+        (MEDIUM, 'Prioridad Media'),
+        (LOW, 'Prioridad Baja')
+    )
     child = models.ForeignKey(Child)
     date = models.DateField()
     background_notes = models.TextField(blank=True, null=True)
@@ -19,6 +27,9 @@ class PsychologicalExam(models.Model):
     psychomotor_notes = models.TextField(blank=True, null=True)
     emotional_notes = models.TextField(blank=True, null=True)
     recommendation = models.TextField(blank=True, null=True)
+    priority = models.IntegerField(choices=PRIORITY_CHOICES, 
+                                   default=HIGH)
+    signature = models.ForeignKey(Signature, blank=True, null=True)
 
     class Meta:
         app_label = 'tracker'
@@ -47,6 +58,7 @@ class PsychologicalExamForm(ModelForm):
             'psychomotor_notes',
             'emotional_notes',
             'recommendation',
+            'priority'
         )
         labels = {
             'date': 'Fecha',
@@ -57,6 +69,7 @@ class PsychologicalExamForm(ModelForm):
             'psychomotor_notes': 'Área Psciomotor',
             'emotional_notes': 'Área Afectiva Emocional',
             'recommendation': 'Recomendaciones',
+            'priority': 'Prioridad',
         }
 
     def __init__(self, *args, **kwargs):

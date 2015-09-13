@@ -22,8 +22,9 @@
 {% endblock %}
 
 {% block content %}
+    {% include 'tracker/basic-info.html' %}
+
     <div class="form-info">
-    	<h2><span>{{ child.first_name }} {{ child.last_name }}:</span> Evaluacíon e Informe Social, {{ exam.date }}</h2>
     	<dl>
     	    <dt>Partida de Nacimiento: </dt><dd>{{ exam.has_birth_certificate }}</dd>
     		<dt>Original: </dt><dd>{{ exam.original_birth_certificate }}</dd>
@@ -41,5 +42,13 @@
     		<dt>Diagnostico Social</dt><dd>{{ exam.social_diagnosis }}</dd>
     		<dt>Recomendaciones</dt><dd>{{ exam.recommendation }}</dd>
     	</dl>
+        <h3>Los Datos del Profesíonal</h3>
+        <dl>
+            <dt>Nombre:</dt><dd>{{ signature.name }} {{ signature.surname }}</dd>
+            <dt>EMP:</dt><dd>{{ signature.emp }}</dd>
+            <dt>Direccion:</dt><dd>{{ signature.direction }}</dd>
+            <dt>Celular:</dt><dd>{{ signature.cell }}</dd>
+        </dl>
+        <a href="{% url 'tracker:edit_social_exam' child_id exam.id %}">Edita Detalles</a>
     </div>
 {% endblock %}

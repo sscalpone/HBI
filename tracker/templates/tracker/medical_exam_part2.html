@@ -22,28 +22,38 @@
 {% endblock %}
 
 {% block content %}
-<div class="form-info">
-	<h2><span>{{ child.first_name }} {{ child.last_name }}:</span> Evaluación e Informe Médico, Parte 2, {{ exam.date }}</h2>
-    <dl>
-		<dt>Enfermedad Actual: </dt><dd>{{ exam.illness_notes }}</dd>
-		<dt>Apetito: </dt><dd>{{ exam.appetite_notes }}</dd>
-		<dt>Sueño: </dt><dd>{{ exam.sleep_notes }}</dd>
-		<dt>Otras Problemas de Salud: </dt><dd>{{ exams.concerns_notes }}</dd>
-		<dt>Presión Arterial: </dt><dd>{{ exam.blood_pressure }}</dd>
-		<dt>Pulso: </dt><dd>{{ exam.pulse }}</dd>
-		<dt>Agudeza Visual Izquierdo: </dt><dd>{{ exam.visual_acuity_left }}</dd>
-		<dt>Agudeza Visual Derecha: </dt><dd>{{ exam.visual_acuity_right }}</dd>
-		<dt>Aspecto General: </dt><dd>{{ exam.appearance_normal }}</dd><dd>{{ exam.appearance_notes }}</dd>
-		<dt>Piel y Mucosas: </dt><dd>{{ exam.skin_mucosa_normal }}</dd><dd>{{ exam.skin_mucosa_notes }}</dd>
-		<dt>TCSC y G. Linfaticos: </dt><dd>{{ exam.TCSC_lymph_normal }}</dd><dd>{{ exam.TCSC_lymph_notes }}</dd>
-		<dt>Cabeza y Cuello: </dt><dd>{{ exam.head_neck_normal }}</dd><dd>{{ exam.head_neck_notes }}</dd>
-		<dt>Tórax y Pulmones: </dt><dd>{{ exam.thorax_lungs_normal }}</dd><dd>{{ exam.thorax_lungs_notes }}</dd>
-		<dt>Cardiovascular: </dt><dd>{{ exam.cardio_normal }}</dd><dd>{{ exam.cardio_notes }}</dd>
-		<dt>Abdomen: </dt><dd>{{ exam.abdomen_normal }}</dd><dd>{{ exam.abdomen_notes }}</dd>
-		<dt>Genitourinario y Ano: </dt><dd>{{ exam.genitourinary_normal }}</dd><dd>{{ exam.genitourinary_notes }}</dd>
-		<dt>Extremidades: </dt><dd>{{ exam.extremities_normal }}</dd><dd>{{ exam.extremities_notes }}</dd>
-		<dt>Neurological: </dt><dd>{{ exam.neurological_normal }}</dd><dd>{{ exam.neurological_notes }}</dd>
-		<dt>Otres Recomendaciones: </dt><dd>{{ exam.recommendations }}</dd>
-	</dl>
-</div>
+
+	{% include 'tracker/basic-info.html' %}
+
+    <div class="form-info">
+	    <dl>
+			<dt>Enfermedad Actual: </dt><dd>{{ exam.illness_notes }}</dd>
+			<dt>Apetito: </dt><dd>{{ exam.appetite_notes }}</dd>
+			<dt>Sueño: </dt><dd>{{ exam.sleep_notes }}</dd>
+			<dt>Otras Problemas de Salud: </dt><dd>{{ exams.concerns_notes }}</dd>
+			<dt>Presión Arterial: </dt><dd>{{ exam.blood_pressure }}</dd>
+			<dt>Pulso: </dt><dd>{{ exam.pulse }}</dd>
+			<dt>Agudeza Visual Izquierdo: </dt><dd>{{ exam.visual_acuity_left }}</dd>
+			<dt>Agudeza Visual Derecha: </dt><dd>{{ exam.visual_acuity_right }}</dd>
+			<dt>Aspecto General: </dt><dd>{{ exam.appearance_normal }}</dd><dd>{{ exam.appearance_notes }}</dd>
+			<dt>Piel y Mucosas: </dt><dd>{{ exam.skin_mucosa_normal }}</dd><dd>{{ exam.skin_mucosa_notes }}</dd>
+			<dt>TCSC y G. Linfaticos: </dt><dd>{{ exam.TCSC_lymph_normal }}</dd><dd>{{ exam.TCSC_lymph_notes }}</dd>
+			<dt>Cabeza y Cuello: </dt><dd>{{ exam.head_neck_normal }}</dd><dd>{{ exam.head_neck_notes }}</dd>
+			<dt>Tórax y Pulmones: </dt><dd>{{ exam.thorax_lungs_normal }}</dd><dd>{{ exam.thorax_lungs_notes }}</dd>
+			<dt>Cardiovascular: </dt><dd>{{ exam.cardio_normal }}</dd><dd>{{ exam.cardio_notes }}</dd>
+			<dt>Abdomen: </dt><dd>{{ exam.abdomen_normal }}</dd><dd>{{ exam.abdomen_notes }}</dd>
+			<dt>Genitourinario y Ano: </dt><dd>{{ exam.genitourinary_normal }}</dd><dd>{{ exam.genitourinary_notes }}</dd>
+			<dt>Extremidades: </dt><dd>{{ exam.extremities_normal }}</dd><dd>{{ exam.extremities_notes }}</dd>
+			<dt>Neurological: </dt><dd>{{ exam.neurological_normal }}</dd><dd>{{ exam.neurological_notes }}</dd>
+			<dt>Otres Recomendaciones: </dt><dd>{{ exam.recommendations }}</dd>
+		</dl>
+		<h3>Los Datos del Profesíonal</h3>
+	    <dl>
+	        <dt>Nombre:</dt><dd>{{ signature.name }} {{ signature.surname }}</dd>
+	        <dt>EMP:</dt><dd>{{ signature.emp }}</dd>
+	        <dt>Direccion:</dt><dd>{{ signature.direction }}</dd>
+	        <dt>Celular:</dt><dd>{{ signature.cell }}</dd>
+	    </dl>
+	    <a href="{% url 'tracker:edit_medical_exam_part2' child_id exam.id %}">Edita Detalles</a>
+	</div>
 {% endblock %}
