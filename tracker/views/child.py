@@ -37,7 +37,10 @@ def new(request, residence_id):
                 saved_child = form.save()
                 if saved_child:
                     child_id = saved_child.id
-                    return HttpResponseRedirect(reverse('tracker:child', kwargs={'child_id': child_id}))
+                    if 'save' in request.POST:
+                        return HttpResponseRedirect(reverse('tracker:edit_child', kwargs={'child_id': child_id}))
+                    else:
+                        return HttpResponseRedirect(reverse('tracker:child', kwargs={'child_id': child_id}))
     else:
         form = ChildForm()
     context = {

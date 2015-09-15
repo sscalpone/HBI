@@ -114,13 +114,13 @@ class ChildForm(ModelForm):
                 if last_name=='':
                     self.add_error('last_name', msg)
                 birthdate = cleaned_data.get('birthdate')
-                if birthdate=='':
+                if birthdate is None:
                     self.add_error('birthdate', msg)
                 birthplace = cleaned_data.get('birthplace')
                 if birthplace=='':
                     self.add_error('birthplace', msg)
                 intake_date = cleaned_data.get('intake_date')
-                if intake_date=='':
+                if intake_date is None:
                     self.add_error('intake_date', msg)
                 photo = cleaned_data.get('photo')
                 if photo is None:

@@ -29,30 +29,34 @@
 	<div class= "children-list" id="active">
 		<h3>Activo Niños</h3>
 	    <ul>
-	    {% for child in active %}
-	    	<a href="{% url 'tracker:child' child.id %}"><li><img {% if child.priority == 1 %}class="red"{% elif child.priority == 2 %} class="yellow" {% else %} class="green" {% endif %} src="{{ child.photo.url }}">
-	    		{% if child.first_name == '' %}
-	    			Unknown Name
-	    		{% else %}
-	    			{{ child.first_name }} {{ child.last_name }}
-	    		{% endif %}
-	    		</li></a>
-	    {% endfor %}
+	    {% if active %}
+		    {% for child in active %}
+		    	<a href="{% url 'tracker:child' child.id %}"><li><img {% if child.priority == 1 %}class="red"{% elif child.priority == 2 %} class="yellow" {% else %} class="green" {% endif %} src="{{ child.photo.url }}">
+		    		{% if child.first_name == '' %}
+		    			Unknown Name
+		    		{% else %}
+		    			{{ child.first_name }} {{ child.last_name }}
+		    		{% endif %}
+		    		</li></a>
+		    {% endfor %}
+	    {% endif %}
 	    	<a href="{% url 'tracker:add_child' residence_id %}"><li class="add-new"><div>+</div><span>Añadir Nuevo Niño</span></li></a>
 	    </ul>
 	</div>
 	<div class="children-list" id="inactive">
 	    <h3>Inactivo Niños</h3>
 	    <ul>
-	    {% for child in inactive %}
-	    	<a href="{% url 'tracker:child' child.id %}"><li><img class="gray" src="{{ child.photo.url }}">
-	    		{% if child.first_name == '' %}
-	    			Unknown Name
-	    		{% else %}
-	    			{{ child.first_name }} {{ child.last_name }}
-	    		{% endif %}
-	    	</li></a>
-	    {% endfor %}
+	    {% if inactive %}
+		    {% for child in inactive %}
+		    	<a href="{% url 'tracker:child' child.id %}"><li><img class="gray" src="{{ child.photo.url }}">
+		    		{% if child.first_name == '' %}
+		    			Unknown Name
+		    		{% else %}
+		    			{{ child.first_name }} {{ child.last_name }}
+		    		{% endif %}
+		    	</li></a>
+		    {% endfor %}
+		  {% endif %}
 		</ul>
     </div>
 {% endblock %}
