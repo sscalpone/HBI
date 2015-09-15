@@ -33,7 +33,6 @@ def index(request, child_id):
 		if latest_dental_exam.priority < priority:
 			priority = latest_dental_exam.priority
 	if latest_social_exam:
-		print latest_social_exam.priority
 		if latest_social_exam.priority < priority:
 			priority = latest_social_exam.priority
 	if latest_psychological_exam:

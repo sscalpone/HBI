@@ -143,7 +143,8 @@ LOGIN STYLES
   font-size: 1em;
 }
 
-#login input[type="submit"], .add-new-exam {
+#login input[type="submit"], 
+.add-new-exam {
   background: #fff;
   text-align: center;
   font-size: 1em;
@@ -258,8 +259,6 @@ TWO-COLUMN and THREE-COLUMN STYLES
 .two-column #content textarea,
 .two-column #content input[type="number"],
 .two-column #content select {
-}
- {
   font-size: 1em;
   padding: 4px;
   border: 2px #666 solid;

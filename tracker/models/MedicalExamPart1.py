@@ -209,7 +209,6 @@ class MedicalExamPart1Form(ModelForm):
                 if height is None:
                     self.add_error('height', msg)
 
-
                 bcg_vaccine = cleaned_data.get('bcg_vaccine')
                 bcg_vaccine_date = cleaned_data.get('bcg_vaccine_date')
                 if bcg_vaccine and bcg_vaccine_date is None:

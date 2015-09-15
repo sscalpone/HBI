@@ -31,7 +31,13 @@
 	    <ul>
 	    {% if active %}
 		    {% for child in active %}
-		    	<a href="{% url 'tracker:child' child.id %}"><li><img {% if child.priority == 1 %}class="red"{% elif child.priority == 2 %} class="yellow" {% else %} class="green" {% endif %} src="{{ child.photo.url }}">
+		    	<a href="{% url 'tracker:child' child.id %}"><li>
+		    		{% if child.photo %}
+		    		<img {% if child.priority == 1 %}class="red"{% elif child.priority == 2 %} class="yellow" {% else %} class="green" {% endif %} src="{{ child.photo.url }}">
+		    		{% else %}
+			    	{% load staticfiles %}<img {% if child.priority == 1 %}class="red"{% elif child.priority == 2 %} class="yellow" {% else %} class="green" {% endif %} src="{% static "tracker/person-icon.svg" %}">
+			    	{% endif %}
+
 		    		{% if child.first_name == '' %}
 		    			Unknown Name
 		    		{% else %}

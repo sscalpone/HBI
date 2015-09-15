@@ -33,7 +33,7 @@ class Child(models.Model):
                               default=MALE)
     birthplace = models.CharField(max_length=200, blank=True, null=True)
     intake_date = models.DateField(blank=True, null=True)
-    photo = models.ImageField(upload_to='photos', default='/media/photos/person-icon.svg', blank=True, null=True)
+    photo = models.ImageField(upload_to='photos', blank=True, null=True)
     priority = models.IntegerField(choices=PRIORITY_CHOICES, 
                                 default=LOW)
     active = models.BooleanField(default=True)
