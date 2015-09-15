@@ -24,7 +24,10 @@ def new(request):
             if form.is_valid():
                 saved_residence = form.save()
                 if saved_residence:
-                    return HttpResponseRedirect(reverse('tracker:residences'))
+                    if 'save' in request.POST:
+                        return HttpResponseRedirect(reverse('tracker:edit_residence', kwargs={'residence_id': saved_residence.id}))
+                    else:
+                        return HttpResponseRedirect(reverse('tracker:residence', kwargs={'residence_id': saved_residence.id}))
     else:
         form = ResidenceForm()
     context = {
@@ -62,7 +65,10 @@ def edit(request, residence_id):
             if form.is_valid():
                 saved_residence = form.save()
                 if saved_residence:
-                    return HttpResponseRedirect(reverse('tracker:residences'))
+                    if 'save' in request.POST:
+                        return HttpResponseRedirect(reverse('tracker:edit_residence', kwargs={'residence_id': saved_residence.id}))
+                    else:
+                        return HttpResponseRedirect(reverse('tracker:residence', kwargs={'residence_id': saved_residence.id}))
     else:
         form = ResidenceForm(instance=residence)
     context = {

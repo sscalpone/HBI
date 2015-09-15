@@ -59,10 +59,8 @@ def edit(request, child_id):
     child = get_object_or_404(Child, pk=child_id)
     residence_id = child.residence_id
     if request.POST:
-        print 'edit post'
         form = ChildForm(request.POST, request.FILES, instance=child, request=request)
         if 'discard' in request.POST:
-            print 'edit discard'
             p = get_object_or_404(Residence, pk=residence_id)
             children = Child.objects.filter(residence_id=residence_id)
             active = Child.objects.filter(residence_id=residence_id).filter(active=True)
@@ -81,17 +79,16 @@ def edit(request, child_id):
                 'at_risk': at_risk
             }
         else:
-            print 'edit form.is_valid()'
             if form.is_valid():
                 form.id = child.id
                 saved_child = form.save()
                 child_id = saved_child.id
-                print 'edit validated'
-                return HttpResponseRedirect(reverse('tracker:child', kwargs={'child_id': child_id}))
+                if 'save' in request.POST:
+                    return HttpResponseRedirect(reverse('tracker:edit_child', kwargs={'child_id': child_id}))
+                else:
+                    return HttpResponseRedirect(reverse('tracker:child', kwargs={'child_id': child_id}))
     else:
-        print 'edit method is not post'
         form = ChildForm(instance=child)
-    print 'edit context'
     context = {
         'form': form.as_ul,
         'residence_id': residence_id,

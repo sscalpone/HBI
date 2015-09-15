@@ -87,6 +87,10 @@ a {
   color: #000;
 }
 
+*:focus {
+  outline: 2px #95bcf2 groove;
+}
+
 /*********************
 HEADER STYLES
 **********************/
@@ -246,8 +250,16 @@ TWO-COLUMN and THREE-COLUMN STYLES
 
 /* FORM STYLES */
 
+.two-column #content select {
+  background: transparent;
+}
+
 .two-column #content input[type="text"],
-.two-column #content textarea {
+.two-column #content textarea,
+.two-column #content input[type="number"],
+.two-column #content select {
+}
+ {
   font-size: 1em;
   padding: 4px;
   border: 2px #666 solid;
@@ -447,7 +459,8 @@ MEDIA QUERIES
   }
 
   .two-column #content input[type="text"],
-  .two-column #content textarea {
+  .two-column #content textarea,
+  .two-column #content input[type="number"] {
     width: 60%;
   }
 

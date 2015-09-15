@@ -26,28 +26,28 @@ def index(request, child_id):
 
 def new(request, child_id):
     child = get_object_or_404(Child, pk=child_id)
-    
     if request.method == 'POST':
         signature_form = SignatureForm(request.POST, request.FILES, request=request)
-        dental_exam_form = DentalExamForm(request.POST, request.FILES, request=request)
-        
+        exam_form = DentalExamForm(request.POST, request.FILES, request=request)
         if 'discard' in request.POST:
             return HttpResponseRedirect(reverse('tracker:child', kwargs={'child_id': child_id}))
 
         else:
-            if signature_form.is_valid() and dental_exam_form.is_valid():
-                signature = signature_form.save()
+            if signature_form.is_valid() and exam_form.is_valid():
+                saved_signature = signature_form.save()
                 
-                if signature:
-                    dental_exam = dental_exam_form.save(commit=False)
-                    dental_exam.signature = signature
-                    dental_exam.child = child
-                    dental_exam.save()
-                    dental_exam_form.save_m2m()
-                    return HttpResponseRedirect(reverse('tracker:child', kwargs={'child_id': child_id}))  
-        
+                if saved_signature:
+                    saved_exam = exam_form.save(commit=False)
+                    saved_exam.signature = saved_signature
+                    saved_exam.child = child
+                    saved_exam.save()
+                    exam_form.save_m2m()
+                    if 'save' in request.POST:
+                        return HttpResponseRedirect(reverse('tracker:edit_dental_exam', kwargs={'child_id': child_id, 'exam_id': saved_exam.id}))
+                    else:
+                        return HttpResponseRedirect(reverse('tracker:child', kwargs={'child_id': child_id}))     
     else:
-        dental_exam_form = DentalExamForm(initial={
+        exam_form = DentalExamForm(initial={
                 'child': child,
                 'child_id': child_id,
                 'date': datetime.date.today(),
@@ -59,7 +59,7 @@ def new(request, child_id):
         'child': child,
         'child_id': child_id,
         'residence_id': child.residence_id,
-        'dental_exam_form': dental_exam_form.as_ul,
+        'dental_exam_form': exam_form.as_ul,
         'signature_form': signature_form.as_ul,
         'DentalExams': dental_exam_list,
     }
@@ -84,40 +84,43 @@ def edit(request, child_id, exam_id):
     signature = get_object_or_404(Signature, pk=exam.signature_id)
     if request.method == 'POST':
         signature_form = SignatureForm(request.POST, request.FILES, instance=signature, request=request)
-        dental_exam_form = DentalExamForm(request.POST, request.FILES, instance=exam, request=request)
+        exam_form = DentalExamForm(request.POST, request.FILES, instance=exam, request=request)
         
         if 'discard' in request.POST:
             return HttpResponseRedirect(reverse('tracker:child', kwargs={'child_id': child_id}))
 
         else:
-            if signature_form.is_valid() and dental_exam_form.is_valid():
+            if signature_form.is_valid() and exam_form.is_valid():
                 saved_signature = signature_form.save()
                 
                 if saved_signature:
-                    dental_exam = dental_exam_form.save(commit=False)
-                    dental_exam.signature = saved_signature
-                    dental_exam.child = child
-                    dental_exam.save()
-                    dental_exam_form.save_m2m()
-                    return HttpResponseRedirect(reverse('tracker:child', kwargs={'child_id': child_id}))  
+                    saved_exam = exam_form.save(commit=False)
+                    saved_exam.signature = saved_signature
+                    saved_exam.child = child
+                    saved_exam.save()
+                    exam_form.save_m2m()
+                    if 'save' in request.POST:
+                        return HttpResponseRedirect(reverse('tracker:edit_dental_exam', kwargs={'child_id': child_id, 'exam_id': saved_exam.id}))
+                    else:
+                        return HttpResponseRedirect(reverse('tracker:child', kwargs={'child_id': child_id}))  
         
     else:
-        dental_exam_form = DentalExamForm(initial={
+        exam_form = DentalExamForm(initial={
                 'child': child,
                 'child_id': child_id,
                 'date': datetime.date.today(),
             }, instance=exam
         )
         signature_form = SignatureForm(instance=signature)
-    dental_exam_list = DentalExam.objects.filter(child_id=child_id)
+    exam_list = DentalExam.objects.filter(child_id=child_id)
     context = {
         'child': child,
         'child_id': child_id,
         'exam_id': exam.id,
         'residence_id': child.residence_id,
-        'dental_exam_form': dental_exam_form.as_ul,
+        'dental_exam_form': exam_form.as_ul,
         'signature_form': signature_form.as_ul,
-        'DentalExams': dental_exam_list,
+        'DentalExams': exam_list,
     }
     return render(request, 'tracker/edit_dental_exam.html', context)
 

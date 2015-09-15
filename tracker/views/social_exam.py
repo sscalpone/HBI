@@ -40,7 +40,10 @@ def new(request, child_id):
                     social_exam.child = child
                     social_exam.save()
                     social_exam_form.save_m2m()
-                    return HttpResponseRedirect(reverse('tracker:child', kwargs={'child_id': child_id}))
+                    if 'save' in request.POST:
+                        return HttpResponseRedirect(reverse('tracker:edit_social_exam', kwargs={'child_id': child_id, 'exam_id': saved_exam.id}))
+                    else:
+                        return HttpResponseRedirect(reverse('tracker:child', kwargs={'child_id': child_id}))
     else:
         social_exam_form = SocialExamForm(initial={
                 'child': child,
@@ -91,7 +94,10 @@ def edit(request, child_id, exam_id):
                     saved_exam.child = child
                     saved_exam.save()
                     exam_form.save_m2m()
-                    return HttpResponseRedirect(reverse('tracker:child', kwargs={'child_id': child_id}))
+                    if 'save' in request.POST:
+                        return HttpResponseRedirect(reverse('tracker:edit_social_exam', kwargs={'child_id': child_id, 'exam_id': saved_exam.id}))
+                    else:
+                        return HttpResponseRedirect(reverse('tracker:child', kwargs={'child_id': child_id}))
     else:
         exam_form = SocialExamForm(
             initial={
