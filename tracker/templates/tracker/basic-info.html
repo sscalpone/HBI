@@ -1,14 +1,16 @@
     <div class="child-info">
         <img src="{{ child.photo.url }}">
         <ul>
-            <li><span>Nombre:</span> {{ child.first_name }} {{ child.last_name }}</li>
-            <li><span>Fecha de Naciemiento:</span> {{ child.birthdate }}</li>
-            {% if child.birthdate %}
+            <li><span>Nombre:</span> {% if child.first_name %}{{ child.first_name }}{% endif %} {% if child.last_name %}{{ child.last_name }}{% endif %}</li>
+            <li><span>Fecha de Naciemiento:</span> {% if child.birthdate %}{{ child.birthdate }}</li>
+                {% if child.birthdate %}
                 <li><span>Años:</span> {{ child.age }}</li>
+                {% endif %}  
             {% endif %}
-            <li><span>Casa Girasoles:</span> {{ child.residence.residence_name }}</li>
-            <li><span>Fecha de Ingreso:</span> {{ child.intake_date }}</li>
-            <li><span>Lugar de Naciemiento:</span> {{ child.birthplace }}</li>
+            <li><span>Género:</span> {{ child.gender }}</li>
+            <li><span>Casa Girasoles:</span>{{ child.residence.residence_name }}</li>
+            <li><span>Fecha de Ingreso:</span> {% if child.intake_date %}{{ child.intake_date }}{% endif %}</li>
+            <li><span>Lugar de Naciemiento:</span> {% if child.birthplace %}{{ child.birthplace }}{% endif %}</li>
             <a href="{% url 'tracker:edit_child' child_id %}"><li>Edita Detalles</li></a>
         </ul>
     </div>

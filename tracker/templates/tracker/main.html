@@ -17,7 +17,7 @@
 		<ul>
 		{% if residences %}
 			{% for residence in residences %}
-				<a href="{% url 'tracker:residence' residence.id %}"><li><img src="/media/photos/house-icon.svg">
+				<a href="{% url 'tracker:residence' residence.id %}"><li>{% load staticfiles %}<img src="{% static "tracker/house-icon.svg" %}">
 					{% if residence.residence_name == '' %}
 						Unknown Name
 					{% else %}
