@@ -1,0 +1,49 @@
+{% extends 'eval-sidebar.html' %}
+
+{% block title %}Informe Sangre{% endblock %}
+
+{% block h2 %}Informe Sangre, {{exam.date}}{% endblock %}
+
+{% block content %}
+
+    {% include 'tracker/basic-info.html' %}
+    <div>
+    	<ul id="form-info">
+            <li><span>Hemoglobina:</span> {{ exam.hemoglobin_abnormal }}{% if exam.hemoglobin_abnormal %}, {{ exam.hemoglobin_notes }}{% endif %}</li>
+            
+            <li><span>Elisa VH1:</span> {{ exam.elisa_vh1_positive }}{% if exam.elisa_vh1_positive %}, {{ exam.elisa_vh1_notes }}{% endif %}</li>
+            
+            <li><span>Hepatitis B:</span> {{ exam.hepatitis_b_positive }}{% if exam.hepatitis_b_positive %}, {{ exam.hepatitis_b_notes }}{% endif %}</li>
+            
+            <li><span>PPD:</span> {{ exam.ppd_positive }}{% if exam.ppd_positive %}, {{ exam.ppd_notes }}{% endif %}</li>
+            
+            <li><span>Parasitos Heces:</span> {{ exam.stool_parasites_positive }}{% if exam.stool_parasites_positive %}, {{ exam.stool_parasites_notes }}{% endif %}</li>
+
+            <li><span>Orina:</span> {{ exam.urine_abnormal }}{% if exam.urine_abnormal %}, {{ exam.urine_notes }}{% endif %}</li>            
+            
+            <li><span>Leucocitos:</span> {{ exam.leukocytes_abnormal }}{% if exam.leukocytes_abnormal %}, {{ exam.comentarios }}{% endif %}</li>
+            
+            <li><span>Nitritos:</span> {{ exam.nitrites_abnormal }}{% if exam.nitrites_abnormal %}, {{ exam.nitrites_notes }}{% endif %}</li>
+            
+            <li><span>Urobilinógeno:</span> {{ exam.urobilinogen_abnormal }}{% if exam.urobilinogen_abnormal %}, {{ exam.urobilinogen_notes }}{% endif %}</li>
+            
+            <li><span>Proteína:</span> {{ exam.protein_abnormal }}{% if exam.protein_abnormal %}, {{ exam.protein_notes }}{% endif %}</li>
+            
+            <li><span>pH:</span> {{ exam.ph_abnormal }}{% if exam.ph_abnormal %}, {{ exam.ph_notes }}{% endif %}</li>
+            
+            <li><span>Densidad:</span> {{ exam.density_abnormal }}{% if exam.density_abnormal %}, {{ exam.density_notes }}{% endif %}</li>
+            
+            <li><span>Glucosa:</span> {{ exam.glucose_abnormal }}{% if exam.glucose_abnormal %}, {{ exam.glucose_notes }}{% endif %}</li>
+        </ul>
+        <ul id="signature">
+            <li><h3>Los Datos del Profesíonal</h3></li>
+            <li><span>Nombre:</span> {{ signature.name }} {{ signature.surname }}</li>
+            <li><span>EMP:</span> {{ signature.emp }}</li>
+            <li><span>Direccion:</span> {{ signature.direction }}</li>
+            <li><span>Celular:</span> {{ signature.cell }}</li>
+        </ul>
+        <a href="{% url 'tracker:edit_blood_exam' child_id exam.id %}">Edita Detalles</a>
+
+    </div>
+    
+{% endblock %}

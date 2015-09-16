@@ -25,31 +25,32 @@ class MedicalExamPart2(models.Model):
     illness_notes = models.TextField(blank=True, null=True)
     appetite_notes = models.TextField(blank=True, null=True)
     sleep_notes = models.TextField(blank=True, null=True)
-    concerns_notes = models.TextField(blank=True, null=True)
-    blood_pressure = models.TextField(blank=True, null=True)
-    pulse = models.TextField(blank=True, null=True)
+    concerns_notes = models.TextField(blank=True, null=True) #not in schema
+    blood_pressure = models.TextField(blank=True, null=True) #not in schema
+    pulse = models.TextField(blank=True, null=True) #not in schema
     visual_acuity_left = models.TextField(blank=True, null=True)
     visual_acuity_right = models.TextField(blank=True, null=True)
-    appearance_normal = models.BooleanField(default=False)
+    appearance_normal = models.BooleanField(default=False) #not in schema
     appearance_notes = models.TextField(blank=True, null=True)
-    skin_mucosa_normal = models.BooleanField(default=False)
+    skin_mucosa_normal = models.BooleanField(default=False) #not in schema
     skin_mucosa_notes = models.TextField(blank=True, null=True)
-    TCSC_lymph_normal = models.BooleanField(default=False)
+    TCSC_lymph_normal = models.BooleanField(default=False) #not in schema
     TCSC_lymph_notes = models.TextField(blank=True, null=True)
-    head_neck_normal = models.BooleanField(default=False)
+    head_neck_normal = models.BooleanField(default=False) #not in schema
     head_neck_notes = models.TextField(blank=True, null=True)
-    thorax_lungs_normal = models.BooleanField(default=False)
+    thorax_lungs_normal = models.BooleanField(default=False) #not in schema
     thorax_lungs_notes = models.TextField(blank=True, null=True)
-    cardio_normal = models.BooleanField(default=False)
+    cardio_normal = models.BooleanField(default=False) #not in schema
     cardio_notes = models.TextField(blank=True, null=True)
-    abdomen_normal = models.BooleanField(default=False)
+    abdomen_normal = models.BooleanField(default=False) #not in schema
     abdomen_notes = models.TextField(blank=True, null=True)
-    genitourinary_normal = models.BooleanField(default=False)
+    genitourinary_normal = models.BooleanField(default=False) #not in schema
     genitourinary_notes = models.TextField(blank=True, null=True)
-    extremities_normal = models.BooleanField(default=False)
+    extremities_normal = models.BooleanField(default=False) #not in schema
     extremities_notes = models.TextField(blank=True, null=True)
-    neurological_normal = models.BooleanField(default=False)
+    neurological_normal = models.BooleanField(default=False) #not in schema
     neurological_notes = models.TextField(blank=True, null=True)
+    diagnosis = models.TextField(blank=True, null=True)
     recommendations = models.TextField(blank=True, null=True)
     priority = models.IntegerField(choices=PRIORITY_CHOICES, 
                                    default=HIGH)
@@ -58,42 +59,6 @@ class MedicalExamPart2(models.Model):
     class Meta:
         app_label = 'tracker'
         db_table = 'tracker_medicalexampart2'
-
-
-class CurrentMedsList(models.Model):
-    exam = models.ForeignKey(MedicalExamPart2)
-    med_name = models.TextField()
-    dose = models.TextField()
-    frequency = models.TextField()
-    start_date = models.DateField()
-    end_date = models.DateField()
-
-    class Meta:
-        app_label = 'tracker'
-        db_table = 'tracker_currentmedslist'
-
-
-class PastMedsList(models.Model):
-    exam = models.ForeignKey(MedicalExamPart2)
-    med_name = models.TextField()
-    dose = models.TextField()
-    frequency = models.TextField()
-    start_date = models.DateField()
-    end_date = models.DateField()
-
-    class Meta:
-        app_label = 'tracker'
-        db_table = 'tracker_pastmedslist'
-
-
-class MedicalExamDiagnosis(models.Model):
-    exam = models.ForeignKey(MedicalExamPart2)
-    name = models.TextField()
-    value = models.TextField()
-
-    class Meta:
-        app_label = 'tracker'
-        db_table = 'tracker_medicalexamdiagnosis'
 
 
 class MedicalExamPart2Form(ModelForm):
@@ -129,6 +94,7 @@ class MedicalExamPart2Form(ModelForm):
             'extremities_notes',
             'neurological_normal',
             'neurological_notes',
+            'diagnosis',
             'recommendations',
             'priority',
         )
@@ -162,6 +128,7 @@ class MedicalExamPart2Form(ModelForm):
             'extremities_notes': 'Comentarios',
             'neurological_normal': 'Neurological',
             'neurological_notes': 'Comentarios',
+            'diagnosis': 'Diagnóstico',
             'recommendations': 'Otres Recomendaciones',
             'priority': 'Prioridad',
         }
@@ -223,6 +190,10 @@ class MedicalExamPart2Form(ModelForm):
                 recommendations = cleaned_data.get('recommendations')
                 if recommendations=='':
                     self.add_error('recommendations', msg)
+
+                diagnosis = cleaned_data.get('diagnosis')
+                if diagnosis=='':
+                    self.add_error('diagnosis', msg)
 
                 appearance_normal = cleaned_data.get('appearance_normal')
                 appearance_notes = cleaned_data.get('appearance_notes')

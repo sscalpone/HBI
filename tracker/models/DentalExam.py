@@ -21,6 +21,7 @@ class DentalExam(models.Model):
     )
     child = models.ForeignKey(Child)
     date = models.DateField()
+    diagnosis = models.TextField(blank=True, null=True)
     recommendation = models.TextField(blank=True, null=True)
     priority = models.IntegerField(choices=PRIORITY_CHOICES, 
                                 default=HIGH)
@@ -31,25 +32,18 @@ class DentalExam(models.Model):
         db_table = 'tracker_dentalexam'
 
 
-class DentalExamDiagnosis(models.Model):
-    exam = models.ForeignKey(DentalExam)
-    diagnosis_notes = models.TextField()
-
-    class Meta:
-        app_label = 'tracker'
-        db_table = 'tracker_dentalexamdiagnosis'
-
-
 class DentalExamForm(ModelForm):
     class Meta:
         model = DentalExam
         fields = (
             'date',
+            'diagnosis',
             'recommendation',
             'priority',
         )
         labels = {
             'date': 'Fecha',
+            'diagnosis': 'Diagnóstico',
             'recommendation': 'Recomendaciones',
             'priority': 'Prioridad',
         }
@@ -63,8 +57,11 @@ class DentalExamForm(ModelForm):
         cleaned_data = super(DentalExamForm, self).clean()
 
         if self.request.method == 'POST':
-            recommendation = cleaned_data.get('recommendation')
             if 'submit' in self.request.POST:
+                diagnosis = cleaned_data.get('diagnosis')
+                if diagnosis=='':
+                    self.add_error('diagnosis', msg)
+                recommendation = cleaned_data.get('recommendation')
                 if recommendation=='':
                     self.add_error('recommendation', msg)
 

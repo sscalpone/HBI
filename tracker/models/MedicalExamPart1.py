@@ -13,8 +13,8 @@ from Signature import Signature
 class MedicalExamPart1(models.Model):
     child = models.ForeignKey(Child)
     date = models.DateField()
-    background_notes = models.TextField(blank=True, null=True)
-    birth_history = models.TextField(blank=True, null=True)
+    background_notes = models.TextField(blank=True, null=True) #not in schema
+    birth_history = models.TextField(blank=True, null=True) #not in schema
     bcg_vaccine = models.BooleanField(default=False)
     bcg_vaccine_date = models.DateField(blank=True, null=True)
     polio_vaccine = models.BooleanField(default=False)
@@ -35,27 +35,6 @@ class MedicalExamPart1(models.Model):
     pneumococcal_vaccine_date = models.DateField(blank=True, null=True)
     weight = models.FloatField(blank=True, null=True)
     height = models.FloatField(blank=True, null=True)
-    hemoglobin_normal = models.BooleanField(default=False)
-    hemoglobin_notes = models.TextField(blank=True, null=True)
-    elisa_vh1_positive = models.BooleanField(default=False)
-    hepatitisB_positive = models.BooleanField(default=False)
-    PPD_positive = models.BooleanField(default=False)
-    stool_parasites_positive = models.BooleanField(default=False)
-    stool_parasites_notes = models.TextField(blank=True, null=True)
-    leukocytes_normal = models.BooleanField(default=False)
-    leukocytes_notes = models.TextField(blank=True, null=True)
-    nitrites_normal = models.BooleanField(default=False)
-    nitrites_notes = models.TextField(blank=True, null=True)
-    urobilinogen_normal = models.BooleanField(default=False)
-    urobilinogen_notes = models.TextField(blank=True, null=True)
-    protein_normal = models.BooleanField(default=False)
-    protein_notes = models.TextField(blank=True, null=True)
-    pH_normal = models.BooleanField(default=False)
-    pH_notes = models.TextField(blank=True, null=True)
-    density_normal = models.BooleanField(default=False)
-    density_notes = models.TextField(blank=True, null=True)
-    glucose_normal = models.BooleanField(default=False)
-    glucose_notes = models.TextField(blank=True, null=True)
     signature = models.ForeignKey(Signature, blank=True, null=True)
 
     class Meta:
@@ -90,27 +69,6 @@ class MedicalExamPart1Form(ModelForm):
             'pneumococcal_vaccine_date',
             'weight',
             'height',
-            'hemoglobin_normal',
-            'hemoglobin_notes',
-            'elisa_vh1_positive',
-            'hepatitisB_positive',
-            'PPD_positive',
-            'stool_parasites_positive',
-            'stool_parasites_notes',
-            'leukocytes_normal',
-            'leukocytes_notes',
-            'nitrites_normal',
-            'nitrites_notes',
-            'urobilinogen_normal',
-            'urobilinogen_notes',
-            'protein_normal',
-            'protein_notes',
-            'pH_normal',
-            'pH_notes',
-            'density_normal',
-            'density_notes',
-            'glucose_normal',
-            'glucose_notes',
         )
         labels = {
             'date': 'Fecha',
@@ -136,27 +94,6 @@ class MedicalExamPart1Form(ModelForm):
             'pneumococcal_vaccine_date': 'Fecha de Administracion',
             'weight': 'Peso',
             'height': 'Estatura',
-            'hemoglobin_normal': 'Hemoglobina',
-            'hemoglobin_notes': 'Comentarios',
-            'elisa_vh1_positive': 'Elisa VH1',
-            'hepatitisB_positive': 'Hepatitis B',
-            'PPD_positive': 'PPD',
-            'stool_parasites_positive': 'Parasitos Heces',
-            'stool_parasites_notes': 'Lista si es positivo',
-            'leukocytes_normal': 'Leucocitos',
-            'leukocytes_notes': 'Comentarios',
-            'nitrites_normal': 'Nitritos',
-            'nitrites_notes': 'Comentarios',
-            'urobilinogen_normal': 'Urobilinogeno',
-            'urobilinogen_notes': 'Comentarios',
-            'protein_normal': 'Proteina',
-            'protein_notes': 'Comentarios',
-            'pH_normal': 'pH',
-            'pH_notes': 'Comentarios',
-            'density_normal': 'Densidad',
-            'density_notes': 'Comentarios',
-            'glucose_normal': 'Glucosa',
-            'glucose_notes': 'Comentarios',
         }
         widgets = {
             'bcg_vaccine': RadioSelect(choices=((True, 'Si'),(False, 'No'))),
@@ -168,18 +105,6 @@ class MedicalExamPart1Form(ModelForm):
             'spr_vaccine': RadioSelect(choices=((True, 'Si'),(False, 'No'))),
             'hpv_vaccine': RadioSelect(choices=((True, 'Si'),(False, 'No'))),
             'pneumococcal_vaccine': RadioSelect(choices=((True, 'Si'),(False, 'No'))),
-            'hemoglobin_normal': RadioSelect(choices=((True, 'Anormal'),(False, 'Normal'))),
-            'elisa_vh1_positive': RadioSelect(choices=((True, 'Positivo'),(False, 'Negativo'))),
-            'hepatitisB_positive': RadioSelect(choices=((True, 'Positivo'),(False, 'Negativo'))),
-            'PPD_positive': RadioSelect(choices=((True, 'Positivo'),(False, 'Negativo'))),
-            'stool_parasites_positive': RadioSelect(choices=((True, 'Positivo'),(False, 'Negativo'))),
-            'leukocytes_normal': RadioSelect(choices=((True, 'Anormal'),(False, 'Normal'))),
-            'nitrites_normal': RadioSelect(choices=((True, 'Anormal'),(False, 'Normal'))),
-            'urobilinogen_normal': RadioSelect(choices=((True, 'Anormal'),(False, 'Normal'))),
-            'protein_normal': RadioSelect(choices=((True, 'Anormal'),(False, 'Normal'))),
-            'pH_normal': RadioSelect(choices=((True, 'Anormal'),(False, 'Normal'))),
-            'density_normal': RadioSelect(choices=((True, 'Anormal'),(False, 'Normal'))),
-            'glucose_normal': RadioSelect(choices=((True, 'Anormal'),(False, 'Normal'))),
         }
 
     def __init__(self, *args, **kwargs):
@@ -190,7 +115,7 @@ class MedicalExamPart1Form(ModelForm):
         msg = "Este campo es obligatorio."
         cleaned_data = super(MedicalExamPart1Form, self).clean()
 
-        if self.request.method=='POST':
+        if self.request.POST:
             if 'submit' in self.request.POST:
 
                 background_notes = cleaned_data.get('background_notes')
@@ -254,49 +179,5 @@ class MedicalExamPart1Form(ModelForm):
                 if pneumococcal_vaccine and pneumococcal_vaccine_date is None:
                     self.add_error('pneumococcal_vaccine_date', msg)
 
-                hemoglobin_normal = cleaned_data.get('hemoglobin_normal')
-                hemoglobin_notes = cleaned_data.get('hemoglobin_notes')
-                if hemoglobin_normal and hemoglobin_notes=='':
-                    self.add_error('hemoglobin_notes', msg)
-
-                stool_parasites_positive = cleaned_data.get('stool_parasites_positive')
-                stool_parasites_notes = cleaned_data.get('stool_parasites_notes')
-                if stool_parasites_positive and stool_parasites_notes=='':
-                    self.add_error('stool_parasites_notes', msg)
-
-                leukocytes_normal = cleaned_data.get('leukocytes_normal')
-                leukocytes_notes = cleaned_data.get('leukocytes_notes')
-                if leukocytes_normal and leukocytes_notes=='':
-                    self.add_error('leukocytes_notes', msg)
-
-                nitrites_normal = cleaned_data.get('nitrites_normal')
-                nitrites_notes = cleaned_data.get('nitrites_notes')
-                if nitrites_normal and nitrites_notes=='':
-                    self.add_error('nitrites_notes', msg)
-
-                urobilinogen_normal = cleaned_data.get('urobilinogen_normal')
-                urobilinogen_notes = cleaned_data.get('urobilinogen_notes')
-                if urobilinogen_normal and urobilinogen_notes=='':
-                    self.add_error('urobilinogen_notes', msg)
-
-                protein_normal = cleaned_data.get('protein_normal')
-                protein_notes = cleaned_data.get('protein_notes')
-                if protein_normal and protein_notes=='':
-                    self.add_error('protein_notes', msg)
-
-                pH_normal = cleaned_data.get('pH_normal')
-                pH_notes = cleaned_data.get('pH_notes')
-                if pH_normal and pH_notes=='':
-                    self.add_error('pH_notes', msg)
-
-                density_normal = cleaned_data.get('density_normal')
-                density_notes = cleaned_data.get('density_notes')
-                if density_normal and density_notes=='':
-                    self.add_error('density_notes', msg)
-
-                glucose_normal = cleaned_data.get('glucose_normal')
-                glucose_notes = cleaned_data.get('glucose_notes')
-                if glucose_normal and glucose_notes=='':
-                    self.add_error('glucose_notes', msg)
 
 

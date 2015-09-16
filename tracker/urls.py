@@ -3,7 +3,10 @@ from django.conf.urls import patterns, url
 from tracker.views import main
 from tracker.views import residence
 from tracker.views import child
+from tracker.views import blood_exam
+from tracker.views import consultation_history
 from tracker.views import dental_exam
+from tracker.views import disease_history
 from tracker.views import medical_exam_part1
 from tracker.views import medical_exam_part2
 from tracker.views import psychological_exam
@@ -24,9 +27,21 @@ urlpatterns = patterns('',
     url(r'^child/edit/(?P<child_id>\d+)', child.edit, name='edit_child'),
     url(r'^child/(?P<child_id>\d+)', exam_views.index, name='child'),
 
+    url(r'^blood_exam/(?P<child_id>\d+)/(?P<exam_id>\d+)', blood_exam.view, name='blood_exam'),
+    url(r'^blood_exam/edit/(?P<child_id>\d+)/(?P<exam_id>\d+)', blood_exam.edit, name='edit_blood_exam'),
+    url(r'^blood_exam/new/(?P<child_id>\d+)', blood_exam.new, name='new_blood_exam'),
+
     url(r'^dental_exam/(?P<child_id>\d+)/(?P<exam_id>\d+)', dental_exam.view, name='dental_exam'),
     url(r'^dental_exam/edit/(?P<child_id>\d+)/(?P<exam_id>\d+)', dental_exam.edit, name='edit_dental_exam'),
     url(r'^dental_exam/new/(?P<child_id>\d+)', dental_exam.new, name='new_dental_exam'),
+
+    url(r'^consultation_history/(?P<child_id>\d+)/(?P<exam_id>\d+)', consultation_history.view, name='consultation_history'),
+    url(r'^consultation_history/edit/(?P<child_id>\d+)/(?P<exam_id>\d+)', consultation_history.edit, name='edit_consultation_history'),
+    url(r'^consultation_history/new/(?P<child_id>\d+)', consultation_history.new, name='new_consultation_history'),
+
+    url(r'^disease_history/(?P<child_id>\d+)/(?P<exam_id>\d+)', disease_history.view, name='disease_history'),
+    url(r'^disease_history/edit/(?P<child_id>\d+)/(?P<exam_id>\d+)', disease_history.edit, name='edit_disease_history'),
+    url(r'^disease_history/new/(?P<child_id>\d+)', disease_history.new, name='new_disease_history'),
 
     url(r'^medical_exam_part1/(?P<child_id>\d+)/(?P<exam_id>\d+)', medical_exam_part1.view, name='medical_exam_part1'),
     url(r'^medical_exam_part1/edit/(?P<child_id>\d+)/(?P<exam_id>\d+)', medical_exam_part1.edit, name='edit_medical_exam_part1'),

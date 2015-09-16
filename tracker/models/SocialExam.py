@@ -38,7 +38,7 @@ class SocialExam(models.Model):
     general_comments = models.TextField(blank=True, null=True)
     visitors_allowed = models.BooleanField(default=True)
     visitors_allowed_no_comments = models.TextField(blank=True, null=True)
-    social_diagnosis = models.TextField(blank=True, null=True)
+    diagnosis = models.TextField(blank=True, null=True)
     recommendation = models.TextField(blank=True, null=True)
     priority = models.IntegerField(choices=PRIORITY_CHOICES, 
                                    default=HIGH)
@@ -70,7 +70,7 @@ class SocialExamForm(ModelForm):
             'general_comments',
             'visitors_allowed',
             'visitors_allowed_no_comments',
-            'social_diagnosis',
+            'diagnosis',
             'recommendation',
             'priority'
         )
@@ -84,7 +84,7 @@ class SocialExamForm(ModelForm):
             'sis': "SIS",
             'sis_in_process': "En El Proceso",
             'sis_no_comments': "Comentarios",
-            'antecedents': "Antecedents",
+            'antecedents': "Antecedentes",
             'family_situation': "Situación Familiar",
             'health_situation': "Situación de Salud",
             'housing_situation': "Situación de la Vivienda",
@@ -92,7 +92,7 @@ class SocialExamForm(ModelForm):
             'general_comments': "Apreciaciones Generales del Niño/a",
             'visitors_allowed': "Recibe Visitas",
             'visitors_allowed_no_comments': "Comentarios",
-            'social_diagnosis': "Diagnostico Social",
+            'diagnosis': "Diagnostico Social",
             'recommendation': "Recomendaciones",
             'priority': 'Prioridad',
         }
@@ -158,9 +158,9 @@ class SocialExamForm(ModelForm):
                 if not visitors_allowed and visitors_allowed_no_comments=='':
                     self.add_error('visitors_allowed_no_comments', msg)
                 
-                social_diagnosis = cleaned_data.get('social_diagnosis')
-                if social_diagnosis=='':
-                    self.add_error('social_diagnosis', msg)
+                diagnosis = cleaned_data.get('diagnosis')
+                if diagnosis=='':
+                    self.add_error('diagnosis', msg)
                 
                 recommendation = cleaned_data.get('recommendation')
                 if recommendation=='':

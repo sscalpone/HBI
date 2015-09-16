@@ -1,25 +1,8 @@
-{% extends 'two-column.html' %}
+{% extends 'eval-sidebar.html' %}
 
 {% block title %}Informe Médico / Parte 1{% endblock %}
 
 {% block h2 %}Informe Médico / Parte 1, {{exam.date}}{% endblock %}
-
-{% block sidebar %}
-    <ul>
-        <a href=""><li>Cerrar sesión</li></a>
-        <a href="{% url 'tracker:residences' %}"><li>Residencias</li></a>
-        <a href="{% url 'tracker:residence' child.residence_id %}"><li>Detalle Orfanato</li></a>
-        <a href="{% url 'tracker:child' child_id %}"><li>Resumen Niño</li></a>
-        <li class="selected">Evaluaciones</li>
-        <span id="secondary">
-            <li><a href="{% url 'tracker:new_dental_exam' child_id %}">Informe Odontológico</a></li>
-            <li class="selected"><a href="{% url 'tracker:new_medical_exam_part1' child_id %}">Informe Médico / Parte 1</a></li>
-            <li><a href="{% url 'tracker:new_medical_exam_part2' child_id %}">Informe Médico / Parte 2</a></li>
-            <li><a href="{% url 'tracker:new_psychological_exam' child_id %}">Informe Psicológico</a></li>
-            <li><a href="{% url 'tracker:new_social_exam' child_id %}">Informe Social</a></li>
-        </span>
-    </ul>
-{% endblock %}
 
 {% block content %}
 
@@ -51,27 +34,6 @@
             <li><span>Peso:</span> {{ exam.weight }}</li>
     		<li><span>Estatura:</span> {{ exam.height }}</li>
     		
-            <li><span>Hemoglobina:</span> {{ exam.hemoglobin_normal }}{% if exam.hemoglobin_normal %}, {{ exam.hemoglobin_notes }}{% endif %}</li>
-    		
-            <li><span>Elisa VH1:</span> {{ exam.elisa_vh1_positive }}</li>
-    		<li><span>Hepatitis B:</span> {{ exam.hepatitisB_positive }}</li>
-    		<li><span>PPD:</span> {{ exam.PPD_positive }}</li>
-    		
-            <li><span>Parasitos Heces:</span> {{ stool_parasites_positive }}{% if exam.stool_parasites_positive %}, exam.stool_parasites_notes{% endif %}</li>
-    		
-            <li><span>Leucocitos: </span>{{ exam.leukocytes_normal }}{% if exam.leukocytes_normal %}, {{ exam.comentarios }}{% endif %}</li>
-    		
-            <li><span>Nitritos:</span> {{ exam.nitrites_normal }}{% if exam.nitrites_normal %}, {{exam.nitrites_notes}}{% endif %}</li>
-    		
-            <li><span>Urobilinógeno:</span> {{ exam.urobilinogen_normal }}{% if exam.urobilinogen_normal %}, {{ exam.urobilinogen_notes }}{% endif %}</li>
-    		
-            <li><span>Proteína:</span> {{ exam.protein_normal }}{% if exam.protein_normal %}, exam.protein_notes{% endif %}</li>
-    		
-            <li><span>pH:</span> {{ exam.pH_normal }}{% if exam.pH_normal %}, {{ exam.pH_notes }}{% endif %}</li>
-    		
-            <li><span>Densidad:</span> {{ exam.density_normal }}{% if exam.density_normal %}, {{ exam.density_notes }}{% endif %}</li>
-    		
-            <li><span>Glucosa:</span> {{ exam.glucose_normal }}{% if exam.glucose_normal %}, {{ exam.glucose_notes }}{% endif %}</li>
         </ul>
         <ul id="signature">
             <li><h3>Los Datos del Profesíonal</h3></li>
