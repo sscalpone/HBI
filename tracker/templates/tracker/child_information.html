@@ -1,44 +1,89 @@
-{% extends 'eval-sidebar.html' %}
+{% extends 'two-column.html' %}
 
 {% block title %}Información General{% endblock %}
 
 {% block h2 %}Información General{% endblock %}
 
+{% block sidebar %}
+    <ul>
+        <a href=""><li>Cerrar sesión</li></a>
+        <a href="{% url 'tracker:residences' %}"><li>Residencias</li></a>
+        <a href="{% url 'tracker:residence' residence_id %}"><li>Detalle Orfanato</li></a>
+        <a href="{% url 'tracker:child' child_id %}"><li class="selected">Resumen Niño</li></a>
+        <li>Evaluaciones</li>
+        <span id="secondary">
+            <li><a href="{% url 'tracker:new_blood_exam' child_id %}">Informe Sangre</a></li>
+            <li><a href="{% url 'tracker:new_consultation_history' child_id %}">Historia de Consulta</a></li>
+            <li><a href="{% url 'tracker:new_dental_exam' child_id %}">Informe Odontológico</a></li>
+            <li><a href="{% url 'tracker:new_disease_history' child_id %}">Historia de Enfermedades</a></li>
+            <li><a href="{% url 'tracker:new_medical_exam_part1' child_id %}">Informe Médico / Parte 1</a></li>
+            <li><a href="{% url 'tracker:new_medical_exam_part2' child_id %}">Informe Médico / Parte 2</a></li>
+            <li><a href="{% url 'tracker:new_operation_history' child_id %}">Historia de Operaciones</a></li>
+            <li><a href="{% url 'tracker:new_psychological_exam' child_id %}">Informe Psicológico</a></li>
+            <li><a href="{% url 'tracker:new_social_exam' child_id %}">Informe Social</a></li>
+        </span>
+    </ul>
+{% endblock %}
+
 {% block content %}
 
     {% include 'tracker/basic-info.html' %}
-
+    
+    {% if dental_exam %}
+    <h3>Resumen Ondontológico</h3>
     <div class="summary">
         <span class="priority">
             <span class="circle {% if dental_exam.priority == 1 %} high {% endif %}"></span>
             <span class="circle {% if dental_exam.priority == 2 %} medium {% endif %}"></span>
             <span class="circle {% if dental_exam.priority == 3 %} low {% endif %}"></span>
         </span>
-        <span class="recommendation">{{ dental_exam.recommendation }}</span>
+        <span class="recommendation">
+            <div><span>Diagnóstico:</span> {{dental_exam.diagnosis}}</div>
+            <div><span>Recomendación:</span> {{ dental_exam.recommendation }}</div>
+        </span>
     </div>
+    {% endif %}
+    {% if medical_exam_part2 %}
+    <h3>Resumen Médico</h3>
     <div class="summary">
         <span class="priority">
             <span class="circle {% if medical_exam_part2.priority == 1 %} high {% endif %}"></span>
             <span class="circle {% if medical_exam_part2.priority == 2 %} medium {% endif %}"></span>
             <span class="circle {% if medical_exam_part2.priority == 3 %} low {% endif %}"></span>
         </span>
-        <span class="recommendation">{{ medical_exam_part2.recommendations }}</span>
+        <span class="recommendation">
+            <div><span>Diagnóstico:</span> {{medical_exam_part2.diagnosis}}</div>
+            <div><span>Recomendación:</span> {{ medical_exam_part2.recommendation }}</div>
+        </span>
     </div>
+    {% endif %}
+    {% if psychological_exam %}
+    <h3>Resumen Psicológica</h3>
     <div class="summary">
         <span class="priority">
             <span class="circle {% if psychological_exam.priority == 1 %} high {% endif %}"></span>
             <span class="circle {% if psychological_exam.priority == 2 %} medium {% endif %}"></span>
             <span class="circle {% if psychological_exam.priority == 3 %} low {% endif %}"></span>
         </span>
-        <span class="recommendation">{{ psychological_exam.recommendation }}</span>
+        <span class="recommendation">
+            <div><span>Diagnóstico:</span> {{ psychological_exam.diagnosis }}</div>
+            <div><span>Recomendación:</span> {{ psychological_exam.recommendation }}</div>
+        </span>
     </div>
+    {% endif %}
+    {% if social_exam %}
+    <h3>Resumen Social</h3>
     <div class="summary">
         <span class="priority">
             <span class="circle {% if social_exam.priority == 1 %} high {% endif %}"></span>
             <span class="circle {% if social_exam.priority == 2 %} medium {% endif %}"></span>
             <span class="circle {% if social_exam.priority == 3 %} low {% endif %}"></span>
         </span>
-        <span class="recommendation">{{ social_exam.recommendation }}<span>  
+        <span class="recommendation">
+            <div><span>Diagnóstico:</span> {{ social_exam.diagnosis }}</div>
+            <div><span>Recomendación:</span> {{ social_exam.recommendation }}</div>
+        </span> 
     </div>
+    {% endif %}
 {% endblock %}
 

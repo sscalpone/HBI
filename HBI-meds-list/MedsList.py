@@ -12,7 +12,6 @@ from MedicalExamPart2 import MedicalExamPart2
 
 class CurrentMedsList(models.Model):
     child = models.ForeignKey(Child)
-    exam = models.ForeignKey(MedicalExamPart2, blank=True, null=True)
     med_name = models.CharField(max_length=200, blank=True, null=True)
     dose = models.CharField(max_length=200, blank=True, null=True)
     frequency = models.CharField(max_length=200, blank=True, null=True)
@@ -69,7 +68,7 @@ class CurrentMedsListForm(ModelForm):
 
 class PastMedsList(models.Model):
     child = models.ForeignKey(Child)
-    exam = models.ForeignKey(MedicalExamPart2, blank=True, null=True)
+    exam = models.ForeignKey(CurrentMedsList, blank=True, null=True)
     med_name = models.CharField(max_length=200, blank=True, null=True)
     dose = models.CharField(max_length=200, blank=True, null=True)
     frequency = models.CharField(max_length=200, blank=True, null=True)

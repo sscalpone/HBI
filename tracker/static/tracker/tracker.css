@@ -91,6 +91,14 @@ a {
   outline: 2px #95bcf2 groove;
 }
 
+footer {
+  text-align: center;
+}
+footer p {
+  margin: 20px 50px;
+  padding-top: 10px;
+}
+
 /*********************
 HEADER STYLES
 **********************/
@@ -233,6 +241,10 @@ TWO-COLUMN and THREE-COLUMN STYLES
 .two-column h2 {
   margin-bottom: 10px;
   padding-right: 10px;
+}
+
+.two-column #content, .three-column #content {
+  padding-bottom: 10px;
 }
 
 .two-column #content li {
@@ -396,6 +408,11 @@ SUMMARY AND RISK ASSESSMENT;
   margin-left: 1%;
 }
 
+.recommendation span {
+  display: inline-block;
+  width: 119px;
+}
+
 
 /**********************
 MEDIA QUERIES
@@ -549,7 +566,7 @@ MEDIA QUERIES
 
   .summary .recommendation {
     width: 80%;
-  }
+  }             
 
 }
 

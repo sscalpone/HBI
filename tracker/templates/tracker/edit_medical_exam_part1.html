@@ -1,8 +1,29 @@
-{% extends 'eval-sidebar.html' %}
+{% extends 'two-column.html' %}
 
 {% block title %}Editar Informe Médico / Parte 1{% endblock %}
 
 {% block h2 %}Editar Informe Médico / Parte 1{% endblock %}
+
+{% block sidebar %}
+    <ul>
+        <a href=""><li>Cerrar sesión</li></a>
+        <a href="{% url 'tracker:residences' %}"><li>Residencias</li></a>
+        <a href="{% url 'tracker:residence' residence_id %}"><li>Detalle Orfanato</li></a>
+        <a href="{% url 'tracker:child' child_id %}"><li>Resumen Niño</li></a>
+        <li class="selected">Evaluaciones</li>
+        <span id="secondary">
+            <li><a href="{% url 'tracker:new_blood_exam' child_id %}">Informe Sangre</a></li>
+            <li><a href="{% url 'tracker:new_consultation_history' child_id %}">Historia de Consulta</a></li>
+            <li><a href="{% url 'tracker:new_dental_exam' child_id %}">Informe Odontológico</a></li>
+            <li><a href="{% url 'tracker:new_disease_history' child_id %}">Historia de Enfermedades</a></li>
+            <li class="selected"><a href="{% url 'tracker:new_medical_exam_part1' child_id %}">Informe Médico / Parte 1</a></li>
+            <li><a href="{% url 'tracker:new_medical_exam_part2' child_id %}">Informe Médico / Parte 2</a></li>
+            <li><a href="{% url 'tracker:new_operation_history' child_id %}">Historia de Operaciones</a></li>
+            <li><a href="{% url 'tracker:new_psychological_exam' child_id %}">Informe Psicológico</a></li>
+            <li><a href="{% url 'tracker:new_social_exam' child_id %}">Informe Social</a></li>
+        </span>
+    </ul>
+{% endblock %}
 
 {% block content %}
 

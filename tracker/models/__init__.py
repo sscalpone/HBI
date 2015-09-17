@@ -7,7 +7,6 @@ from DentalExam import DentalExam, DentalExamForm
 from DiseaseHistory import DiseaseHistory, DiseaseHistoryForm
 from MedicalExamPart1 import MedicalExamPart1, MedicalExamPart1Form
 from MedicalExamPart2 import MedicalExamPart2, MedicalExamPart2Form
-from MedsList import CurrentMedsList, CurrentMedsListForm, PastMedsList, PastMedsListForm
 from PsychologicalExam import PsychologicalExam, PsychologicalExamForm
 from Residence import Residence, ResidenceForm
 from Signature import Signature, SignatureForm

@@ -56,7 +56,6 @@ urlpatterns = patterns('',
     url(r'^operation_history/edit/(?P<child_id>\d+)/(?P<exam_id>\d+)', operation_history.edit, name='edit_operation_history'),
     url(r'^operation_history/new/(?P<child_id>\d+)', operation_history.new, name='new_operation_history'),
 
-
     url(r'^psychological_exam/(?P<child_id>\d+)/(?P<exam_id>\d+)', psychological_exam.view, name='psychological_exam'),
     url(r'^psychological_exam/edit/(?P<child_id>\d+)/(?P<exam_id>\d+)', psychological_exam.edit, name='edit_psychological_exam'),
     url(r'^psychological_exam/new/(?P<child_id>\d+)', psychological_exam.new, name='new_psychological_exam'),

@@ -8,16 +8,15 @@
     <meta charset="utf-8">
 </head>
 <body>
-
-    <header id="header">
-        {% load staticfiles %}<img src="{% static "tracker/health-bridges-international-logo.png" %}" alt="Health Bridges International Logo" id="logo">
-        <h1>Unión Bíblica Evaluación de Girasoles</h1>
-        <h2>{% block h2 %}{% endblock %}</h2>
-    </header>
-    <div id="border"></div>
-    <div id="content">
-        {% block content %}{% endblock %}
+    <div>
+        <header id="header">
+            {% load staticfiles %}<img src="{% static "tracker/health-bridges-international-logo.png" %}" alt="Health Bridges International Logo" id="logo">
+            <h1>Unión Bíblica Evaluación de Girasoles</h1>
+            <h2>{% block h2 %}{% endblock %}</h2>
+        </header>
+        <div id="border"></div>
+        <div id="content">
+            {% block content %}{% endblock %}
+        </div>
     </div>
-    {% load staticfiles %}<script src="{% static "tracker/jquery-1.11.3.min.js" %}" type="text/javascript"></script>
-</body>
 </html>
