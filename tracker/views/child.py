@@ -1,6 +1,7 @@
 from django.http import Http404
 from django.http import HttpResponse
 from django.http import HttpResponseRedirect
+from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
 
 from django.shortcuts import render, get_object_or_404
@@ -10,6 +11,7 @@ from tracker.models import Child
 from tracker.models import ChildForm
 from tracker.models import Residence
 
+@login_required()
 def new(request, residence_id):
     if request.POST:
         form = ChildForm(request.POST, request.FILES, request=request)
@@ -49,6 +51,7 @@ def new(request, residence_id):
     }
     return render(request, 'tracker/add_child.html', context)
 
+@login_required
 def view(request, child_id):
     p = get_object_or_404(Child, pk=child_id)
     context = {
@@ -58,6 +61,7 @@ def view(request, child_id):
     }
     return render(request, 'tracker/child_information.html', context)
 
+@login_required
 def edit(request, child_id):
     child = get_object_or_404(Child, pk=child_id)
     residence_id = child.residence_id

@@ -1,3 +1,5 @@
+from django.contrib.auth.decorators import login_required
+
 from django.shortcuts import render, render_to_response, get_object_or_404
 
 from tracker.models import Child
@@ -7,7 +9,7 @@ from tracker.models import MedicalExamPart2
 from tracker.models import PsychologicalExam
 from tracker.models import SocialExam
 
-
+@login_required
 def index(request, child_id):
 	child = get_object_or_404(Child, pk=child_id)
 	residence_id = child.residence_id

@@ -3,6 +3,7 @@ import datetime
 from django.http import Http404
 from django.http import HttpResponse
 from django.http import HttpResponseRedirect
+from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
 
 from django.shortcuts import render, get_object_or_404
@@ -13,6 +14,7 @@ from tracker.models import MedicalExamPart1, MedicalExamPart1Form
 from tracker.models import Signature, SignatureForm
 from tracker.models import Child
 
+@login_required
 def index(request, child_id):
     list = MedicalExamPart1.objects.filter(child_id=child_id)
     child = get_object_or_404(Child, pk=child_id)
@@ -24,6 +26,7 @@ def index(request, child_id):
     }
     return render(request, 'tracker/add_medical_exam_part1.html', context)
 
+@login_required
 def new(request, child_id):
     child = get_object_or_404(Child, pk=child_id)
     
@@ -68,6 +71,7 @@ def new(request, child_id):
     }
     return render(request, 'tracker/add_medical_exam_part1.html', context)
 
+@login_required
 def view(request, child_id, exam_id):
     p = get_object_or_404(MedicalExamPart1, pk=exam_id)
     child = get_object_or_404(Child, pk=exam_id)
@@ -81,6 +85,7 @@ def view(request, child_id, exam_id):
     }
     return render(request, 'tracker/medical_exam_part1.html', context)
 
+@login_required
 def edit(request, child_id, exam_id):
     child = get_object_or_404(Child, pk=child_id)
     exam = get_object_or_404(MedicalExamPart1, pk=exam_id)

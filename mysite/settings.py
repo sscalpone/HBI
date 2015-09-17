@@ -88,6 +88,8 @@ STATICFILES_FINDERS = (
 #    'django.contrib.staticfiles.finders.DefaultStorageFinder',
 )
 
+LOGIN_URL = 'tracker:index'
+
 # Make this unique, and don't share it with anybody.
 SECRET_KEY = '$=vkujum%s3n1skggwyflp0mv0_(vvkh39_ej-7etcig^2x@1z'
 
@@ -154,6 +156,7 @@ TEST_RUNNER = 'django.test.runner.DiscoverRunner'
 # the site admins on every HTTP 500 error when DEBUG=False.
 # See http://docs.djangoproject.com/en/dev/topics/logging for
 # more details on how to customize your logging configuration.
+
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,

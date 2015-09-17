@@ -1,6 +1,7 @@
 from django.http import Http404
 from django.http import HttpResponse
 from django.http import HttpResponseRedirect
+from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
 
 from django.shortcuts import render, get_object_or_404
@@ -10,11 +11,13 @@ from tracker.models import Residence
 from tracker.models import ResidenceForm
 from tracker.models import Child
 
+@login_required()
 def index(request):
     list_of_residences = Residence.objects.all()
     context = {'residences': list_of_residences }
     return render(request, 'tracker/main.html', context)
 
+@login_required()
 def new(request):
     if request.method == 'POST':
         form = ResidenceForm(request.POST, request.FILES, request=request)
@@ -35,6 +38,7 @@ def new(request):
     }
     return render(request, 'tracker/add_residence.html', context)
 
+@login_required()
 def view(request, residence_id):
     p = get_object_or_404(Residence, pk=residence_id)
     children = Child.objects.filter(residence_id=residence_id)
@@ -55,6 +59,7 @@ def view(request, residence_id):
     }
     return render(request, 'tracker/residence.html', context)
 
+@login_required()
 def edit(request, residence_id):
     residence = get_object_or_404(Residence, pk=(residence_id))
     if request.method == 'POST':
