@@ -33,6 +33,6 @@ Connect to the server with your browser:
 http://127.0.0.1:8000/tracker/
 
 Initialize the db with some data:
-cp fixtures/photos/me.png media/photos/
+cp fixtures/me.png media/photos/
 python manage.py loaddata fixtures/basic.json
 
