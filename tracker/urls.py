@@ -18,6 +18,7 @@ urlpatterns = patterns('',
     # ex: /tracker/
     url(r'^$', main.index, name='index'),
     url(r'^login/$', main.login, name='login'),
+    url(r'^logout/$', main.logout, name='logout'),
     
     url(r'^residences/$', residence.index, name='residences'),
     url(r'^residences/new/$', residence.new, name='add_residence'),

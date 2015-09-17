@@ -6,7 +6,7 @@
 
 {% block sidebar %}
     <ul>
-        <a href=""><li>Cerrar sesión</li></a>
+        <a href="{% url 'tracker:logout' %}"><li>Cerrar sesión</li></a>
         <a href="{% url 'tracker:residences' %}"><li>Residencias</li></a>
         <a href="{% url 'tracker:residence' residence_id %}"><li>Detalle Orfanato</li></a>
         <a href="{% url 'tracker:child' child_id %}"><li>Resumen Niño</li></a>

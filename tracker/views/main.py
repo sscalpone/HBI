@@ -4,6 +4,7 @@ from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from django.contrib.auth import authenticate
 from django.contrib.auth import login as auth_login
+from django.contrib.auth import logout as auth_logout
 
 from django.shortcuts import render, get_object_or_404
 from django.template import RequestContext, loader
@@ -30,3 +31,8 @@ def login(request):
             'error_message': "Your username and password do not match.",
         })
 
+def logout(request):
+    auth_logout(request)
+    return render(request, 'tracker/index.html', {
+        'message': "You have successfully logged out.",
+        })
