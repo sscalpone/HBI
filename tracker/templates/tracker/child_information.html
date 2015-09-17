@@ -28,6 +28,7 @@
 {% block content %}
 
     {% include 'tracker/basic-info.html' %}
+    <a href="{% url 'tracker:edit_child' child_id %}">Edita Detalles</a>
     
     {% if dental_exam %}
     <h3>Resumen Ondontológico</h3>
