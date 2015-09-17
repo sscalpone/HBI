@@ -20,7 +20,7 @@ class PsychologicalExam(models.Model):
     )
     child = models.ForeignKey(Child)
     date = models.DateField()
-    background_notes = models.TextField(blank=True, null=True)
+    family_notes = models.TextField(blank=True, null=True)
     physical_description = models.TextField(blank=True, null=True)
     intellectual_notes = models.TextField(blank=True, null=True)
     organicity_notes = models.TextField(blank=True, null=True)
@@ -42,7 +42,7 @@ class PsychologicalExamForm(ModelForm):
         model = PsychologicalExam
         fields = (
             'date',
-            'background_notes',
+            'family_notes',
             'physical_description',
             'intellectual_notes',
             'organicity_notes',
@@ -54,7 +54,7 @@ class PsychologicalExamForm(ModelForm):
         )
         labels = {
             'date': 'Fecha',
-            'background_notes': 'Antecedents Patológicos Personales y Familiares Importantes',
+            'family_notes': 'Antecedents Patológicos Personales y Familiares Importantes',
             'physical_description': 'Descripción Fisica y Comportamiento',
             'intellectual_notes': 'Área Intelectual',
             'organicity_notes': 'Área Organicidad',
@@ -74,9 +74,9 @@ class PsychologicalExamForm(ModelForm):
         cleaned_data = super(PsychologicalExamForm, self).clean()
         if self.request.method=='POST':
             if 'submit' in self.request.POST:
-                background_notes = cleaned_data.get('background_notes')
+                family_notes = cleaned_data.get('family_notes')
                 if background_notes=='':
-                    self.add_error('background_notes', msg)
+                    self.add_error('family_notes', msg)
                 physical_description = cleaned_data.get('physical_description')
                 if physical_description=='':
                     self.add_error('physical_description', msg)

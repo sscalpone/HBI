@@ -9,12 +9,13 @@
 
     <div>
     	<ul id="form-info">
-    	   	<li><span>Antecedents Patológicos Personales y Familiares Importantes:</span> {{ exam.background_notes }}</li>
+    	   	<li><span>Antecedents Patológicos Personales y Familiares Importantes:</span> {{ exam.family_notes }}</li>
     		<li><span>Descripción Fisica y Comportamiento:</span> {{ exam.physical_description }}</li>
     		<li><span>Área Intelectual:</span> {{ exam.intelectual_notes }}</li>
     		<li><span>Área Organicidad:</span> {{ exam.organicity_notes }}</li>
     		<li><span>Área Psciomotor:</span> {{ exam.psychomotor_notes }}</li>
     		<li><span>Área Afectiva Emocional:</span> {{ exam.emotional_notes }}</li>
+            <li><span>Diagnóstico:</span> {{ exam.diagnosis }}</li>
     		<li><span>Recomendaciones:</span> {{ exam.recommendation }}</li>
     	</ul>
         <ul id="signature">

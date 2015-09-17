@@ -14,32 +14,22 @@
 			<li><span>Enfermedad Actual:</span> {{ exam.illness_notes }}</li>
 			<li><span>Apetito:</span>{{ exam.appetite_notes }}</li>
 			<li><span>Sueño:</span> {{ exam.sleep_notes }}</li>
-			<li><span>Otras Problemas de Salud:</span> {{ exams.concerns_notes }}</li>
 			<li><span>Presión Arterial: </span>{{ exam.blood_pressure }}</li>
 			<li><span>Pulso:</span> {{ exam.pulse }}</li>
 			<li><span>Agudeza Visual Izquierdo:</span> {{ exam.visual_acuity_left }}</li>
 			<li><span>Agudeza Visual Derecha:</span> {{ exam.visual_acuity_right }}</li>
-			
-			<li><span>Aspecto General:</span> {{ exam.appearance_normal }}{% if exam.appearance_normal %}, {{ exam.appearance_notes }}{% endif %}</li>
-			
-			<li><span>Piel y Mucosas:</span> {{ exam.skin_mucosa_normal }}{% if exam.skin_mucosa_normal %}, {{ exam.skin_mucosa_notes }}{% endif %}</li>
-			
-			<li>TCSC y G. Linfaticos:</span> {{ exam.TCSC_lymph_normal }}{% if exam.TCSC_lymph_normal %}, {{ exam.TCSC_lymph_notes }}{% endif %}</li>
-			
-			<li><span>Cabeza y Cuello: </span>{{ exam.head_neck_normal }}{% if exam.head_neck_normal %}, {{ exam.head_neck_notes }}{% endif %}</li>
-			
-			<li><span>Tórax y Pulmones:</span> {{ exam.thorax_lungs_normal }}{% if exam.thorax_lungs_normal %}, {{ exam.thorax_lungs_notes }}{% endif %}</li>
-			
-			<li><span>Cardiovascular:</span> {{ exam.cardio_normal }}{% if exam.cardio_normal %}, {{ exam.cardio_notes }}{% endif %}</li>
-			
-			<li><span>Abdomen:</span> {{ exam.abdomen_normal }}{% if exam.abdomen_normal %}, {{ exam.abdomen_notes }}{% endif %}</li>
-			
-			<li><span>Genitourinario y Ano:</span> {{ exam.genitourinary_normal }}{% if exam.genitourinary_normal %}, {{ exam.genitourinary_notes }}{% endif %}</li>
-			
-			<li><span>Extremidades:</span> {{ exam.extremities_normal }}{% if exam.extremities_normal %}, {{ exam.extremities_notes }}{% endif %}</li>
-			
-			<li>Neurological:</span> {{ exam.neurological_normal }}{% if exam.neurological_normal %}, {{ exam.neurological_notes }}{% endif %}</li>
-			
+			<li><span>Apariencia Comentarios:</span> {{ exam.appearance_notes }}</li>
+			<li><span>Piel Comentarios:</span> {{ exam.skin_notes }}</li>
+			<li>Ganglios Comenarios:</span> {{ exam.lymph_notes }}</li>
+			<li><span>Comentarios Cuello: </span> {{ exam.neck_notes }}</li>
+			<li><span> Comentarios Pulmones:</span> {{ exam.lung_notes }}</li>
+			<li><span>Comentarios Cardiovasculares:</span> {{ exam.cardio_notes }}</li>
+			<li><span>Comentarios Abdomen:</span>{{ exam.abdomen_notes }}</li>
+			<li><span>Comentarios Genitourinarias:</span>{{ exam.genitourinary_notes }}</li>
+			<li><span>Extremidades Commentarios:</span> {{ exam.extremities_notes }}</li>
+			<li>Neurológicos Comentarios:</span> {{ exam.neurological_notes }}</li>
+			<li><span>Tratamientos Comentarios:</span> {{ exam.treatment_notes }}</li>
+			<li><span>Diagnóstico:</span> {{exam.diagnosis}}</li>
 			<li>Otres Recomendaciones:</span> {{ exam.recommendations }}</li>
 		</ul>
 		<ul id="signature">

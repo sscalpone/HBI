@@ -21,8 +21,8 @@ class BloodExam(models.Model):
     hepatitis_b_notes = models.TextField(blank=True, null=True)
     ppd_positive = models.BooleanField(default=False)
     ppd_notes = models.TextField(blank=True, null=True)
-    stool_parasites_positive = models.BooleanField(default=False)
-    stool_parasites_notes = models.TextField(blank=True, null=True)
+    parasites_positive = models.BooleanField(default=False)
+    parasites_notes = models.TextField(blank=True, null=True)
     urine_abnormal = models.BooleanField(default=False)
     urine_notes = models.TextField(blank=True, null=True)
     leukocytes_abnormal = models.BooleanField(default=False)
@@ -59,8 +59,8 @@ class BloodExamForm(ModelForm):
             'hepatitis_b_notes',
             'ppd_positive',
             'ppd_notes',
-            'stool_parasites_positive',
-            'stool_parasites_notes',
+            'parasites_positive',
+            'parasites_notes',
             'urine_abnormal',
             'urine_notes',
             'urobilinogen_abnormal',
@@ -90,8 +90,8 @@ class BloodExamForm(ModelForm):
             'hepatitis_b_notes': 'Comentarios',
             'ppd_positive': 'PPD',
             'ppd_notes': 'Comentarios', 
-            'stool_parasites_positive': 'Parasitos Heces',
-            'stool_parasites_notes': 'Lista si es positivo',
+            'parasites_positive': 'Parasitos',
+            'parasites_notes': 'Comentarios',
             'leukocytes_abnormal': 'Leucocitos',
             'leukocytes_notes': 'Comentarios',
             'nitrites_abnormal': 'Nitritos',
@@ -114,11 +114,11 @@ class BloodExamForm(ModelForm):
             'elisa_vh1_positive': RadioSelect(choices=((True, 'Positivo'),(False, 'Negativo'))),
             'hepatitis_b_positive': RadioSelect(choices=((True, 'Positivo'),(False, 'Negativo'))),
             'ppd_positive': RadioSelect(choices=((True, 'Positivo'),(False, 'Negativo'))),
-            'stool_parasites_positive': RadioSelect(choices=((True, 'Positivo'),(False, 'Negativo'))),
+            'parasites_positive': RadioSelect(choices=((True, 'Positivo'),(False, 'Negativo'))),
             'urine_abnormal': RadioSelect(choices=((True, 'Anormal'),(False, 'Negativo'))),
             'leukocytes_abnormal': RadioSelect(choices=((True, 'Anormal'),(False, 'Normal'))),
             'nitrites_abnormal': RadioSelect(choices=((True, 'Anormal'),(False, 'Normal'))),
-            'urobilinogen_normal': RadioSelect(choices=((True, 'Anormal'),(False, 'Normal'))),
+            'urobilinogen_abnormal': RadioSelect(choices=((True, 'Anormal'),(False, 'Normal'))),
             'protein_abnormal': RadioSelect(choices=((True, 'Anormal'),(False, 'Normal'))),
             'ph_abnormal': RadioSelect(choices=((True, 'Anormal'),(False, 'Normal'))),
             'density_abnormal': RadioSelect(choices=((True, 'Anormal'),(False, 'Normal'))),
@@ -149,17 +149,22 @@ class BloodExamForm(ModelForm):
                 hepatitis_b_positive = cleaned_data.get('hepatitis_b_positive')
                 hepatitis_b_notes = cleaned_data.get('hepatitis_b_notes')
                 if hepatitis_b_positive and hepatitis_b_notes=='':
-                    self.add_error('hepatitis_bs_notes', msg)
+                    self.add_error('hepatitis_b_notes', msg)
 
                 ppd_positive = cleaned_data.get('ppd_positive')
                 ppd_notes = cleaned_data.get('ppd_notes')
                 if ppd_positive and ppd_notes=='':
                     self.add_error('ppd_notes', msg)
 
-                stool_parasites_positive = cleaned_data.get('stool_parasites_positive')
-                stool_parasites_notes = cleaned_data.get('stool_parasites_notes')
-                if stool_parasites_positive and stool_parasites_notes=='':
-                    self.add_error('stool_parasites_notes', msg)
+                parasites_positive = cleaned_data.get('parasites_positive')
+                parasites_notes = cleaned_data.get('parasites_notes')
+                if parasites_positive and parasites_notes=='':
+                    self.add_error('parasites_notes', msg)
+
+                urine_abnormal = cleaned_data.get('urine_abnormal')
+                urine_notes = cleaned_data.get('urine_notes')
+                if urine_abnormal and urine_notes=='':
+                    self.add_error('urine_notes', msg)
 
                 leukocytes_abnormal = cleaned_data.get('leukocytes_abnormal')
                 leukocytes_notes = cleaned_data.get('leukocytes_notes')

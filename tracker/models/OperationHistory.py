@@ -22,6 +22,7 @@ class OperationHistory(models.Model):
 		app_label='tracker'
 		db_table='tracker_operationhistory'
 
+
 class OperationHistoryForm(ModelForm):
 	class Meta:
 		model = OperationHistory
@@ -35,32 +36,35 @@ class OperationHistoryForm(ModelForm):
 		labels = {
 			'date': 'Fecha',
 			'institution': 'Institución',
-			'preop_diagnosis':'Diagnóstico Preoperatorio',
+			'preop_diagnosis': 'Diagnóstico Preoperatorio',
 			'intervention': 'Intervención',
 			'postop_diagnosis': 'Diagnóstico Postoperatorio',
 		}
 
 	def __init__(self, *args, **kwargs):
 		self.request = kwargs.pop('request', None)
-        super(OperationHistoryForm, self).__init__(*args, **kwargs)
+		super(OperationHistoryForm, self).__init__(*args, **kwargs)
 
 	def clean(self):
 		msg = "Este campo es obligatorio."
-    	cleaned_data = super(OperationHistoryForm, self).clean()
-        if self.request.POST:
-        	if 'submit' in self.request.POST:
-        		institution = cleaned_data.get('institution')
-        		if institution == '':
-        			self.add_error('institution', msg)
-        		preop_diagnosis = cleaned_data.get('preop_diagnosis')
-        		if preop_diagnosis == '':
-        			self.add_error('preop_diagnosis', msg)
-        		intervention = cleaned_data.get('intervention')
-        		if intervention == '':
-        			self.add_error('intervention', msg)
-        		postop_diagnosis = cleaned_data.get('postop_diagnosis')
-        		if postop_diagnosis == '':
-        			self.add_error('postop_diagnosis', msg)
+		cleaned_data = super(OperationHistoryForm, self).clean()
+
+		if self.request.POST:
+			if 'submit' in self.request.POST:
+				institution = cleaned_data.get('institution')
+				if institution=='':
+					self.add_error('institution', msg)
+				preop_diagnosis = cleaned_data.get('preop_diagnosis')
+				if preop_diagnosis=='':
+					self.add_error('preop_diagnosis', msg)
+				intervention = cleaned_data.get('intervention')
+				if intervention=='':
+					self.add_error('intervention', msg)
+				postop_diagnosis = cleaned_data.get('postop_diagnosis')
+				if postop_diagnosis=='':
+					self.add_error('postop_diagnosis', msg)
+
+
 
 
 

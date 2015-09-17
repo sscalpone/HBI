@@ -1,0 +1,11 @@
+	
+	<div class="exam-list">
+		<h3>Historias de Operaciones</h3>
+		<ol>
+		{% if OperationHistories %}
+			{% for exam in OperationHistories reversed %}
+				<li><a href="{% url 'tracker:operation_history' child_id exam.id %}">{{ exam.date }}</a></li>
+			{% endfor%}
+		{% endif %}
+		</ol>
+	</div>
