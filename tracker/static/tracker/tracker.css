@@ -414,6 +414,28 @@ SUMMARY AND RISK ASSESSMENT;
 }
 
 
+.photograph {
+  width: 300px;
+  height: 300px;
+  display: inline-block;
+  float: left;
+}
+
+.photograph img {
+  overflow: hidden;
+}
+
+#content form {
+  min-height: 150px;
+
+}
+
+#photo {
+  display: block;
+  max-width: 500px;
+  margin: 0 auto;
+}
+
 /**********************
 MEDIA QUERIES
 **********************/

@@ -1,8 +1,8 @@
 {% extends 'two-column.html' %}
 
-{% block title %}Nuevo Informe Psicológico{% endblock %}
+{% block title %}Añadir Fotografía{% endblock %}
 
-{% block h2 %}Nuevo Informe Psicológico{% endblock %}
+{% block h2 %}Añadir Fotografía{% endblock %}
 
 {% block sidebar %}
     <ul>
@@ -19,9 +19,9 @@
             <li><a href="{% url 'tracker:new_medical_exam_part1' child_id %}">Informe Médico / Parte 1</a></li>
             <li><a href="{% url 'tracker:new_medical_exam_part2' child_id %}">Informe Médico / Parte 2</a></li>
             <li><a href="{% url 'tracker:new_operation_history' child_id %}">Historia de Operaciones</a></li>
-            <li class="selected"><a href="{% url 'tracker:new_psychological_exam' child_id %}">Informe Psicológico</a></li>
+            <li><a href="{% url 'tracker:new_psychological_exam' child_id %}">Informe Psicológico</a></li>
             <li><a href="{% url 'tracker:new_social_exam' child_id %}">Informe Social</a></li>
-            <li><a href="{% url 'tracker:new_photo' child_id %}">Fotografias</a></li>
+            <li class="selected"><a href="{% url 'tracker:new_photo' child_id %}">Fotografias</a></li>
         </span>
     </ul>
 {% endblock %}
@@ -29,22 +29,34 @@
 {% block content %}
 
     {% include 'tracker/basic-info.html' %}
-    {% include 'tracker/psychological_exam_list.html' %}
 
     {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
 
-    <form action="{% url 'tracker:new_psychological_exam' child_id %}" enctype="multipart/form-data" method="post" class="exam">
+    <form action="{% url 'tracker:new_photo' child_id %}" enctype="multipart/form-data" method="post" class="exam">
         {% csrf_token %}
         <ul>
-            {{ psychological_exam_form }}
+            {{ photograph_form }}
         
-            <li><h3>Los Datos del Profesíonal</h3></li>
-
-            {{ signature_form }}
-
         </ul>
         <input type="submit" name="submit" value="Enviar">
         <input type="submit" name="save" value="Guardar Cambios">
         <input type="submit" name="discard" value="Descartar Cambios">
+        
     </form>
+
+    {% if Photographs %}
+    <div>
+        <ul>
+        {% for photograph in Photographs %}
+            <a href="{% url 'tracker:photo' child_id photograph.id %}"><li class="photograph"><img src="{{ photograph.photo.url }}"></li></a>
+        {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
 {% endblock %}
+
+
+
+
+
+

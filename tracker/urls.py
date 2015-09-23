@@ -11,6 +11,7 @@ from tracker.views import medical_exam_part1
 from tracker.views import medical_exam_part2
 from tracker.views import psychological_exam
 from tracker.views import operation_history
+from tracker.views import photograph
 from tracker.views import social_exam
 from tracker.views import exam_views
 
@@ -60,6 +61,10 @@ urlpatterns = patterns('',
     url(r'^psychological_exam/(?P<child_id>\d+)/(?P<exam_id>\d+)', psychological_exam.view, name='psychological_exam'),
     url(r'^psychological_exam/edit/(?P<child_id>\d+)/(?P<exam_id>\d+)', psychological_exam.edit, name='edit_psychological_exam'),
     url(r'^psychological_exam/new/(?P<child_id>\d+)', psychological_exam.new, name='new_psychological_exam'),
+
+    url(r'^photo/(?P<child_id>\d+)/(?P<exam_id>\d+)', photograph.view, name='photo'),
+    url(r'^photo/edit/(?P<child_id>\d+)/(?P<exam_id>\d+)', photograph.edit, name='edit_photo'),
+    url(r'^photo/new/(?P<child_id>\d+)', photograph.new, name='new_photo'),
 
     url(r'^social_exam/(?P<child_id>\d+)/(?P<exam_id>\d+)', social_exam.view, name='social_exam'),
     url(r'^social_exam/edit/(?P<child_id>\d+)/(?P<exam_id>\d+)', social_exam.edit, name='edit_social_exam'),
