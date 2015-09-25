@@ -32,7 +32,16 @@
     <div>
         <img id="photo" src="{{ exam.photo.url }}">  
     </div>
-    <a href="{% url 'tracker:edit_photo' child_id exam.id %}">Edita Detalles</a>
-    <a href="{% url 'tracker:delete_photo' child_id exam.id %}">Borrar</a>
+    <ul>
+        <li><a href="{% url 'tracker:edit_photo' child_id exam.id %}">Edita Detalles</a></li>
+        <li><a href="{% url 'tracker:delete_photo' child_id exam.id %}" id="delete">Borrar<span id="dialog">
+            <form action ="" method="post" class="no-display">{% csrf_token %}
+                <p>¿Estás seguro que quieres borrar esta foto?</p>
+                <input type="submit" name="yes" value="Sí">
+                <input type="submit" name="no" value="No">
+            </form>
+            </span>
+        </a></li>
+    </ul>
     
 {% endblock %}

@@ -99,6 +99,10 @@ footer p {
   padding-top: 10px;
 }
 
+.no-display {
+  display: none;
+}
+
 /*********************
 HEADER STYLES
 **********************/

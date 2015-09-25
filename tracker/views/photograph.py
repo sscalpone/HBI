@@ -63,6 +63,20 @@ def new(request, child_id):
 
 @login_required
 def view(request, child_id, exam_id):
+    if request.method=="POST":
+        exam = get_object_or_404(Photograph, pk=exam_id)
+        child = get_object_or_404(Child, pk=child_id)
+        if 'yes' in request.POST:
+            exam.delete()
+            return HttpResponseRedirect(reverse('tracker:child', kwargs={'child_id': child_id}))  
+        elif 'no' in request.POST:
+            context = {
+                'exam': exam,
+                'child': child,
+                'child_id': child.id,
+                'residence_id': child.residence_id,
+            }
+            return render(request, 'tracker/photograph.html', context)
     p = get_object_or_404(Photograph, pk=exam_id)
     child = get_object_or_404(Child, pk=child_id)
     context = {

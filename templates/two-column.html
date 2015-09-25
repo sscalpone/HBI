@@ -30,5 +30,13 @@
             </div>
         </div>
         {% load staticfiles %}<script type="text/javascript" src="{% static "tracker/jquery-1.11.3.min.js" %}"></script>
+        {% load staticfiles %}<script type="text/javascript" src="{% static "tracker/jquery-ui.min.js" %}"></script>
+        <script type="text/javascript">
+            $('#delete').click(function(event) {
+                event.preventDefault();
+                $('#dialog form').removeClass('no-display');
+                $('#dialog').dialog();
+            });
+        </script>
     </body>
 </html>
