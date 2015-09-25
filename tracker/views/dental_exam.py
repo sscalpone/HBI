@@ -1,8 +1,11 @@
+# coding=utf-8
+
 import datetime
 
 from django.http import Http404
 from django.http import HttpResponse
 from django.http import HttpResponseRedirect
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
 
@@ -33,6 +36,7 @@ def new(request, child_id):
         signature_form = SignatureForm(request.POST, request.FILES, request=request)
         exam_form = DentalExamForm(request.POST, request.FILES, request=request)
         if 'discard' in request.POST:
+            messages.add_message(request, messages.SUCCESS, 'Con éxito desechada información.')
             return HttpResponseRedirect(reverse('tracker:child', kwargs={'child_id': child_id}))
 
         else:
@@ -46,8 +50,10 @@ def new(request, child_id):
                     saved_exam.save()
                     exam_form.save_m2m()
                     if 'save' in request.POST:
+                        messages.add_message(request, messages.SUCCESS, 'Guardado correctamente la información.')
                         return HttpResponseRedirect(reverse('tracker:edit_dental_exam', kwargs={'child_id': child_id, 'exam_id': saved_exam.id}))
                     else:
+                        messages.add_message(request, messages.SUCCESS, 'Enviado correctamente la información.')
                         return HttpResponseRedirect(reverse('tracker:child', kwargs={'child_id': child_id}))     
     else:
         exam_form = DentalExamForm(initial={
@@ -92,6 +98,7 @@ def edit(request, child_id, exam_id):
         exam_form = DentalExamForm(request.POST, request.FILES, instance=exam, request=request)
         
         if 'discard' in request.POST:
+            messages.add_message(request, messages.SUCCESS, 'Con éxito desechada información.')
             return HttpResponseRedirect(reverse('tracker:child', kwargs={'child_id': child_id}))
 
         else:
@@ -105,8 +112,10 @@ def edit(request, child_id, exam_id):
                     saved_exam.save()
                     exam_form.save_m2m()
                     if 'save' in request.POST:
+                        messages.add_message(request, messages.SUCCESS, 'Guardado correctamente la información.')
                         return HttpResponseRedirect(reverse('tracker:edit_dental_exam', kwargs={'child_id': child_id, 'exam_id': saved_exam.id}))
                     else:
+                        messages.add_message(request, messages.SUCCESS, 'Enviado correctamente la información.')
                         return HttpResponseRedirect(reverse('tracker:child', kwargs={'child_id': child_id}))  
         
     else:

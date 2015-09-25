@@ -65,6 +65,7 @@ urlpatterns = patterns('',
     url(r'^photo/(?P<child_id>\d+)/(?P<exam_id>\d+)', photograph.view, name='photo'),
     url(r'^photo/edit/(?P<child_id>\d+)/(?P<exam_id>\d+)', photograph.edit, name='edit_photo'),
     url(r'^photo/new/(?P<child_id>\d+)', photograph.new, name='new_photo'),
+    url(r'^photo/delete/(?P<child_id>\d+)/(?P<exam_id>\d+)', photograph.delete, name='delete_photo'),
 
     url(r'^social_exam/(?P<child_id>\d+)/(?P<exam_id>\d+)', social_exam.view, name='social_exam'),
     url(r'^social_exam/edit/(?P<child_id>\d+)/(?P<exam_id>\d+)', social_exam.edit, name='edit_social_exam'),

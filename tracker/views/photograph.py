@@ -6,6 +6,7 @@ from django.http import HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
 
+
 from django.shortcuts import render, get_object_or_404
 from django.template import loader
 import django.template.loader
@@ -111,4 +112,27 @@ def edit(request, child_id, exam_id):
         'Photographs': exam_list,
     }
     return render(request, 'tracker/edit_photograph.html', context)
+
+def delete(request, child_id, exam_id):
+    if request.method=="POST":
+        exam = get_object_or_404(Photograph, pk=exam_id)
+        child = get_object_or_404(Child, pk=child_id)
+        if 'yes' in request.POST:
+            exam.delete()
+            return HttpResponseRedirect(reverse('tracker:child', kwargs={'child_id': child_id}))  
+        elif 'no' in request.POST:
+            context = {
+                'exam': exam,
+                'child': child,
+                'child_id': child.id,
+                'residence_id': child.residence_id,
+            }
+            return render(request, 'tracker/photograph.html', context)
+    return render(request, 'tracker/delete_photograph.html')            
+
+
+
+    
+
+
 

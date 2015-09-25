@@ -32,5 +32,7 @@
     <div>
         <img id="photo" src="{{ exam.photo.url }}">  
     </div>
+    <a href="{% url 'tracker:edit_photo' child_id exam.id %}">Edita Detalles</a>
+    <a href="{% url 'tracker:delete_photo' child_id exam.id %}">Borrar</a>
     
 {% endblock %}
