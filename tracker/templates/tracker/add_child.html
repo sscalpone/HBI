@@ -6,9 +6,9 @@
 
 {% block sidebar %}
 	<ul>
-		<a href="{% url 'tracker:logout' %}"><li>Cerrar sesión</li></a>
-		<a href="{% url 'tracker:residences' %}"><li>Residencias</li></a>
-		<a href="{% url 'tracker:residence' residence_id %}"><li>Detalle Orfanato</li></a>
+		<a href="{% url 'tracker:logout' %}" class="delete"><li>Cerrar sesión</li></a>
+		<a href="{% url 'tracker:residences' %}" class="delete"><li>Residencias</li></a>
+		<a href="{% url 'tracker:residence' residence_id %}" class="delete"><li>Detalle Orfanato</li></a>
 	</ul>
 
 {% endblock %}
@@ -24,6 +24,13 @@
     	</ul>
         <input type="submit" name="submit" value="Enviar">
         <input type="submit" name="save" value="Guardar Cambios">
-        <input type="submit" name="discard" value="Descartar Cambios">
     </form>
+
+    <span id="dialog">
+        <form action ="" method="post" class="no-display">{% csrf_token %}
+            <p>¿Seguro que quieres descartar esta información?</p>
+            <input type="submit" name="discard" value="Sí">
+            <input type="submit" value="No" id="no">
+        </form>
+     </span>
 {% endblock %}

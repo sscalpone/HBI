@@ -50,7 +50,7 @@ def new(request, child_id):
                     if 'save' in request.POST:
                         return HttpResponseRedirect(reverse('tracker:edit_medical_exam_part1', kwargs={'child_id': child_id, 'exam_id': saved_exam.id}))
                     else:
-                        return HttpResponseRedirect(reverse('tracker:child', kwargs={'child_id': child_id}))
+                        return HttpResponseRedirect(reverse('tracker:new_medical_exam_part1', kwargs={'child_id': child_id}))
     
     else:
         exam_form = MedicalExamPart1Form(initial={
@@ -110,7 +110,7 @@ def edit(request, child_id, exam_id):
                     if 'save' in request.POST:
                         return HttpResponseRedirect(reverse('tracker:edit_medical_exam_part1', kwargs={'child_id': child_id, 'exam_id': saved_exam.id}))
                     else:
-                        return HttpResponseRedirect(reverse('tracker:child', kwargs={'child_id': child_id}))
+                        return HttpResponseRedirect(reverse('tracker:new_medical_exam_part1', kwargs={'child_id': child_id}))
     
     else:
         exam_form = MedicalExamPart1Form(initial={

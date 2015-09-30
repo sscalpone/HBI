@@ -43,7 +43,7 @@ def new(request, child_id):
                     if 'save' in request.POST:
                         return HttpResponseRedirect(reverse('tracker:edit_photo', kwargs={'child_id': child_id, 'exam_id': saved_exam.id}))
                     else:
-                        return HttpResponseRedirect(reverse('tracker:child', kwargs={'child_id': child_id}))     
+                        return HttpResponseRedirect(reverse('tracker:new_photo', kwargs={'child_id': child_id}))     
     else:
         exam_form = PhotographForm(initial={
                 'child': child,
@@ -66,9 +66,9 @@ def view(request, child_id, exam_id):
     if request.method=="POST":
         exam = get_object_or_404(Photograph, pk=exam_id)
         child = get_object_or_404(Child, pk=child_id)
-        if 'yes' in request.POST:
+        if 'discard' in request.POST:
             exam.delete()
-            return HttpResponseRedirect(reverse('tracker:child', kwargs={'child_id': child_id}))  
+            return HttpResponseRedirect(reverse('tracker:new_photo', kwargs={'child_id': child_id}))  
         elif 'no' in request.POST:
             context = {
                 'exam': exam,
@@ -106,7 +106,7 @@ def edit(request, child_id, exam_id):
                     if 'save' in request.POST:
                         return HttpResponseRedirect(reverse('tracker:edit_photo', kwargs={'child_id': child_id, 'exam_id': saved_exam.id}))
                     else:
-                        return HttpResponseRedirect(reverse('tracker:child', kwargs={'child_id': child_id}))  
+                        return HttpResponseRedirect(reverse('tracker:new_photo', kwargs={'child_id': child_id}))  
         
     else:
         exam_form = PhotographForm(initial={
@@ -131,9 +131,9 @@ def delete(request, child_id, exam_id):
     if request.method=="POST":
         exam = get_object_or_404(Photograph, pk=exam_id)
         child = get_object_or_404(Child, pk=child_id)
-        if 'yes' in request.POST:
+        if 'discard' in request.POST:
             exam.delete()
-            return HttpResponseRedirect(reverse('tracker:child', kwargs={'child_id': child_id}))  
+            return HttpResponseRedirect(reverse('tracker:new_photo', kwargs={'child_id': child_id}))  
         elif 'no' in request.POST:
             context = {
                 'exam': exam,

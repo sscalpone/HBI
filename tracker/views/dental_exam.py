@@ -54,7 +54,7 @@ def new(request, child_id):
                         return HttpResponseRedirect(reverse('tracker:edit_dental_exam', kwargs={'child_id': child_id, 'exam_id': saved_exam.id}))
                     else:
                         messages.add_message(request, messages.SUCCESS, 'Enviado correctamente la información.')
-                        return HttpResponseRedirect(reverse('tracker:child', kwargs={'child_id': child_id}))     
+                        return HttpResponseRedirect(reverse('tracker:new9_dental_exam', kwargs={'child_id': child_id}))     
     else:
         exam_form = DentalExamForm(initial={
                 'child': child,
@@ -116,7 +116,7 @@ def edit(request, child_id, exam_id):
                         return HttpResponseRedirect(reverse('tracker:edit_dental_exam', kwargs={'child_id': child_id, 'exam_id': saved_exam.id}))
                     else:
                         messages.add_message(request, messages.SUCCESS, 'Enviado correctamente la información.')
-                        return HttpResponseRedirect(reverse('tracker:child', kwargs={'child_id': child_id}))  
+                        return HttpResponseRedirect(reverse('tracker:new_dental_exam', kwargs={'child_id': child_id}))  
         
     else:
         exam_form = DentalExamForm(initial={

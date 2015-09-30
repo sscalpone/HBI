@@ -48,7 +48,7 @@ def new(request, child_id):
                     if 'save' in request.POST:
                         return HttpResponseRedirect(reverse('tracker:edit_operation_history', kwargs={'child_id': child_id, 'exam_id': saved_exam.id}))
                     else:
-                        return HttpResponseRedirect(reverse('tracker:child', kwargs={'child_id': child_id}))     
+                        return HttpResponseRedirect(reverse('tracker:new_operation_history', kwargs={'child_id': child_id}))     
     else:
         exam_form = OperationHistoryForm(initial={
                 'child': child,
@@ -107,7 +107,7 @@ def edit(request, child_id, exam_id):
                     if 'save' in request.POST:
                         return HttpResponseRedirect(reverse('tracker:edit_operation_history', kwargs={'child_id': child_id, 'exam_id': saved_exam.id}))
                     else:
-                        return HttpResponseRedirect(reverse('tracker:child', kwargs={'child_id': child_id}))  
+                        return HttpResponseRedirect(reverse('tracker:new_operation_history', kwargs={'child_id': child_id}))  
         
     else:
         exam_form = OperationHistoryForm(initial={

@@ -33,11 +33,27 @@
         {% load staticfiles %}<script type="text/javascript" src="{% static "tracker/jquery-1.11.3.min.js" %}"></script>
         {% load staticfiles %}<script type="text/javascript" src="{% static "tracker/jquery-ui.min.js" %}"></script>
         <script type="text/javascript">
-            $('#delete').click(function(event) {
-                event.preventDefault();
-                $('#dialog form').removeClass('no-display');
-                $('#dialog').dialog();
+            var changed=false;
+            $("form").on("input", function() {
+                changed=true;
             });
+            $("form :input").change(function() {
+                changed=true;
+            });
+            $('.delete').click(function(event) {
+                if (changed==true) {
+                    event.preventDefault();
+                    $('#dialog form').removeClass('no-display');
+                    $('#dialog').dialog({ autoOpen: false });
+                    $('#dialog').dialog("open");
+                    $('#no').click(function(e) {
+                        e.preventDefault();
+                        $('#dialog').dialog("close");
+                    });
+
+                }
+            });
+
         </script>
     </body>
 </html>

@@ -34,12 +34,12 @@
     </div>
     <ul>
         <li><a href="{% url 'tracker:edit_photo' child_id exam.id %}">Edita Detalles</a></li>
-        <li><a href="{% url 'tracker:delete_photo' child_id exam.id %}" id="delete">Borrar</a></li>
+        <li><a href="{% url 'tracker:delete_photo' child_id exam.id %}" class="delete">Borrar</a></li>
     </ul>
     <span id="dialog">
         <form action ="" method="post" class="no-display">{% csrf_token %}
             <p>¿Estás seguro que quieres borrar esta foto?</p>
-            <input type="submit" name="yes" value="Sí">
+            <input type="submit" name="discard" value="Sí">
             <input type="submit" name="no" value="No">
         </form>
      </span>
