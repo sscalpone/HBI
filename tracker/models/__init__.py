@@ -5,7 +5,7 @@ from Child import Child, ChildForm
 from ConsultationHistory import ConsultationHistory, ConsultationHistoryForm
 from DentalExam import DentalExam, DentalExamForm
 from DiseaseHistory import DiseaseHistory, DiseaseHistoryForm
-from MedicalExamPart1 import MedicalExamPart1, MedicalExamPart1Form, Weight, Height
+from MedicalExamPart1 import MedicalExamPart1, MedicalExamPart1Form, Growth
 from MedicalExamPart2 import MedicalExamPart2, MedicalExamPart2Form
 from PsychologicalExam import PsychologicalExam, PsychologicalExamForm
 from Photograph import Photograph, PhotographForm

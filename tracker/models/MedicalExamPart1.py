@@ -41,15 +41,15 @@ class MedicalExamPart1(models.Model):
         app_label = 'tracker'
         db_table = 'tracker_medicalexampart1'
 
-class Height(models.Model):
+class Growth(models.Model):
     child = models.ForeignKey(Child)
+    exam = models.ForeignKey(MedicalExamPart1)
     date = models.DateField()
     height = models.FloatField(blank=True, null=True)
+    weight = models.FloatField(blank=True, null=True)
+    age = models.FloatField(blank=True, null=True)
+    gender = models.CharField(max_length=6, blank=True, null=True)
 
-class Weight(models.Model):
-    child = models.ForeignKey(Child)
-    date = models.DateField()
-    weight = models.FloatField()
 
 class MedicalExamPart1Form(ModelForm):
     class Meta:
@@ -101,8 +101,8 @@ class MedicalExamPart1Form(ModelForm):
             'hpv_vaccine_date': 'Fecha de Administracion',
             'pneumococcal_vaccine': 'Neumococo',
             'pneumococcal_vaccine_date': 'Fecha de Administracion',
-            'weight': 'Peso',
-            'height': 'Estatura',
+            'weight': 'Peso (kg)',
+            'height': 'Estatura (cm)',
         }
         widgets = {
             'bcg_vaccine': RadioSelect(choices=((True, 'Si'),(False, 'No'))),
