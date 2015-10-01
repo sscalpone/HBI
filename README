@@ -16,6 +16,9 @@ sudo pip install Django==1.7.9
 Install the Python Image Tools:
 sudo pip install Pillow
 
+Install Python Graphing Tools:
+sudo pip install matplotlib
+
 First you'll want a fresh database:
 rm -f database/mysite.db
 python manage.py syncdb
