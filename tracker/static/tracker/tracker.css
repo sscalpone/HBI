@@ -287,6 +287,10 @@ TWO-COLUMN and THREE-COLUMN STYLES
   padding-bottom: 10px;
 }
 
+.two-column #content p {
+  padding: 20px 0 10px;
+}
+
 /* FORM STYLES */
 
 .two-column #content select {
