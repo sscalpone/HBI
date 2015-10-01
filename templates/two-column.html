@@ -33,6 +33,12 @@
         {% load staticfiles %}<script type="text/javascript" src="{% static "tracker/jquery-1.11.3.min.js" %}"></script>
         {% load staticfiles %}<script type="text/javascript" src="{% static "tracker/jquery-ui.min.js" %}"></script>
         <script type="text/javascript">
+            $("#sidebar li").click(function() {
+                $(this).addClass("selected");
+                $(this).siblings().removeClass("selected");
+            });
+        </script>
+        <script type="text/javascript">
             var changed=false;
             $("form").on("input", function() {
                 changed=true;

@@ -54,6 +54,9 @@ urlpatterns = patterns('',
     url(r'^medical_exam_part2/edit/(?P<child_id>\d+)/(?P<exam_id>\d+)', medical_exam_part2.edit, name='edit_medical_exam_part2'),
     url(r'^medical_exam_part2/new/(?P<child_id>\d+)', medical_exam_part2.new, name='new_medical_exam_part2'),
 
+    url(r'^graph/height/(?P<child_id>\d+)', medical_exam_part1.graph_height, name='height_graph'),
+    url(r'^graph/weight/(?P<child_id>\d+)', medical_exam_part1.graph_weight, name='weight_graph'),
+
     url(r'^operation_history/(?P<child_id>\d+)/(?P<exam_id>\d+)', operation_history.view, name='operation_history'),
     url(r'^operation_history/edit/(?P<child_id>\d+)/(?P<exam_id>\d+)', operation_history.edit, name='edit_operation_history'),
     url(r'^operation_history/new/(?P<child_id>\d+)', operation_history.new, name='new_operation_history'),

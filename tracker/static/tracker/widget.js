@@ -1,5 +1,4 @@
-$('.delete').click(function(event) {
-    event.preventDefault();
-    $('#dialog form').removeClass('no-display');
-    $('#dialog').dialog();
-});
+$("#sidebar li").click({
+	$(this).addClass("selected");
+	$(this).siblings().removeClass("selected");
+}) 
