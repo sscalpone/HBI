@@ -14,7 +14,7 @@
         <span id="secondary">
             <li><a href="{% url 'tracker:new_blood_exam' child_id %}">Informe Sangre</a></li>
             <li><a href="{% url 'tracker:new_consultation_history' child_id %}">Historia de Consulta</a></li>
-            <li class="selected"><a href="{% url 'tracker:new_dental_exam' child_id %}">Informe Odontológico</a></li>
+            <li><a href="{% url 'tracker:new_dental_exam' child_id %}">Informe Odontológico</a></li>
             <li><a href="{% url 'tracker:new_disease_history' child_id %}">Historia de Enfermedades</a></li>
             <li><a href="{% url 'tracker:new_medical_exam_part1' child_id %}">Informe Médico / Parte 1</a></li>
             <li><a href="{% url 'tracker:new_medical_exam_part2' child_id %}">Informe Médico / Parte 2</a></li>
@@ -23,7 +23,7 @@
             <li><a href="{% url 'tracker:new_social_exam' child_id %}">Informe Social</a></li>
             <li><a href="{% url 'tracker:new_photo' child_id %}">Fotografias</a></li>
             <li class="selected"><a href="{% url 'tracker:height_graph' child_id %}">Altura Gráfico</a></li>
-            <li><a href="{% url 'tracker:weight_graph' child_id %}">Peso Gráfico</a></li>
+            <li class=><a href="{% url 'tracker:height_graph' child_id %}">Altura Gráfico</a></li>
         </span>
     </ul>
 {% endblock %}
@@ -31,5 +31,8 @@
 {% block content %}
 
     {% include 'tracker/basic-info.html' %}
-    
+
+    {% load staticfiles %}
+    <img src="{% static '/tracker/graph/height/1/height.png' %}" id="graph">
+
 {% endblock %}

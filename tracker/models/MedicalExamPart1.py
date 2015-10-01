@@ -41,6 +41,15 @@ class MedicalExamPart1(models.Model):
         app_label = 'tracker'
         db_table = 'tracker_medicalexampart1'
 
+class Height(models.Model):
+    child = models.ForeignKey(Child)
+    date = models.DateField()
+    height = models.FloatField(blank=True, null=True)
+
+class Weight(models.Model):
+    child = models.ForeignKey(Child)
+    date = models.DateField()
+    weight = models.FloatField()
 
 class MedicalExamPart1Form(ModelForm):
     class Meta:

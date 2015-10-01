@@ -8,15 +8,17 @@ from django.http import HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
 
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, render_to_response, get_object_or_404
 from django.template import loader
 import django.template.loader
 
 import matplotlib.pyplot as plt
 import matplotlib.pylab
-import matplotlib.dates as mdates
+from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
+from matplotlib.figure import Figure
 
 from tracker.models import MedicalExamPart1, MedicalExamPart1Form
+from tracker.models import Height, Weight
 from tracker.models import Signature, SignatureForm
 from tracker.models import Child
 
@@ -53,6 +55,10 @@ def new(request, child_id):
                     saved_exam.child = child
                     saved_exam.save()
                     exam_form.save_m2m()
+                    height = Height.objects.create(child=child, date=saved_exam.date, height=saved_exam.height)
+                    height.save()
+                    weight = Weight.objects.create(child=child, date=saved_exam.date, weight=saved_exam.weight)
+                    weight.save()
                     if 'save' in request.POST:
                         return HttpResponseRedirect(reverse('tracker:edit_medical_exam_part1', kwargs={'child_id': child_id, 'exam_id': saved_exam.id}))
                     else:
@@ -138,44 +144,32 @@ def edit(request, child_id, exam_id):
     }
     return render(request, 'tracker/edit_medical_exam_part1.html', context)
 
+def height_png(request, child_id):
+    child = get_object_or_404(Child, pk=child_id)
+    heights = Height.objects.filter(child_id=child_id)
+    x=list()
+    y=list()
+    for height in heights:
+        x.append(height.date)
+        y.append(height.height)
+    fig, ax = plt.subplots()
+    ax.plot_date(x, y, markerfacecolor='#95bcf2', markersize=8)
+    plt.xlabel('Fecha')
+    plt.ylabel('Altura (cm)')
+    fig.autofmt_xdate()
+    ax.set_ylim(0, 250)
+
+    canvas = FigureCanvas(plt.figure(1))
+    response = HttpResponse(content_type='image/png')
+    canvas.print_png(response)
+    return response
+
 def graph_height(request, child_id):
-    exams = MedicalExamPart1.objects.filter(child_id=child_id)
-    if exams:
-        heights = list()
-        dates = list()
-        for exam in exams:
-            heights.append(exam.height)
-            dates.append(exam.date)
-        years = mdates.YearLocator()
-        months = mdates.MonthLocator()
-        yearsFmt = mdates.DateFormatter('%Y')
-
-        plt.gca().xaxis.set_major_formatter(yearsFmt)
-        plt.gca().xaxis.set_major_locator(years)
-        plt.plot(dates, heights)
-        plt.gcf().autofmt_xdate()
-
-        xlabel('Fecha (años)')
-        ylabel('Altura (cm)')
-        grid=true
-
-        buffer = StringIO.StringIO()
-        canvas = pylab.get_current_fig_manager().canvas
-        canvas.draw()
-        graphIMG = Image.fromstring("RGB", canvas.get_width_height(), canvas.tostring_rgb())
-        graphIMG.save(buffer, "PNG")
-        pylab.close()
-
-        return render(request, 'tracker/height_chart.html', 'graphIMG')
-
-
-
-
-def graph_weight(request, child_id):
-    exams = MedicalExamPart1.objects.filter(child_id=child_id)
-    weights = list()
-    dates = list()
-    for exam in exams:
-        weights.append(exam.weight)
-        dates.append(exam.date)
+    child = get_object_or_404(Child, pk=child_id)
+    context = {
+        'child': child,
+        'child_id': child.id,
+        'residence_id': child.residence_id,
+    }
+    return render(request, 'tracker/height_graph.html', context)
 
