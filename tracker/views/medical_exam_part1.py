@@ -185,7 +185,7 @@ def growth_png(request, child_id):
             avg_weight.append(item[1])
 
     child_arc = mpatches.Patch(color='#95bcf2', label='Arco Nino')
-    expected_arc = mpatches.Patch(color='#666666', label='Esperado Nino')
+    expected_arc = mpatches.Patch(color='#666666', label='Arco Esperado')
     plt.subplot(211)
     plt.plot(age, height, color='#95bcf2', marker='.')
     plt.plot(age, avg_height, color='#666666', marker='.')
