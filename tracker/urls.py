@@ -4,6 +4,7 @@ from tracker.views import main
 from tracker.views import residence
 from tracker.views import child
 from tracker.views import blood_exam
+from tracker.views import documents
 from tracker.views import consultation_history
 from tracker.views import dental_exam
 from tracker.views import disease_history
@@ -34,6 +35,10 @@ urlpatterns = patterns('',
     url(r'^blood_exam/edit/(?P<child_id>\d+)/(?P<exam_id>\d+)', blood_exam.edit, name='edit_blood_exam'),
     url(r'^blood_exam/new/(?P<child_id>\d+)', blood_exam.new, name='new_blood_exam'),
 
+    url(r'^documents/(?P<child_id>\d+)/(?P<exam_id>\d+)', documents.view, name='document'),
+    url(r'^documents/edit/(?P<child_id>\d+)/(?P<exam_id>\d+)', documents.edit, name='edit_document'),
+    url(r'^documents/new/(?P<child_id>\d+)', documents.new, name='new_document'),
+
     url(r'^dental_exam/(?P<child_id>\d+)/(?P<exam_id>\d+)', dental_exam.view, name='dental_exam'),
     url(r'^dental_exam/edit/(?P<child_id>\d+)/(?P<exam_id>\d+)', dental_exam.edit, name='edit_dental_exam'),
     url(r'^dental_exam/new/(?P<child_id>\d+)', dental_exam.new, name='new_dental_exam'),
@@ -57,6 +62,7 @@ urlpatterns = patterns('',
     url(r'^graph/height/(?P<child_id>\d+)/growth.png', medical_exam_part1.growth_png, name='growth_png'),
     url(r'^graph/height/(?P<child_id>\d+)', medical_exam_part1.graph_growth, name='growth_graph'),
 
+    url(r'^operation_history/(?P<child_id>\d+)/(?P<exam_id>\d+)', operation_history.view, name='operation_history'),
     url(r'^operation_history/edit/(?P<child_id>\d+)/(?P<exam_id>\d+)', operation_history.edit, name='edit_operation_history'),
     url(r'^operation_history/new/(?P<child_id>\d+)', operation_history.new, name='new_operation_history'),
 

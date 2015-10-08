@@ -212,19 +212,19 @@ CHILDREN LIST STYLES
   display: block;
 }
 
-.children-list ul li img.green {
+.thumbnail.green {
   border: 4px #009e0f solid;
 }
 
-.children-list ul li img.yellow {
+.thumbnail.yellow {
   border: 4px #ffff00 solid;
 }
 
-.children-list ul li img.red {
+.thumbnail.red {
   border: 4px #cf2a27 solid;
 }
 
-.children-list ul li img.gray {
+.thumbnail.gray {
   border: 4px #666 solid;
 }
 
@@ -241,6 +241,12 @@ CHILDREN LIST STYLES
 
 .add-new span {
   font-size: .8em;
+}
+
+.thumbnail {
+  width: 100px;
+  height: 100px;
+  overflow: hidden;
 }
 
 .add-new div, #residences img {
@@ -371,10 +377,20 @@ TWO-COLUMN and THREE-COLUMN STYLES
 CHILD PAGE STYLES
 *************************/
 
-.child-info img {
+/*.child-info img {
   display: block;
   width: 200px;
+  height: 200px;
   margin: 0 auto;
+  box-sizing: border-box;
+}*/
+
+.profile-picture {
+  display: block;
+  width: 200px;
+  height: 200px;
+  margin: 0 auto;
+  overflow: hidden;
 }
 
 .child-info span, #form-info span {
@@ -554,11 +570,6 @@ MEDIA QUERIES
     padding-bottom: 10px;
   }
 
-  .child-info img {
-    width: 200px;
-    margin: 0 0;
-  }
-
 }
 
 @media screen and (min-width: 775px) {
@@ -604,8 +615,7 @@ MEDIA QUERIES
 
   /* Update CHILD INFORMATION STYLES */
 
-  .child-info img {
-    width: 200px;
+  .profile-picture {
     float: right;
   }
 

@@ -2,38 +2,23 @@
 
 import datetime
 
-from django.http import Http404
-from django.http import HttpResponse
-from django.http import HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
-
+from django.http import HttpResponseRedirect
 from django.shortcuts import render, render_to_response, get_object_or_404
 from django.template import loader
-import django.template.loader
 
-import matplotlib.pyplot as plt
-import matplotlib.patches as mpatches
 from matplotlib import pylab
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 from matplotlib.figure import Figure
+import matplotlib.patches as mpatches
+import matplotlib.pyplot as plt
 
-from tracker.models import MedicalExamPart1, MedicalExamPart1Form
-from tracker.models import Growth
-from tracker.models import Signature, SignatureForm
 from tracker.models import Child
+from tracker.models import Growth
+from tracker.models import MedicalExamPart1, MedicalExamPart1Form
+from tracker.models import Signature, SignatureForm
 
-@login_required
-def index(request, child_id):
-    list = MedicalExamPart1.objects.filter(child_id=child_id)
-    child = get_object_or_404(Child, pk=child_id)
-    context = {
-        'MedicalExamPart1s': list,
-        'child_id': child_id,
-        'child': child,
-        'residence_id': child.residence_id,
-    }
-    return render(request, 'tracker/add_medical_exam_part1.html', context)
 
 @login_required
 def new(request, child_id):
@@ -79,8 +64,10 @@ def new(request, child_id):
         'medical_exam_part1_form': exam_form.as_ul,
         'signature_form': signature_form.as_ul,
         'MedicalExamPart1s': exam_list,
+        'page': 'medical_exam_part1',
     }
     return render(request, 'tracker/add_medical_exam_part1.html', context)
+
 
 @login_required
 def view(request, child_id, exam_id):
@@ -93,8 +80,10 @@ def view(request, child_id, exam_id):
         'child_id': child.id,
         'residence_id': child.residence_id,
         'signature': signature,
+        'page': 'medical_exam_part1',
     }
     return render(request, 'tracker/medical_exam_part1.html', context)
+
 
 @login_required
 def edit(request, child_id, exam_id):
@@ -150,8 +139,10 @@ def edit(request, child_id, exam_id):
         'medical_exam_part1_form': exam_form.as_ul,
         'signature_form': signature_form.as_ul,
         'MedicalExamPart1s': exam_list,
+        'page': 'medical_exam_part1',
     }
     return render(request, 'tracker/edit_medical_exam_part1.html', context)
+
 
 def growth_png(request, child_id):
     child = get_object_or_404(Child, pk=child_id)
@@ -206,12 +197,14 @@ def growth_png(request, child_id):
     canvas.print_png(response)
     return response
 
+
 def graph_growth(request, child_id):
     child = get_object_or_404(Child, pk=child_id)
     context = {
         'child': child,
         'child_id': child.id,
         'residence_id': child.residence_id,
+        'page': 'growth_graph',
     }
     return render(request, 'tracker/growth_graph.html', context)
 

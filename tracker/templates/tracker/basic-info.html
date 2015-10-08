@@ -1,8 +1,10 @@
     <div class="child-info">
         {% if child.photo %}
-        <img src="{{ child.photo.url }}">
+        <div class="profile-picture">
+        <img src="{{ child.photo.url }}"></div>
         {% else %}
-        {% load staticfiles %}<img src="{% static "tracker/person-icon.svg"  %}">
+        <div class="profile-picture">
+        {% load staticfiles %}<img src="{% static "tracker/person-icon.svg" %}"></div>
         {% endif %}
         <ul>
             <li><span>Nombre:</span> {% if child.first_name %}{{ child.first_name }}{% endif %} {% if child.last_name %}{{ child.last_name }}{% endif %}</li>

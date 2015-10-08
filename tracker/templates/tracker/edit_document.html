@@ -1,8 +1,8 @@
 {% extends 'two-column.html' %}
 
-{% block title %}Editar Informe Médico / Parte 1{% endblock %}
+{% block title %}Editar Documento{% endblock %}
 
-{% block h2 %}Editar Informe Médico / Parte 1{% endblock %}
+{% block h2 %}Editar Histora Documento{% endblock %}
 
 {% block sidebar %}
     {% include 'tracker/sidebar.html' %}
@@ -11,22 +11,21 @@
 {% block content %}
 
     {% include 'tracker/basic-info.html' %}
-    {% include 'tracker/medical_exam_part1_list.html' %}
+    {% include 'tracker/documents_list.html' %}
 
     {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
 
-    <form action="{% url 'tracker:edit_medical_exam_part1' child_id exam_id %}" enctype="multipart/form-data" method="post" class="exam">
+    <form action="{% url 'tracker:edit_documents' child_id exam_id %}" enctype="multipart/form-data" method="post" class="exam">
         {% csrf_token %}
         <ul>
-            {{ medical_exam_part1_form }}
+            {{ documents_form }}
         
-        <li><h3>Los Datos del Profesíonal</h3></li>
+            <li><h3>Los Datos del Profesíonal</h3></li>
 
             {{ signature_form }}
         </ul>
-        
         <input type="submit" name="submit" value="Enviar">
-        <input type="submit" name="save" value="Guardar Cambios">
+        <input type="submit" name="save" value="Guardar Cambios">        
     </form>
 
     <span id="dialog">

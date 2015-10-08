@@ -5,28 +5,8 @@
 {% block h2 %}Nuevo Informe Médico / Parte 1{% endblock %}
 
 {% block sidebar %}
-    <ul>
-        <a href="{% url 'tracker:logout' %}" class="delete"><li>Cerrar sesión</li></a>
-        <a href="{% url 'tracker:residences' %}" class="delete"><li>Residencias</li></a>
-        <a href="{% url 'tracker:residence' residence_id %}" class="delete"><li>Detalle Orfanato</li></a>
-        <a href="{% url 'tracker:child' child_id %}" class="delete"><li>Resumen Niño</li></a>
-        <li class="selected">Evaluaciones</li>
-        <span id="secondary">
-            <li><a href="{% url 'tracker:new_blood_exam' child_id %}" class="delete">Informe Sangre</a></li>
-            <li><a href="{% url 'tracker:new_consultation_history' child_id %}" class="delete">Historia de Consulta</a></li>
-            <li><a href="{% url 'tracker:new_dental_exam' child_id %}" class="delete">Informe Odontológico</a></li>
-            <li><a href="{% url 'tracker:new_disease_history' child_id %}" class="delete">Historia de Enfermedades</a></li>
-            <li class="selected"><a href="{% url 'tracker:new_medical_exam_part1' child_id %}" class="delete">Informe Médico / Parte 1</a></li>
-            <li><a href="{% url 'tracker:new_medical_exam_part2' child_id %}" class="delete">Informe Médico / Parte 2</a></li>
-            <li><a href="{% url 'tracker:new_operation_history' child_id %}" class="delete">Historia de Operaciones</a></li>
-            <li><a href="{% url 'tracker:new_psychological_exam' child_id %}" class="delete">Informe Psicológico</a></li>
-            <li><a href="{% url 'tracker:new_social_exam' child_id %}" class="delete">Informe Social</a></li>
-            <li><a href="{% url 'tracker:new_photo' child_id %}" class="delete">Fotografias</a></li>
-            <li><a href="{% url 'tracker:growth_graph' child_id %}">Crecimiento Gráfico</a></li>
-        </span>
-    </ul>
+    {% include 'tracker/sidebar.html' %}
 {% endblock %}
-
 
 {% block content %}
 

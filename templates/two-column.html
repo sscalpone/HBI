@@ -40,7 +40,12 @@
             $("form :input").change(function() {
                 changed=true;
             });
+
             $('.delete').click(function(event) {
+                if ($('.delete').hasClass('delete_photo')) {
+                    changed=true;
+                    console.log(changed);
+                }
                 if (changed==true) {
                     event.preventDefault();
                     $('#dialog form').removeClass('no-display');

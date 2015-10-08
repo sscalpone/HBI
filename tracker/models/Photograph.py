@@ -9,6 +9,8 @@ from django.forms import RadioSelect
 
 from Child import Child
 
+# def get_upload_path(instance, filename):
+
 class Photograph(models.Model):
 	child = models.ForeignKey(Child)
 	date = models.DateField()
@@ -17,6 +19,10 @@ class Photograph(models.Model):
 	class Meta:
 		app_label = 'tracker'
 		db_table = 'tracker_photograph'
+
+# class Profile(models.Model):
+# 	child=models.ForeignKey(Child)
+# 	photo = models.ImageField(upload_to='photos', blank=True, null=True)
 
 class PhotographForm(ModelForm):
 	class Meta:

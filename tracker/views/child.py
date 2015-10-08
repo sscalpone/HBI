@@ -1,15 +1,14 @@
-from django.http import Http404
-from django.http import HttpResponse
-from django.http import HttpResponseRedirect
+# coding=utf-8
+
 from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
-
+from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
 from django.template import loader
 
-from tracker.models import Child
-from tracker.models import ChildForm
+from tracker.models import Child, ChildForm
 from tracker.models import Residence
+
 
 @login_required()
 def new(request, residence_id):
@@ -48,8 +47,10 @@ def new(request, residence_id):
     context = {
         'form': form.as_ul,
         'residence_id': residence_id,
+        'page': 'child',
     }
     return render(request, 'tracker/add_child.html', context)
+
 
 @login_required
 def view(request, child_id):
@@ -57,9 +58,11 @@ def view(request, child_id):
     context = {
         'child': p,
         'child_id': p.id,
-        'residence_id': p.residence_id
+        'residence_id': p.residence_id,
+        'page': 'child',
     }
     return render(request, 'tracker/child_information.html', context)
+
 
 @login_required
 def edit(request, child_id):
@@ -99,7 +102,7 @@ def edit(request, child_id):
     context = {
         'form': form.as_ul,
         'residence_id': residence_id,
-        'child_id': child_id
+        'child_id': child_id,
+        'page': 'child',
     }
     return render(request, 'tracker/edit_child.html', context)
-

@@ -1,6 +1,8 @@
+#coding=utf-8
+
 from django.contrib.auth.decorators import login_required
 
-from django.shortcuts import render, render_to_response, get_object_or_404
+from django.shortcuts import render, get_object_or_404
 
 from tracker.models import Child
 from tracker.models import DentalExam
@@ -8,6 +10,7 @@ from tracker.models import MedicalExamPart1
 from tracker.models import MedicalExamPart2
 from tracker.models import PsychologicalExam
 from tracker.models import SocialExam
+
 
 @login_required
 def index(request, child_id):
@@ -55,6 +58,7 @@ def index(request, child_id):
 		'dental_exam': latest_dental_exam,
 		'medical_exam_part2': latest_medical_exam_part2,
 		'psychological_exam': latest_psychological_exam,
-		'social_exam': latest_social_exam,		
+		'social_exam': latest_social_exam,
+		'page': 'child',	
 	}
 	return render(request, 'tracker/child_information.html', context)

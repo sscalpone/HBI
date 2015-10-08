@@ -1,30 +1,16 @@
+# coding=utf-8
+
 import datetime
 
-from django.http import Http404
-from django.http import HttpResponse
-from django.http import HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
-
+from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
 from django.template import loader
-import django.template.loader
 
+from tracker.models import Child
 from tracker.models import OperationHistory, OperationHistoryForm
 from tracker.models import Signature, SignatureForm
-from tracker.models import Child
-
-@login_required
-def index(request, child_id):
-    list = OperationHistory.objects.filter(child_id=child_id)
-    child = get_object_or_404(Child, pk=child_id)
-    context = {
-        'OperationHistories': list,
-        'child': child,
-        'child_id': child_id,
-        'residence_id': child.residence_id,
-    }
-    return render(request, 'tracker/add_operation_history.html', context)
 
 @login_required
 def new(request, child_id):
@@ -65,6 +51,7 @@ def new(request, child_id):
         'operation_history_form': exam_form.as_ul,
         'signature_form': signature_form.as_ul,
         'OperationHistories': exam_list,
+        'page': 'operation_history',
     }
     return render(request, 'tracker/add_operation_history.html', context)
 
@@ -78,7 +65,8 @@ def view(request, child_id, exam_id):
         'child': child,
         'child_id': child.id,
         'residence_id': child.residence_id,
-        'signature': signature
+        'signature': signature,
+        'page': 'operation_history',
     }
     return render(request, 'tracker/operation_history.html', context)
 
@@ -126,6 +114,7 @@ def edit(request, child_id, exam_id):
         'operation_history_form': exam_form.as_ul,
         'signature_form': signature_form.as_ul,
         'OperationHistories': exam_list,
+        'page': 'operation_history',
     }
     return render(request, 'tracker/edit_operation_history.html', context)
 

@@ -2,6 +2,7 @@
 
 import datetime
 
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
@@ -9,8 +10,8 @@ from django.shortcuts import render, get_object_or_404
 from django.template import loader
 
 from tracker.models import Child
+from tracker.models import Documents, DocumentsForm
 from tracker.models import Signature, SignatureForm
-from tracker.models import SocialExam, SocialExamForm
 
 
 @login_required
@@ -18,12 +19,14 @@ def new(request, child_id):
     child = get_object_or_404(Child, pk=child_id)
     if request.method == 'POST':
         signature_form = SignatureForm(request.POST, request.FILES, request=request)
-        exam_form = SocialExamForm(request.POST, request.FILES, request=request)
+        exam_form = DocumentsForm(request.POST, request.FILES, request=request)
         if 'discard' in request.POST:
             return HttpResponseRedirect(reverse('tracker:child', kwargs={'child_id': child_id}))
+
         else:
             if signature_form.is_valid() and exam_form.is_valid():
                 saved_signature = signature_form.save()
+                
                 if saved_signature:
                     saved_exam = exam_form.save(commit=False)
                     saved_exam.signature = saved_signature
@@ -31,33 +34,33 @@ def new(request, child_id):
                     saved_exam.save()
                     exam_form.save_m2m()
                     if 'save' in request.POST:
-                        return HttpResponseRedirect(reverse('tracker:edit_social_exam', kwargs={'child_id': child_id, 'exam_id': saved_exam.id}))
+                        return HttpResponseRedirect(reverse('tracker:edit_document', kwargs={'child_id': child_id, 'exam_id': saved_exam.id}))
                     else:
-                        return HttpResponseRedirect(reverse('tracker:new_social_exam', kwargs={'child_id': child_id}))
+                        return HttpResponseRedirect(reverse('tracker:new9_document', kwargs={'child_id': child_id}))     
     else:
-        exam_form = SocialExamForm(initial={
+        exam_form = DocumentsForm(initial={
                 'child': child,
                 'child_id': child_id,
                 'date': datetime.date.today(),
             }
         )
         signature_form = SignatureForm()
-    exam_list = SocialExam.objects.filter(child_id=child_id)
+    documents_list = Documents.objects.filter(child_id=child_id)
     context = {
         'child': child,
         'child_id': child_id,
         'residence_id': child.residence_id,
-        'social_exam_form': exam_form.as_ul,
+        'documents_form': exam_form.as_ul,
         'signature_form': signature_form.as_ul,
-        'SocialExams': exam_list,
-        'page': 'social_exam',
+        'DocumentsList': documents_list,
+        'page': 'documents',
     }
-    return render(request, 'tracker/add_social_exam.html', context)
+    return render(request, 'tracker/add_document.html', context)
 
 
 @login_required
 def view(request, child_id, exam_id):
-    p = get_object_or_404(SocialExam, pk=exam_id)
+    p = get_object_or_404(Documents, pk=exam_id)
     child = get_object_or_404(Child, pk=child_id)
     signature = get_object_or_404(Signature, pk=p.signature_id)
     context = {
@@ -66,24 +69,27 @@ def view(request, child_id, exam_id):
         'child_id': child.id,
         'residence_id': child.residence_id,
         'signature': signature,
-        'page': 'social_exam',
+        'page': 'documents',
     }
-    return render(request, 'tracker/social_exam.html', context)
+    return render(request, 'tracker/document.html', context)
 
 
 @login_required
 def edit(request, child_id, exam_id):
     child = get_object_or_404(Child, pk=child_id)
-    exam = get_object_or_404(SocialExam, pk=exam_id)
+    exam = get_object_or_404(DocumentsExam, pk=exam_id)
     signature = get_object_or_404(Signature, pk=exam.signature_id)
     if request.method == 'POST':
         signature_form = SignatureForm(request.POST, request.FILES, instance=signature, request=request)
-        exam_form = SocialExamForm(request.POST, request.FILES, instance=exam, request=request)
+        exam_form = DocumentsForm(request.POST, request.FILES, instance=exam, request=request)
+        
         if 'discard' in request.POST:
             return HttpResponseRedirect(reverse('tracker:child', kwargs={'child_id': child_id}))
+
         else:
             if signature_form.is_valid() and exam_form.is_valid():
                 saved_signature = signature_form.save()
+                
                 if saved_signature:
                     saved_exam = exam_form.save(commit=False)
                     saved_exam.signature = saved_signature
@@ -91,30 +97,28 @@ def edit(request, child_id, exam_id):
                     saved_exam.save()
                     exam_form.save_m2m()
                     if 'save' in request.POST:
-                        return HttpResponseRedirect(reverse('tracker:edit_social_exam', kwargs={'child_id': child_id, 'exam_id': saved_exam.id}))
+                        return HttpResponseRedirect(reverse('tracker:edit_document', kwargs={'child_id': child_id, 'exam_id': saved_exam.id}))
                     else:
-                        return HttpResponseRedirect(reverse('tracker:new_social_exam', kwargs={'child_id': child_id}))
+                        return HttpResponseRedirect(reverse('tracker:new_document', kwargs={'child_id': child_id}))  
+        
     else:
-        exam_form = SocialExamForm(
-            initial={
+        exam_form = DocumentsForm(initial={
                 'child': child,
                 'child_id': child_id,
                 'date': datetime.date.today(),
             }, instance=exam
         )
         signature_form = SignatureForm(instance=signature)
-    exam_list = SocialExam.objects.filter(child_id=child_id)
+    exam_list = Documents.objects.filter(child_id=child_id)
     context = {
         'child': child,
         'child_id': child_id,
-        'residence_id': child.residence_id,
         'exam_id': exam.id,
-        'social_exam_form': exam_form.as_ul,
+        'residence_id': child.residence_id,
+        'documents_form': exam_form.as_ul,
         'signature_form': signature_form.as_ul,
-        'SocialExams': exam_list,
-        'page': 'social_exam',
+        'DocumentsList': exam_list,
+        'page': 'documents',
     }
-    return render(request, 'tracker/edit_social_exam.html', context)
-
-
+    return render(request, 'tracker/edit_document.html', context)
 
