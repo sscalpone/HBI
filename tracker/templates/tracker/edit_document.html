@@ -15,7 +15,7 @@
 
     {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
 
-    <form action="{% url 'tracker:edit_documents' child_id exam_id %}" enctype="multipart/form-data" method="post" class="exam">
+    <form action="{% url 'tracker:edit_document' child_id exam_id %}" enctype="multipart/form-data" method="post" class="exam">
         {% csrf_token %}
         <ul>
             {{ documents_form }}

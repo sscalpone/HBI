@@ -1,13 +1,17 @@
 # coding=utf-8
 
 import datetime
+import os
 
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
-from django.http import HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
 from django.template import loader
+
+from StringIO import StringIO
+from reportlab.pdfgen import canvas
 
 from tracker.models import Child
 from tracker.models import Documents, DocumentsForm
@@ -36,7 +40,7 @@ def new(request, child_id):
                     if 'save' in request.POST:
                         return HttpResponseRedirect(reverse('tracker:edit_document', kwargs={'child_id': child_id, 'exam_id': saved_exam.id}))
                     else:
-                        return HttpResponseRedirect(reverse('tracker:new9_document', kwargs={'child_id': child_id}))     
+                        return HttpResponseRedirect(reverse('tracker:new_document', kwargs={'child_id': child_id}))     
     else:
         exam_form = DocumentsForm(initial={
                 'child': child,
@@ -77,7 +81,7 @@ def view(request, child_id, exam_id):
 @login_required
 def edit(request, child_id, exam_id):
     child = get_object_or_404(Child, pk=child_id)
-    exam = get_object_or_404(DocumentsExam, pk=exam_id)
+    exam = get_object_or_404(Documents, pk=exam_id)
     signature = get_object_or_404(Signature, pk=exam.signature_id)
     if request.method == 'POST':
         signature_form = SignatureForm(request.POST, request.FILES, instance=signature, request=request)

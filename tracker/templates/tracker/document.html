@@ -2,7 +2,7 @@
 
 {% block title %}Documento{% endblock %}
 
-{% block h2 %}Documento, {{exam.name}}{% endblock %}
+{% block h2 %}Documento, {{ exam.title }}{% endblock %}
 
 {% block sidebar %}
     {% include 'tracker/sidebar.html' %}
@@ -13,7 +13,9 @@
     {% include 'tracker/basic-info.html' %}
     <div>
     	<ul id="form-info">
-            <img src="{{ exam.document.url }}">
+            <li><span>Fecha:</span> {{exam.date}}</li>
+            <li><span>Título:</span> {{exam.title}}</li>
+            <li><a href="{{ exam.document.url }}" target="_blank">Ver el Documento</a></li>
         </ul>
         <ul id="signature">
             <li><h3>Los Datos del Profesíonal</h3></li>
@@ -22,7 +24,7 @@
             <li><span>Direccion:</span> {{ signature.direction }}</li>
             <li><span>Celular:</span> {{ signature.cell }}</li>
         </ul>
-        <a href="{% url 'tracker:edit_blood_exam' child_id exam.id %}">Edita Detalles</a>
+        <a href="{% url 'tracker:edit_document' child_id exam.id %}">Edita Detalles</a>
 
     </div>
     

@@ -13,7 +13,7 @@ from Signature import Signature
 class Documents(models.Model):
 	child = models.ForeignKey(Child)
 	date = models.DateField()
-	name = models.CharField(max_length=200, blank=True, null=True)
+	title = models.CharField(max_length=200, blank=True, null=True)
 	document = models.FileField(upload_to='documents', blank=True, null=True)
 	signature = models.ForeignKey(Signature)
 
@@ -22,12 +22,12 @@ class DocumentsForm(ModelForm):
 		model = Documents
 		fields = (
 			'date',
-			'name',
+			'title',
 			'document',
 		)
 		labels = {
 			'date': 'Fecha',
-			'name': 'Título',
+			'title': 'Título',
 			'document': 'Documento',
 		}
 
@@ -41,9 +41,9 @@ class DocumentsForm(ModelForm):
 
 		if self.request.method=='POST':
 			if 'submit' in self.request.POST:
-				name = cleaned_data.get('name')
-				if name=='':
-					self.add_error('name', msg)
+				title = cleaned_data.get('title')
+				if title=='':
+					self.add_error('title', msg)
 
 				document = cleaned_data.get('document')
 				if document is None:
