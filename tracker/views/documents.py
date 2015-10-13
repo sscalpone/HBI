@@ -1,7 +1,6 @@
 # coding=utf-8
 
 import datetime
-import os
 
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
@@ -9,9 +8,6 @@ from django.core.urlresolvers import reverse
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
 from django.template import loader
-
-from StringIO import StringIO
-from reportlab.pdfgen import canvas
 
 from tracker.models import Child
 from tracker.models import Documents, DocumentsForm
