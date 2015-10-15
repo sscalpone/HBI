@@ -15,12 +15,19 @@ from tracker.views import operation_history
 from tracker.views import photograph
 from tracker.views import social_exam
 from tracker.views import exam_views
+from tracker.views import profile
 
 urlpatterns = patterns('',
     # ex: /tracker/
     url(r'^$', main.index, name='index'),
     url(r'^login/$', main.login, name='login'),
     url(r'^logout/$', main.logout, name='logout'),
+
+    url(r'^user/$', profile.index, name='users'),
+    url(r'^users/new/$', profile.new, name='add_user'),
+    # url(r'^user/(?P<user_id>\d+)', user.view, name='user'),
+    # url(r'^user/edit/(?P<user_id>\d+)', user.edit, name='edit_user'),
+
     
     url(r'^residences/$', residence.index, name='residences'),
     url(r'^residences/new/$', residence.new, name='add_residence'),
