@@ -10,7 +10,10 @@ from django.template import RequestContext, loader
 
 
 def index(request):
-    return render(request, 'tracker/index.html')
+    if request.user.is_authenticated():
+        return HttpResponseRedirect(reverse('tracker:residences'))
+    else:
+        return render(request, 'tracker/index.html')
 
 
 def login(request):

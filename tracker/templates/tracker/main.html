@@ -2,12 +2,13 @@
 
 {% block title %}Residencias{% endblock %}
 
-{% block h2 %}Bienvenidos{% endblock %}
+{% block h2 %}Bienvenidos, {{ user.username }}{% endblock %}
 
 {% block sidebar %}
 	<ul>
 		<a href="{% url 'tracker:logout' %}"><li>Cerrar sesión</li></a>
 		<a href="{% url 'tracker:residences' %}" ><li class="selected">Residencias</li></a>
+		<a href="{% url 'tracker:profiles' %}"><li>Usuarios</li></a>
 	</ul>
 {% endblock %}
 

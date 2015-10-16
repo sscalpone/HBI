@@ -23,9 +23,9 @@ urlpatterns = patterns('',
     url(r'^login/$', main.login, name='login'),
     url(r'^logout/$', main.logout, name='logout'),
 
-    url(r'^user/$', profile.index, name='users'),
-    url(r'^users/new/$', profile.new, name='add_user'),
-    # url(r'^user/(?P<user_id>\d+)', user.view, name='user'),
+    url(r'^user/$', profile.index, name='profiles'),
+    url(r'^users/new/$', profile.new, name='add_profile'),
+    url(r'^user/(?P<profile_id>\d+)', profile.view, name='profile'),
     # url(r'^user/edit/(?P<user_id>\d+)', user.edit, name='edit_user'),
 
     

@@ -1,0 +1,31 @@
+{% extends 'two-column.html' %}
+
+{% block title %}Usuarios{% endblock %}
+
+{% block h2 %}Usuarios{% endblock %}
+
+{% block sidebar %}
+    <ul>
+        <a href="{% url 'tracker:logout' %}"><li>Cerrar sesión</li></a>
+        <a href="{% url 'tracker:residences' %}" ><li>Residencias</li></a>
+        <a href="{% url 'tracker:profiles' %}"><li class="selected">Usuarios</li></a>
+    </ul>
+{% endblock %}
+
+{% block content %}
+
+    <ul>
+        <li><span>Nombre:</span> {{ profile.first_name }} {{ profile.last_name }} <a href="">Cambiar</a></li>
+        <li><span>Nombre de Usuario:</span> {{ profile.username }}</li>
+        <li><a href="">Cambiar la contraseña</a></li>
+        <li><span>Puede añadir usuarios?</span> {% if 'tracker.add_users' in permissions %}Si{% else %}No{% endif %}{% if user.is_superuser or perms.tracker.add_users %} <a href="">Cambiar</a>{% endif %}</li>
+        <li><span>Se puede borrar la información?</span> {% if 'tracker.delete_info' in permissions %}Si{% else %}No{% endif %}{% if user.is_superuser or perms.tracker.add_users %} <a href="">Cambiar</a>{% endif %}</li></li>
+        <li><span>Puede añadir y editar formas?</span> {% if 'tracker.add_edit_forms' in permissions %}Si{% else %}No{% endif %}{% if user.is_superuser or perms.tracker.add_users %} <a href="">Cambiar</a>{% endif %}</li></li>
+        <li><span>Puede consultar la información?</span> {% if 'tracker.view' in permissions %}Si{% else %}No{% endif %}</li>
+         <li><span>¿Es el personal?:</span> {% if profile.is_staff %}Si{% else %}No{% endif %}{% if user.is_superuser or perms.tracker.add_users %} <a href="">Cambiar</a>{% endif %}</li></li>
+        <li><span>¿Es activo?:</span> {% if profile.is_active %}Si{% else %}No{% endif %}{% if user.is_superuser or perms.tracker.add_users %} <a href="">Cambiar</a>{% endif %}</li></li>
+
+
+    </ul>
+
+{% endblock %}

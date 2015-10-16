@@ -8,7 +8,7 @@
     <ul>
         <a href="{% url 'tracker:logout' %}"><li>Cerrar sesión</li></a>
         <a href="{% url 'tracker:residences' %}" ><li>Residencias</li></a>
-        <a href="{% url 'tracker:users' %}"><li class="selected">Usuarios</li></a>
+        <a href="{% url 'tracker:profiles' %}"><li class="selected">Usuarios</li></a>
     </ul>
 {% endblock %}
 
@@ -16,7 +16,7 @@
 
     {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
 
-    <form action="{% url 'tracker:add_user' %}" enctype="multipart/form-data" method="post">
+    <form action="{% url 'tracker:add_profile' %}" enctype="multipart/form-data" method="post">
         {% csrf_token %}
         <ul>
             {{ profile_form }}

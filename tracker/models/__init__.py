@@ -17,4 +17,3 @@ from Signature import Signature, SignatureForm
 from SocialExam import SocialExam, SocialExamForm
 from Profile import Profile, ProfileForm
 from ProfilePermissions import ProfilePermissions, ProfilePermissionsForm
-from GlobalPermissions import GlobalPermission, GlobalPermissionManager
