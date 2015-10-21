@@ -130,8 +130,7 @@ def delete(request, child_id, exam_id):
                 'residence_id': child.residence_id,
                 'page': 'photo',
             }
-            return render(request, 'tracker/photograph.html', context)
-    return render(request, 'tracker/delete_photograph.html')            
+            return render(request, 'tracker/photograph.html', context)           
 
 
 

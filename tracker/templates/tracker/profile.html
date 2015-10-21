@@ -14,18 +14,64 @@
 
 {% block content %}
 
-    <ul>
-        <li><span>Nombre:</span> {{ profile.first_name }} {{ profile.last_name }} <a href="">Cambiar</a></li>
-        <li><span>Nombre de Usuario:</span> {{ profile.username }}</li>
-        <li><a href="">Cambiar la contraseña</a></li>
-        <li><span>Puede añadir usuarios?</span> {% if 'tracker.add_users' in permissions %}Si{% else %}No{% endif %}{% if user.is_superuser or perms.tracker.add_users %} <a href="">Cambiar</a>{% endif %}</li>
-        <li><span>Se puede borrar la información?</span> {% if 'tracker.delete_info' in permissions %}Si{% else %}No{% endif %}{% if user.is_superuser or perms.tracker.add_users %} <a href="">Cambiar</a>{% endif %}</li></li>
-        <li><span>Puede añadir y editar formas?</span> {% if 'tracker.add_edit_forms' in permissions %}Si{% else %}No{% endif %}{% if user.is_superuser or perms.tracker.add_users %} <a href="">Cambiar</a>{% endif %}</li></li>
-        <li><span>Puede consultar la información?</span> {% if 'tracker.view' in permissions %}Si{% else %}No{% endif %}</li>
-         <li><span>¿Es el personal?:</span> {% if profile.is_staff %}Si{% else %}No{% endif %}{% if user.is_superuser or perms.tracker.add_users %} <a href="">Cambiar</a>{% endif %}</li></li>
-        <li><span>¿Es activo?:</span> {% if profile.is_active %}Si{% else %}No{% endif %}{% if user.is_superuser or perms.tracker.add_users %} <a href="">Cambiar</a>{% endif %}</li></li>
-
-
+    <ul id="user-info">
+        <li><span>Nombre:</span> <span>{{ profile.first_name }} {{ profile.last_name }}</span> <a href="" class="name change">Cambiar</a></li>
+        <li><span>Nombre de Usuario:</span> <span>{{ profile.username }}</span></li>
+        <li><a href="" class="password change">Cambiar la contraseña</a></li>
+        <li><span>¿Puede añadir usuarios?</span> <span>{% if 'tracker.add_users' in permissions %}Sí{% else %}No{% endif %}{% if perms.tracker.add_users %}</span> <a href="" class="add_users change">Cambiar</a>{% endif %}</li>
+        <li><span>¿Puede borrar la información?</span> <span>{% if 'tracker.delete_info' in permissions %}Sí{% else %}No{% endif %}{% if perms.tracker.add_users %}</span> <a href="" class="delete_info change">Cambiar</a>{% endif %}</li>
+        <li><span>¿Puede añadir y editar formas?</span> <span>{% if 'tracker.add_edit_forms' in permissions %}Sí{% else %}No{% endif %}{% if perms.tracker.add_users %}</span> <a href="" class="add_edit_forms change">Cambiar</a>{% endif %}</li>
+        <li><span>¿Puede consultar la información?</span> {% if 'tracker.view' in permissions %}Sí{% else %}No{% endif %}</li>
+         <li><span>¿Es el personal?</span> <span>{% if profile.is_staff %}Sí{% else %}No{% endif %}{% if perms.tracker.add_users %}</span> <a href="" class="is_staff change">Cambiar</a>{% endif %}</li>
+        <li><span>¿Es activo?</span> <span>{% if profile.is_active %}Sí{% else %}No{% endif %}{% if perms.tracker.add_users %}</span> <a href="" class="is_active change">Cambiar</a>{% endif %}</li>
     </ul>
+
+    <span id="dialog">
+        <form class="name no-display">{% csrf_token %}
+            <ul>
+                <li><label for="id_first_name">Nombre:</label><input id="id_last_name" maxlength="30" name="last_name" type="text"></li>
+                <li><label for="id_last_name">Apellido:</label><input id="id_first_name" maxlength="30" name="first_name" type="text"></li>
+                <li><input type="submit" name="name" value="Enviar"></li>
+            </ul>
+        </form>
+        <form class="password no-display">{% csrf_token %}
+            <ul>
+                <li><label for="old_password">Contraseña anterior</label><input id="old_password" maxlength="200" name="password" type="password"></li>
+                <li><label for="new_password">Contraseña Nueva</label><input id="new_password" maxlength="200" name="password" type="password"></li>
+                <li><label for="confirm_password">Confirmar Contraseña</label><input id="confirm_password" maxlength="200" name="password" type="password"></li>
+                <li><input type="submit" name="name" value="Enviar"></li>
+            </ul>
+        </form>
+        <form class="add_users no-display">{% csrf_token %}
+            <ul>
+                <li><label for="add_users">¿Puede añadir usuarios?</label><input {% if 'tracker.add_users' in permissions %}checked="checked" {% endif %} id="add_users" name="add_users" type="checkbox"></li>
+                <li><input type="submit" name="name" value="Enviar"></li>
+            </ul>
+        </form>
+        <form class="delete_info no-display">{% csrf_token %}
+            <ul>
+                <li><label for="delete_info">¿Puede borrar la información?</label><input {% if 'tracker.delete_info' in permissions %}checked="checked" {% endif %} id="delete_info" name="delete_info" type="checkbox"></li>
+                <li><input type="submit" name="name" value="Enviar"></li>
+            </ul>
+        </form>
+        <form class="add_edit_forms no-display">{% csrf_token %}
+            <ul>
+                <li><label for="add_edit_forms">¿Puede añadir y editar formas?</label><input {% if 'tracker.add_users' in permissions %}checked="checked" {% endif %} id="add_edit_forms" name="add_edit_forms" type="checkbox"></li>
+                <li><input type="submit" name="name" value="Enviar"></li>
+            </ul>
+        </form>
+        <form class="is_staff no-display">{% csrf_token %}
+            <ul>
+                <li><label for="is_staff">¿Es el personal?</label><input {% if profile.is_staff %}checked="checked" {% endif %} id="is_staff" name="is_staff" type="checkbox"></li>
+                <li><input type="submit" name="name" value="Enviar"></li>
+            </ul>
+        </form>
+        <form class="is_active no-display">{% csrf_token %}
+            <ul>
+                <li><label for="is_active">¿Es activo?</label><input {% if profile.is_active %}checked="checked"{% endif %} id="is_active" name="is_active" type="checkbox"></li>
+                <li><input type="submit" name="name" value="Enviar"></li>
+            </ul>
+        </form>
+    </span>
 
 {% endblock %}

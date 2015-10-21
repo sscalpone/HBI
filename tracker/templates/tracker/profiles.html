@@ -19,7 +19,7 @@
 		<ul>
 		{% if profile_list %}
 			{% for profile in profile_list %}
-				{% if user.is_superuser or perms.tracker.add_users or user.id == profile.id %}
+				{% if perms.tracker.add_users or user.id == profile.id %}
 					<a href="{% url 'tracker:profile' profile.id %}"><li>{% load staticfiles %}<img src="{% static "tracker/person-icon.svg" %}">
 						{% if profile.first_name == '' and profile.last_name == '' %}
 							Unknown Name

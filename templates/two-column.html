@@ -59,6 +59,42 @@
                 }
             });
 
+            $('.change').click(function(event) {
+                event.preventDefault();
+                if ($(this).hasClass('name')) {
+                    $('#dialog .name').removeClass('no-display');
+                }
+                else if ($(this).hasClass('password')) {
+                    $('#dialog .password').removeClass('no-display');
+                }
+                else if ($(this).hasClass('add_users')) {
+                    $('#dialog .add_users').removeClass('no-display');
+                }
+                else if ($(this).hasClass('delete_info')) {
+                    $('#dialog .delete_info').removeClass('no-display');
+                }
+                else if ($(this).hasClass('add_edit_forms')) {
+                    $('#dialog .add_edit_forms').removeClass('no-display');
+                }
+                else if ($(this).hasClass('is_staff')) {
+                    $('#dialog .is_staff').removeClass('no-display');
+                }
+                else if ($(this).hasClass('is_active')) {
+                    $('#dialog .is_active').removeClass('no-display');
+                }
+                $('#dialog').dialog({ autoOpen: false });
+                $('#dialog').dialog("open");
+                $('div').on('dialogclose', function(event) {
+                    console.log('hello');
+                    $('#dialog form').each(function(event) {
+                        if (!$(this).hasClass('no-display')) {
+                            $(this).addClass('no-display');                        
+                        }
+                    });
+                    
+                });
+            });
+
         </script>
     </body>
 </html>

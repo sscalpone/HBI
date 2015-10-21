@@ -114,7 +114,7 @@ footer p {
 }
 
 #dialog input[type="submit"] {
-  width: 50px;
+  width: 60px;
   background: #fff;
   border: 1px solid #666;
   padding: 5px;
@@ -396,6 +396,21 @@ CHILD PAGE STYLES
 .child-info span, #form-info span {
   display: inline-block;
   width: 166px;
+}
+
+#user-info span {
+  display: inline-block;
+  width: 237px;
+}
+
+.name label {
+  display: inline-block;
+  width: 68px;
+}
+
+.password label {
+  display: inline-block;
+  width: 158px;
 }
 
 #signature span {

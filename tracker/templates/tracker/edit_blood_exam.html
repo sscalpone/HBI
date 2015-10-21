@@ -10,10 +10,20 @@
 
 {% block content %}
 
-    {% include 'tracker/basic-info.html' %}
-    {% include 'tracker/blood_exam_list.html' %}
+    {% if perms.tracker.view %}
+     
+        {% include 'tracker/basic-info.html' %}
+        {% include 'tracker/blood_exam_list.html' %}
+    
+    {% else %}
+
+        <p><strong>Usted no tiene permiso para ver esta información.</strong></p>        
+
+    {% endif %}
 
     {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+
+    {% if perms.tracker.add_edit_forms %}
 
     <form action="{% url 'tracker:edit_blood_exam' child_id exam_id %}" enctype="multipart/form-data" method="post" class="exam">
         {% csrf_token %}
@@ -35,4 +45,12 @@
             <input type="submit" value="No" id="no">
         </form>
      </span>
+
+     {% else %}
+
+     <p><strong>Usted no tiene permiso para agregar o formularios de edición.</strong></p>
+
+     {% endif %}
+
+
 {% endblock %}

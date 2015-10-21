@@ -13,9 +13,7 @@ from tracker.models import Profile, ProfileForm
 from tracker.models import ProfilePermissions, ProfilePermissionsForm
 
 def permissions_check(user):
-    if user.is_superuser:
-        return True
-    elif user.has_perm('tracker.add_users'):
+    if user.has_perm('tracker.add_users'):
         return True
     else:
         return False
@@ -93,6 +91,7 @@ def view(request, profile_id):
     
     elif user.id == int(profile_id):
         allowed=True
+    
     else:
         allowed=False
     
