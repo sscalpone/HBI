@@ -10,16 +10,8 @@
 
 {% block content %}
 
-    {% if perms.tracker.view %}
-     
-        {% include 'tracker/basic-info.html' %}
-        {% include 'tracker/blood_exam_list.html' %}
-    
-    {% else %}
-
-        <p><strong>Usted no tiene permiso para ver esta información.</strong></p>        
-
-    {% endif %}
+    {% include 'tracker/basic-info.html' %}
+    {% include 'tracker/blood_exam_list.html' %}
 
     {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
 

@@ -54,6 +54,7 @@ def new(request):
                     user = User.objects.create_user(saved_user.username, saved_user.email, saved_user.password)
                     user.first_name = saved_user.first_name
                     user.last_name = saved_user.last_name
+                    user.is_staff = saved_user.is_staff
                     content_type = ContentType.objects.get_for_model(Profile)
                     if saved_permission.add_users is True:
                         permission = Permission.objects.get(codename='add_users', content_type=content_type)
@@ -106,20 +107,106 @@ def view(request, profile_id):
             'profile_list': User.objects.all(),
             }
             return render(request, 'tracker/profiles.html', context)
-        else:
-            permissions = p.get_all_permissions()
-            print permissions
-            context = {
-                'profile': p,
-                'profile_id': p.id,
-                'page': 'profile',
-                'permissions': permissions,
-                'request': request,
-            }
-            return render(request, 'tracker/profile.html', context)
+        
+        permissions = p.get_all_permissions()
+        if request.method=="POST":
+            content_type = ContentType.objects.get_for_model(Profile)
+            
+            if 'name_form' in request.POST:
+                p.first_name = request.POST['first_name']
+                p.last_name = request.POST['last_name']
+                p.save()
+                return HttpResponseRedirect(reverse('tracker:profile', kwargs={'profile_id': profile_id}))
+            
+            elif 'password_form' in request.POST:
+                if request.POST['old_password'] == p.password:
+                    if request.POST['new_password'] == request.POST['confirm_password']:
+                        p.password = request.POST['new_password']
+                        p.save()
+                        return HttpResponseRedirect(reverse('tracker:profile', kwargs={'profile_id': profile_id}))
+                    else:
+                        context = {
+                            'profile': p,
+                            'profile_id': p.id,
+                            'page': 'profile',
+                            'permissions': permissions,
+                            'request': request,
+                            'error_message_password': 'New passwords do not match.'
+                        }
+                        return render(request, 'tracker/profile.html', context)
+                else:
+                    context = {
+                        'profile': p,
+                        'profile_id': p.id,
+                        'page': 'profile',
+                        'permissions': permissions,
+                        'request': request,
+                        'error_message_password': 'Password is incorrect.'
+                    }
+                    return render(request, 'tracker/profile.html', context)
+            
+            elif 'add_users_form' in request.POST:
+                permission = Permission.objects.get(codename='add_users', content_type=content_type)
+                if request.POST['add_users'] == 'True':
+                    p.user_permissions.add(permission)
+                    p.save()
+                    return HttpResponseRedirect(reverse('tracker:profile', kwargs={'profile_id': profile_id}))
+                elif request.POST['add_users'] =='False':  
+                    p.user_permissions.remove(permission)
+                    p.save()
+                    return HttpResponseRedirect(reverse('tracker:profile', kwargs={'profile_id': profile_id}))
 
-def edit(request):
-    pass
+            elif 'delete_info_form' in request.POST:
+                permission = Permission.objects.get(codename='delete_info', content_type=content_type)
+                if request.POST['delete_info'] == 'True':
+                    p.user_permissions.add(permission)
+                    p.save()
+                    return HttpResponseRedirect(reverse('tracker:profile', kwargs={'profile_id': profile_id}))
+                elif request.POST['delete_info'] == 'False':  
+                    p.user_permissions.remove(permission)
+                    p.save()
+                    return HttpResponseRedirect(reverse('tracker:profile', kwargs={'profile_id': profile_id}))
+
+            elif 'add_edit_forms_form' in request.POST:
+                permission = Permission.objects.get(codename='add_edit_forms', content_type=content_type)
+                if request.POST['add_edit_forms'] == 'True':
+                    p.user_permissions.add(permission)
+                    p.save()
+                    return HttpResponseRedirect(reverse('tracker:profile', kwargs={'profile_id': profile_id}))
+                elif request.POST['add_edit_forms'] == 'False':  
+                    p.user_permissions.remove(permission)
+                    p.save()
+                    return HttpResponseRedirect(reverse('tracker:profile', kwargs={'profile_id': profile_id}))
+
+            elif 'is_staff_form' in request.POST:
+                if request.POST['is_staff'] == 'True':
+                    p.is_staff = True
+                    p.save()
+                    return HttpResponseRedirect(reverse('tracker:profile', kwargs={'profile_id': profile_id}))
+                elif request.POST['if_staff'] == 'False':  
+                    p.is_staff = False
+                    p.save()
+                    return HttpResponseRedirect(reverse('tracker:profile', kwargs={'profile_id': profile_id}))
+
+            elif 'is_active_form' in request.POST:
+                if request.POST['is_active'] == 'True':
+                    p.is_active = True
+                    p.save()
+                    return HttpResponseRedirect(reverse('tracker:profile', kwargs={'profile_id': profile_id}))
+                elif request.POST['is_active'] == 'False':  
+                    p.is_active = False
+                    p.save()
+                    return HttpResponseRedirect(reverse('tracker:profile', kwargs={'profile_id': profile_id}))
+
+        context = {
+            'profile': p,
+            'profile_id': p.id,
+            'page': 'profile',
+            'permissions': permissions,
+            'request': request,
+        }
+        return render(request, 'tracker/profile.html', context)
+
 
 
 

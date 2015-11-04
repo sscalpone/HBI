@@ -14,8 +14,12 @@
         <img id="photo" src="{{ exam.photo.url }}">  
     </div>
     <ul>
+        {% if perms.tracker.add_edit_forms %}
         <li><a href="{% url 'tracker:edit_photo' child_id exam.id %}">Edita Detalles</a></li>
+        {% endif %}
+        {% if perms.tracker.delete_info %}
         <li><a href="#" class="delete delete_photo">Borrar</a></li>
+        {% endif %}
     </ul>
     <span id="dialog">
         <form action ="" method="post" class="no-display">{% csrf_token %}

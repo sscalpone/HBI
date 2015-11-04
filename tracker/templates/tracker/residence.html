@@ -20,7 +20,9 @@
 		<li>Niños: {{ boys.count }}</li>
 		<li>Niñas: {{ girls.count }}</li>
 		<li>En riesgo: {{ at_risk.count }} </li>
+		{% if perms.tracker.add_edit_forms %}
 		<a href="{% url 'tracker:edit_residence' residence_id %}"><li>Edita Detalles</li></a>
+		{% endif %}
 	</ul>
 
 {% endblock %}
@@ -50,7 +52,9 @@
 		    	</a>
 		    {% endfor %}
 	    {% endif %}
+	    {% if perms.tracker.add_edit_forms %}
 	    	<a href="{% url 'tracker:add_child' residence_id %}"><li class="add-new"><div>+</div><span>Añadir Nuevo Niño</span></li></a>
+	    {% endif %}
 	    </ul>
 	</div>
 	<div class="children-list" id="inactive">

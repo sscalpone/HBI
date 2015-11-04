@@ -28,7 +28,9 @@
 				</li></a>
 			{% endfor %}
 		{% endif %}
+		{% if perms.tracker.add_edit_forms %}
 		<a href="{% url 'tracker:add_residence' %}"><li class="add-new"><div>+</div><span>Añadir Nueva Casa</span></li></a>
+		{% endif %}
 		</ul>
 	</div>
 

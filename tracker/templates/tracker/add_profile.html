@@ -16,6 +16,8 @@
 
     {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
 
+    {% if perms.tracker.add_edit_forms %}
+
     <form action="{% url 'tracker:add_profile' %}" enctype="multipart/form-data" method="post">
         {% csrf_token %}
         <ul>
@@ -32,4 +34,11 @@
             <input type="submit" value="No" id="no">
         </form>
      </span>
+
+    {% else %}
+
+    <p><strong>Usted no tiene permiso para agregar o formularios de edición.</strong></p>
+
+    {% endif %}
+     
 {% endblock %}

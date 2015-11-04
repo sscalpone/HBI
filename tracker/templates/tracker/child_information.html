@@ -19,7 +19,10 @@
     {% endif %}
 
     {% include 'tracker/basic-info.html' %}
+
+    {% if perms.tracker.add_edit_forms %}
     <a href="{% url 'tracker:edit_child' child_id %}">Edita Detalles</a>
+    {% endif %}
     
     {% if dental_exam %}
     <h3>Resumen Ondontológico</h3>

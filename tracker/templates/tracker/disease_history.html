@@ -25,7 +25,10 @@
             <li><span>Direccion:</span> {{ signature.direction }}</li>
             <li><span>Celular:</span> {{ signature.cell }}</li>
         </ul>
+
+        {% if perms.tracker.add_edit_forms %}
         <a href="{% url 'tracker:edit_disease_history' child_id exam.id %}">Edita Detalles</a>
+        {% endif %}
 
     </div>
     
