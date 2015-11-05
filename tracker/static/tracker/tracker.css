@@ -377,14 +377,6 @@ TWO-COLUMN and THREE-COLUMN STYLES
 CHILD PAGE STYLES
 *************************/
 
-/*.child-info img {
-  display: block;
-  width: 200px;
-  height: 200px;
-  margin: 0 auto;
-  box-sizing: border-box;
-}*/
-
 .profile-picture {
   display: block;
   width: 200px;
@@ -560,7 +552,11 @@ MEDIA QUERIES
   .two-column #sidebar li {
     display: block;
     text-align: left;
-    border-bottom: 1px solid #000;
+    border-top: 1px solid #000;
+  }
+
+  .two-column #sidebar li:first-child {
+    border-top: 0;
   }
 
   .two-column #content input[type="text"],

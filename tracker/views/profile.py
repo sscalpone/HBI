@@ -1,3 +1,5 @@
+from django.contrib.auth import authenticate
+
 from django.contrib.auth.models import User
 from django.contrib.auth.models import Permission
 from django.contrib.contenttypes.models import ContentType
@@ -19,17 +21,7 @@ def permissions_check(user):
         return False
 
 
-# def permission_or_own_page(request, user_id):
-#     profile = request.user
-#     if permissions_check(profile):
-#         return True
-#     elif profile.id == user_id:
-#         return True
-#     else:
-#         return False
-
 @login_required
-# @user_passes_test(permissions_check)
 def index(request):
     user_list = User.objects.all()
     context = {
@@ -119,9 +111,9 @@ def view(request, profile_id):
                 return HttpResponseRedirect(reverse('tracker:profile', kwargs={'profile_id': profile_id}))
             
             elif 'password_form' in request.POST:
-                if request.POST['old_password'] == p.password:
+                if authenticate(username=p.username, password=request.POST['old_password']):
                     if request.POST['new_password'] == request.POST['confirm_password']:
-                        p.password = request.POST['new_password']
+                        p.set_password(request.POST['new_password'])
                         p.save()
                         return HttpResponseRedirect(reverse('tracker:profile', kwargs={'profile_id': profile_id}))
                     else:
