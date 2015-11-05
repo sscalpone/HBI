@@ -6,8 +6,8 @@
 
 {% block sidebar %}
 	<ul>
-		<a href="{% url 'tracker:logout' %}" class="delete"><li>Cerrar sesión</li></a>
-		<a href="{% url 'tracker:residences' %}" class="delete"><li class="selected">Residencias</li></a>
+		<li><a href="{% url 'tracker:logout' %}" class="delete">Cerrar sesión</a></li>
+		<li class="selected"><a href="{% url 'tracker:residences' %}" class="delete">Residencias</a></li>
 	</ul>
 {% endblock %}
 
