@@ -1,5 +1,7 @@
 #coding=utf-8
 
+import datetime
+
 from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
@@ -23,7 +25,10 @@ def new(request):
             return HttpResponseRedirect(reverse('tracker:residences'))
         else:
             if form.is_valid():
-                saved_residence = form.save()
+                saved_residence = form.save(commit=False)
+                saved_residence.last_saved = datetime.datetime.utcnow()
+                saved_residence.save()
+                form.save_m2m()
                 if saved_residence:
                     if 'save' in request.POST:
                         return HttpResponseRedirect(reverse('tracker:edit_residence', kwargs={'residence_id': saved_residence.id}))

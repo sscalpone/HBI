@@ -1,22 +1,26 @@
 # coding=utf-8
 
 import datetime
+import uuid
 
 from django.contrib.auth.models import User
 from django.db import models
 from django.forms import ModelForm
 
 class Residence(models.Model):
-    residence_name = models.CharField(max_length=200, blank=True, null=True)
-    administrator = models.CharField(max_length=200, blank=True, null=True)
-    location = models.CharField(max_length=200, blank=True, null=True)
+	uuid = models.CharField(max_length=200, unique=True, default=uuid.uuid4)
+	residence_name = models.CharField(max_length=200, blank=True, null=True)
+	administrator = models.CharField(max_length=200, blank=True, null=True)
+	location = models.CharField(max_length=200, blank=True, null=True)
+	last_saved = models.DateTimeField()
 
-    def __unicode__(self):
-        return self.residence_name
+	def __unicode__(self):
+		return self.residence_name
 
-    class Meta:
-        app_label = 'tracker'
-        db_table = 'tracker_residence'
+	class Meta:
+		app_label = 'tracker'
+		db_table = 'tracker_residence'
+		default_permissions = ()
 
 
 class ResidenceForm(ModelForm):

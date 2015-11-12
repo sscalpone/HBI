@@ -1,6 +1,7 @@
 # coding=utf-8
 
 import datetime
+import uuid
 
 from django.contrib.auth.models import User
 from django.db import models
@@ -11,11 +12,18 @@ from Child import Child
 from Signature import Signature
 
 class Documents(models.Model):
+	uuid = models.CharField(max_length=200, unique=True, default=uuid.uuid4)
 	child = models.ForeignKey(Child)
 	date = models.DateField()
 	title = models.CharField(max_length=200, blank=True, null=True)
 	document = models.FileField(upload_to='documents', blank=True, null=True)
 	signature = models.ForeignKey(Signature)
+	last_saved = models.DateTimeField()
+
+	class Meta:
+		app_label='tracker'
+		db_table='tracker_documents'
+		default_permissions = ()
 
 class DocumentsForm(ModelForm):
 	class Meta:

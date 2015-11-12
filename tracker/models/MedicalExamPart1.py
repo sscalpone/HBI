@@ -1,6 +1,7 @@
 # coding=utf-8
 
 import datetime
+import uuid
 
 from django.contrib.auth.models import User
 from django.db import models
@@ -11,6 +12,7 @@ from Child import Child
 from Signature import Signature
 
 class MedicalExamPart1(models.Model):
+    uuid = models.CharField(max_length=200, unique=True, default=uuid.uuid4)
     child = models.ForeignKey(Child)
     date = models.DateField()
     background_notes = models.TextField(blank=True, null=True) #not in schema
@@ -36,10 +38,12 @@ class MedicalExamPart1(models.Model):
     weight = models.FloatField(blank=True, null=True)
     height = models.FloatField(blank=True, null=True)
     signature = models.ForeignKey(Signature, blank=True, null=True)
+    last_saved = models.DateTimeField()
 
     class Meta:
         app_label = 'tracker'
         db_table = 'tracker_medicalexampart1'
+        default_permissions = ()
 
 class Growth(models.Model):
     child = models.ForeignKey(Child)
@@ -49,6 +53,12 @@ class Growth(models.Model):
     weight = models.FloatField(blank=True, null=True)
     age = models.FloatField(blank=True, null=True)
     gender = models.CharField(max_length=6, blank=True, null=True)
+
+    class Meta:
+        app_label = 'tracker'
+        db_table = 'tracker_growth'
+        default_permissions = ()
+
 
 
 class MedicalExamPart1Form(ModelForm):

@@ -1,6 +1,7 @@
 # coding=utf-8
 
 import datetime
+import uuid
 
 from django.contrib.auth.models import User
 from django.db import models
@@ -24,6 +25,8 @@ class Child(models.Model):
         (MEDIUM, 'Prioridad Media'),
         (LOW, 'Prioridad Baja')
     )
+    uuid = models.CharField(max_length=200, unique=True, default=uuid.uuid4)
+
     residence = models.ForeignKey(Residence, default=1, blank=True, null=True)
     first_name = models.CharField(max_length=200, blank=True, null=True)
     last_name = models.CharField(max_length=200, blank=True, null=True)
@@ -37,11 +40,13 @@ class Child(models.Model):
     priority = models.IntegerField(choices=PRIORITY_CHOICES, 
                                 default=LOW)
     active = models.BooleanField(default=True)
+    last_saved = models.DateTimeField()
 
     class Meta:
         app_label = 'tracker'
         db_table = 'tracker_child'
         verbose_name_plural = "Children"
+        default_permissions = ()
 
     def __unicode__(self):
         return self.first_name

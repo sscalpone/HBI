@@ -1,6 +1,7 @@
 # coding=utf-8
 
 import datetime
+import uuid
 
 from django.db import models
 from django.forms import ModelForm
@@ -18,6 +19,7 @@ class PsychologicalExam(models.Model):
         (MEDIUM, 'Prioridad Media'),
         (LOW, 'Prioridad Baja')
     )
+    uuid = models.CharField(max_length=200, unique=True, default=uuid.uuid4)
     child = models.ForeignKey(Child)
     date = models.DateField()
     family_notes = models.TextField(blank=True, null=True)
@@ -31,10 +33,12 @@ class PsychologicalExam(models.Model):
     priority = models.IntegerField(choices=PRIORITY_CHOICES, 
                                    default=HIGH)
     signature = models.ForeignKey(Signature, blank=True, null=True)
+    last_saved = models.DateTimeField()
 
     class Meta:
         app_label = 'tracker'
         db_table = 'tracker_psychologicalexam'
+        default_permissions = ()
 
 
 class PsychologicalExamForm(ModelForm):

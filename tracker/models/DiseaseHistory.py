@@ -1,6 +1,7 @@
 # coding=utf-8
 
 import datetime
+import uuid
 
 from django.contrib.auth.models import User
 from django.db import models
@@ -10,6 +11,7 @@ from Child import Child
 from Signature import Signature
 
 class DiseaseHistory(models.Model):
+	uuid = models.CharField(max_length=200, unique=True, default=uuid.uuid4)
 	child = models.ForeignKey(Child)
 	date = models.DateField()
 	institution = models.CharField(max_length=200, null=True, blank=True)
@@ -17,10 +19,12 @@ class DiseaseHistory(models.Model):
 	studies = models.TextField(null=True, blank=True)
 	treatment = models.TextField(null=True, blank=True)
 	signature = models.ForeignKey(Signature, blank=True, null=True)
+	last_saved = models.DateTimeField()
 
 	class Meta:
 		app_label='tracker'
 		db_table='tracker_diseasehistory'
+		default_permissions = ()
 
 
 class DiseaseHistoryForm(ModelForm):

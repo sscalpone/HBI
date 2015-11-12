@@ -1,18 +1,24 @@
+# coding=utf-8
+
 import datetime
+import uuid
 
 from django.db import models
 from django.forms import ModelForm
 
 class Signature(models.Model):
+    uuid = models.CharField(max_length=200, unique=True, default=uuid.uuid4)
     name = models.CharField(max_length=200, blank=True, null=True)
     surname = models.CharField(max_length=200, blank=True, null=True)
     emp = models.CharField(max_length=200, blank=True, null=True)
     direction = models.CharField(max_length=200, blank=True, null=True)
     cell = models.CharField(max_length=200, blank=True, null=True)
+    last_saved = models.DateTimeField()
 
     class Meta:
         app_label = 'tracker'
         db_table = 'tracker_signature'
+        default_permissions = ()
 
     def __unicode__(self):
         return self.name

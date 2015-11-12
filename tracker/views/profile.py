@@ -1,3 +1,5 @@
+import datetime
+
 from django.contrib.auth import authenticate
 
 from django.contrib.auth.models import User
@@ -11,7 +13,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
 from django.template import loader
 
-from tracker.models import Profile, ProfileForm
+from tracker.models import Profile, ProfileForm, UserUUID
 from tracker.models import ProfilePermissions, ProfilePermissionsForm
 
 def permissions_check(user):
@@ -61,6 +63,8 @@ def new(request):
                         permission = Permission.objects.get(codename='view', content_type=content_type)
                         user.user_permissions.add(permission)
                     user.save()
+                    uuid = UserUUID(user=user)
+                    uuid.save()
                     context = {
                         'profile_list': User.objects.all(),
                     }

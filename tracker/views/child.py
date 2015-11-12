@@ -1,5 +1,7 @@
 # coding=utf-8
 
+import datetime
+
 from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
@@ -35,7 +37,10 @@ def new(request, residence_id):
             return render(request, 'tracker/residence.html', context)
         else:
             if form.is_valid():
-                saved_child = form.save()
+                saved_child = form.save(commit=False)
+                saved_child.last_saved = datetime.datetime.utcnow()
+                saved_child.save()
+                form.save_m2m()
                 if saved_child:
                     child_id = saved_child.id
                     if 'save' in request.POST:

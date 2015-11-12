@@ -1,6 +1,7 @@
 # coding=utf-8
 
 import datetime
+import uuid
 
 from django.contrib.auth.models import User
 from django.db import models
@@ -20,6 +21,7 @@ class SocialExam(models.Model):
         (LOW, 'Prioridad Baja')
     )
 
+    uuid = models.CharField(max_length=200, unique=True, default=uuid.uuid4)
     child = models.ForeignKey(Child)
     date = models.DateField()
     has_birth_certificate = models.BooleanField(default=False)
@@ -43,10 +45,12 @@ class SocialExam(models.Model):
     priority = models.IntegerField(choices=PRIORITY_CHOICES, 
                                    default=HIGH)
     signature = models.ForeignKey(Signature, blank=True, null=True)
+    last_saved = models.DateTimeField()
 
     class Meta:
         app_label = 'tracker'
         db_table = 'tracker_socialexam'
+        default_permissions = ()
 
 
 class SocialExamForm(ModelForm):

@@ -24,22 +24,24 @@ def new(request, child_id):
         if 'discard' in request.POST:
             return HttpResponseRedirect(reverse('tracker:child', kwargs={'child_id': child_id}))
         
-        if signature_form.is_valid() and exam_form.is_valid():
-            saved_signature = signature_form.save()
-            
-            if saved_signature:
-                saved_exam = exam_form.save(commit=False)
-                saved_exam.signature = saved_signature
-                saved_exam.child = child
-                saved_exam.save()
-                exam_form.save_m2m()
+        else:
+            if signature_form.is_valid() and exam_form.is_valid():
+                saved_signature = signature_form.save()
                 
-                if 'save' in request.POST:
-                    return HttpResponseRedirect(reverse('tracker:edit_medical_exam_part2', kwargs={'child_id': child_id, 'exam_id': saved_exam.id,}))
-                
-                else:
-                    return HttpResponseRedirect(reverse('tracker:new_medical_exam_part2', kwargs={'child_id': child_id}))
-    
+                if saved_signature:
+                    saved_exam = exam_form.save(commit=False)
+                    saved_exam.signature = saved_signature
+                    saved_exam.child = child
+                    saved_exam.last_saved = datetime.datetime.utcnow()
+                    saved_exam.save()
+                    exam_form.save_m2m()
+                    
+                    if 'save' in request.POST:
+                        return HttpResponseRedirect(reverse('tracker:edit_medical_exam_part2', kwargs={'child_id': child_id, 'exam_id': saved_exam.id,}))
+                    
+                    else:
+                        return HttpResponseRedirect(reverse('tracker:new_medical_exam_part2', kwargs={'child_id': child_id}))
+        
     else:
         exam_form = MedicalExamPart2Form(initial={
                 'child': child,

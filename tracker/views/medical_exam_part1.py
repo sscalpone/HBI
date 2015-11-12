@@ -39,6 +39,7 @@ def new(request, child_id):
                     saved_exam = exam_form.save(commit=False)
                     saved_exam.signature = saved_signature
                     saved_exam.child = child
+                    saved_exam.last_saved = datetime.datetime.utcnow()
                     saved_exam.save()
                     exam_form.save_m2m()
                     growth = Growth.objects.create(child=child, exam=saved_exam, date=saved_exam.date, height=saved_exam.height, weight=saved_exam.weight, age=child.age_in_years(from_date=child.birthdate, to_date=saved_exam.date), gender=child.gender)

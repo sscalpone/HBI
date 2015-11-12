@@ -19,7 +19,8 @@ class MedicalExamPart2(models.Model):
         (MEDIUM, 'Prioridad Media'),
         (LOW, 'Prioridad Baja')
     )
-
+    
+    uuid = models.CharField(max_length=200, primary_key=True)
     child = models.ForeignKey(Child)
     date = models.DateField()
     illness_notes = models.TextField(blank=True, null=True)
@@ -49,6 +50,7 @@ class MedicalExamPart2(models.Model):
     class Meta:
         app_label = 'tracker'
         db_table = 'tracker_medicalexampart2'
+        default_permissions = ()
 
 
 class MedicalExamPart2Form(ModelForm):

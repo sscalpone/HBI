@@ -23,6 +23,7 @@ def new(request, child_id):
             if exam_form.is_valid():
                     saved_exam = exam_form.save(commit=False)
                     saved_exam.child = child
+                    saved_exam.last_saved = datetime.datetime.utcnow()
                     saved_exam.save()
                     exam_form.save_m2m()
                     if 'save' in request.POST:

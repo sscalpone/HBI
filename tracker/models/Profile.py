@@ -1,5 +1,8 @@
 # coding=utf-8
 
+import datetime
+import uuid
+
 from django.contrib.auth.models import User
 from django.db import models
 
@@ -12,21 +15,23 @@ from django.forms import CheckboxInput
 
 from ProfilePermissions import ProfilePermissions
 
-
 class Profile(models.Model):
+	uuid = models.CharField(max_length=200, unique=True, default=uuid.uuid4)
 	first_name = models.CharField(max_length=30, blank=True, null=True)
 	last_name = models.CharField(max_length=30, blank=True, null=True)
-	username = models.CharField(max_length=30)
+	username = models.CharField(max_length=30, unique=True)
 	password = models.CharField(max_length=200)
 	cpassword = models.CharField(max_length=200)
-	email = models.CharField(max_length=200)
+	email = models.CharField(max_length=200, unique=True)
 	is_staff = models.BooleanField(default=True)
 	is_active = models.BooleanField(default=True)
 	permission = models.ForeignKey(ProfilePermissions)
+	last_saved = models.DateTimeField()
 
 	class Meta:
 		app_label = 'tracker'
 		db_table = 'tracker_profile'
+		default_permissions = ()
 
 		permissions = (
 			('add_users', 'Add Users'),
@@ -94,26 +99,14 @@ class ProfileForm(ModelForm):
 					self.add_error('email', 'Este correo electrónico ya tiene una cuenta.')
 
 
-# class EditNameForm(forms.Form):
-# 	first_name = models.CharField(max_length=30, blank=True, null=True)
-# 	last_name = models.CharField(max_length=30, blank=True, null=True)
-# 	password = models.CharField(max_length=200)
+class UserUUID(models.Model):
+	user = models.OneToOneField(User)
+	uuid = models.CharField(max_length=200, unique=True, default=uuid.uuid4)
 
-
-# class EditPasswordForm(forms.Form):
-# 	old_password = models.CharField(max_length=200)
-# 	password = models.CharField(max_length=200)
-# 	cpassword = models.CharField(max_length=200)
-
-
-# class EditActiveStatusForm(forms.Form):
-# 	is_active = models.BooleanField(default=True)
-
-
-# class EditStaffStatusForm(forms.Form):
-# 	is_staff = models.BooleanField(default=True)
-
-
+	class Meta:
+		app_label = 'tracker'
+		db_table = 'tracker_useruuid'
+		default_permissions = ()
 
 
 
