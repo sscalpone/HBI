@@ -3,7 +3,9 @@
     <head>
         <title>{% block title %}Unión Bíblica Evaluación de Girasoles{% endblock %}</title>
         {% load staticfiles %}<link rel="stylesheet" href="{% static "tracker/jquery-ui.min.css" %}">
+        {% load staticfiles %}<link rel="stylesheet" href="{% static "tracker/css-reset.css" %}">
         {% load staticfiles %}<link rel="stylesheet" href="{% static "tracker/tracker.css" %}">
+        <!-- {% load staticfiles %}<link rel="stylesheet" href="{% static "tracker/responsive.css" %}"> -->
         <meta name="viewport" content="width=device-width">
         <meta name="description" content="Health Bridges International Record Keeping">
         <meta charset="utf-8">
@@ -29,6 +31,8 @@
             <div id="content">
                 {% block content %}{% endblock %}
             </div>
+            <div id="border"></div>
+            {% include 'footer.html' %}
         </div>
         {% load staticfiles %}<script type="text/javascript" src="{% static "tracker/jquery-1.11.3.min.js" %}"></script>
         {% load staticfiles %}<script type="text/javascript" src="{% static "tracker/jquery-ui.min.js" %}"></script>

@@ -33,9 +33,9 @@
 	    <ul>
 	    {% if active %}
 		    {% for child in active %}
-		    	<a href="{% url 'tracker:child' child.id %}">
-		    		<li>
-		    			<div class="thumbnail {% if child.priority == 1 %} red {% elif child.priority == 2 %} yellow {% else %} green {% endif %}" >
+		    	<li>
+		    		<a href="{% url 'tracker:child' child.id %}">
+		    			<div class="thumbnail {% if child.priority == 1 %} red {% elif child.priority == 2 %} yellow {% else %} green {% endif %}">
 				    		{% if child.photo %}
 				    		<img src="{{ child.photo.url }}">
 				    		{% else %}
@@ -48,12 +48,12 @@
 			    		{% else %}
 			    			{{ child.first_name }} {{ child.last_name }}
 			    		{% endif %}
-		    		</li>
-		    	</a>
+			    	</a>
+		    	</li>	
 		    {% endfor %}
 	    {% endif %}
 	    {% if perms.tracker.add_edit_forms %}
-	    	<a href="{% url 'tracker:add_child' residence_id %}"><li class="add-new"><div>+</div><span>Añadir Nuevo Niño</span></li></a>
+	    	<li><a href="{% url 'tracker:add_child' residence_id %}"><div class="thumbnail gray"><img src="{% static "tracker/add-new.svg" %}"></div>Añadir Nuevo Niño</a></li>
 	    {% endif %}
 	    </ul>
 	</div>

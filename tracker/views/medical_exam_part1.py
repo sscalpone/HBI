@@ -53,7 +53,7 @@ def new(request, child_id):
         exam_form = MedicalExamPart1Form(initial={
                 'child': child,
                 'child_id': child_id,
-                'date': datetime.date.today(),
+                'date': datetime.date.today().strftime('%d-%m-%Y'),
             }
         )
         signature_form = SignatureForm()

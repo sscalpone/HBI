@@ -8,7 +8,6 @@
 	<ul>
 		<li><a href="{% url 'tracker:logout' %}">Cerrar sesión</a></li>
 		<li><a href="{% url 'tracker:residences' %}" >Residencias</a></li>
-		<li class="selected"><a href="{% url 'tracker:profiles' %}">Usuarios</a></li>
 	</ul>
 {% endblock %}
 
@@ -20,7 +19,7 @@
 		{% if profile_list %}
 			{% for profile in profile_list %}
 				{% if perms.tracker.add_users or user.id == profile.id %}
-					<a href="{% url 'tracker:profile' profile.id %}"><li>{% load staticfiles %}<img src="{% static "tracker/person-icon.svg" %}">
+					<a href="{% url 'tracker:profile' profile.id %}"><li><div class="thumbnail gray">{% load staticfiles %}<img src="{% static "tracker/person-icon.svg" %}"></div>
 						{% if profile.first_name == '' and profile.last_name == '' %}
 							Unknown Name
 						{% else %}
@@ -33,7 +32,7 @@
 		{% endif %}
 
 		{% if user.is_superuser or perms.tracker.add_users %}
-			<a href="{% url 'tracker:add_profile' %}"><li class="add-new"><div>+</div><span>Añadir Nuevo Usuario</span></li></a>
+			<a href="{% url 'tracker:add_profile' %}"><li><div class="thumbnail gray">{% load staticfiles %}<img src="{% static "tracker/add-new.svg" %}"></div>Añadir Nuevo Usuario</li></a>
 		{% endif %}
 
 		</ul>

@@ -14,7 +14,6 @@ from django.shortcuts import render, get_object_or_404
 from django.template import loader
 
 from tracker.models import Profile, ProfileForm, UserUUID
-from tracker.models import ProfilePermissions, ProfilePermissionsForm
 
 def permissions_check(user):
     if user.has_perm('tracker.add_users'):
@@ -29,6 +28,7 @@ def index(request):
     context = {
         'profile_list': user_list,
         'request': request,
+        'page': 'user',
     }
     return render(request, 'tracker/profiles.html', context)
 
@@ -38,28 +38,26 @@ def index(request):
 def new(request):
     if request.POST:
         profile_form = ProfileForm(request.POST, request.FILES, request=request)
-        permissions_form = ProfilePermissionsForm(request.POST, request.FILES, request=request)
         if 'discard' in request.POST:
             return HttpResponseRedirect(reverse('tracker:profiles'))
         else:
-            if profile_form.is_valid() and permissions_form.is_valid:
+            if profile_form.is_valid():
                     saved_user = profile_form.save(commit=False)
-                    saved_permission = permissions_form.save(commit=False)
                     user = User.objects.create_user(saved_user.username, saved_user.email, saved_user.password)
                     user.first_name = saved_user.first_name
                     user.last_name = saved_user.last_name
                     user.is_staff = saved_user.is_staff
                     content_type = ContentType.objects.get_for_model(Profile)
-                    if saved_permission.add_users is True:
+                    if saved_user.add_users is True:
                         permission = Permission.objects.get(codename='add_users', content_type=content_type)
                         user.user_permissions.add(permission)
-                    if saved_permission.delete_info is True:
+                    if saved_user.delete_info is True:
                         permission = Permission.objects.get(codename='delete_info', content_type=content_type)
                         user.user_permissions.add(permission)
-                    if saved_permission.add_edit_forms is True:
+                    if saved_user.add_edit_forms is True:
                         permission = Permission.objects.get(codename='add_edit_forms', content_type=content_type)
                         user.user_permissions.add(permission)
-                    if saved_permission.view is True:
+                    if saved_user.view is True:
                         permission = Permission.objects.get(codename='view', content_type=content_type)
                         user.user_permissions.add(permission)
                     user.save()
@@ -71,10 +69,8 @@ def new(request):
                     return render(request, 'tracker/profiles.html', context)
     else:
         profile_form = ProfileForm()
-        permissions_form = ProfilePermissionsForm()
     context = {
         'profile_form': profile_form.as_ul(),
-        'permissions_form': permissions_form.as_ul(),
         'page': 'user',
     }
     return render(request, 'tracker/add_profile.html', context)
@@ -200,6 +196,7 @@ def view(request, profile_id):
             'page': 'profile',
             'permissions': permissions,
             'request': request,
+            'page': 'user',
         }
         return render(request, 'tracker/profile.html', context)
 

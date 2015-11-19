@@ -1,8 +1,6 @@
 # coding=utf-8
 
-from BloodExam import BloodExam, BloodExamForm
 from Child import Child, ChildForm
-from ConsultationHistory import ConsultationHistory, ConsultationHistoryForm
 from DentalExam import DentalExam, DentalExamForm
 from Documents import Documents, DocumentsForm
 from DiseaseHistory import DiseaseHistory, DiseaseHistoryForm
@@ -15,4 +13,3 @@ from Residence import Residence, ResidenceForm
 from Signature import Signature, SignatureForm
 from SocialExam import SocialExam, SocialExamForm
 from Profile import Profile, ProfileForm, UserUUID
-from ProfilePermissions import ProfilePermissions, ProfilePermissionsForm

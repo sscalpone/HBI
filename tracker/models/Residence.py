@@ -7,25 +7,36 @@ from django.contrib.auth.models import User
 from django.db import models
 from django.forms import ModelForm
 
+
+"""The Residence model saves information about each of the homes the children live in. The model is referenced in the Child model.
+"""
 class Residence(models.Model):
+	# The fields
 	uuid = models.CharField(max_length=200, unique=True, default=uuid.uuid4)
 	residence_name = models.CharField(max_length=200, blank=True, null=True)
 	administrator = models.CharField(max_length=200, blank=True, null=True)
 	location = models.CharField(max_length=200, blank=True, null=True)
-	last_saved = models.DateTimeField()
+	photo = models.ImageField(upload_to='photos', blank=True, null=True)
+	last_saved = models.DateTimeField(blank=True, null=True)
 
+	# The human-readable version of the model - the residence name
 	def __unicode__(self):
 		return self.residence_name
 
+	# Meta class defines database table and labels, and clears any default permissions.
 	class Meta:
 		app_label = 'tracker'
 		db_table = 'tracker_residence'
 		default_permissions = ()
 
 
+"""The form of the Residence model."""
 class ResidenceForm(ModelForm):
+	
+	# Meta class defines the fields and Spanish labels for the form. Also defines any weidgets being used.
 	class Meta:
 		model = Residence
+		
 		fields = (
 			'residence_name',
 			'administrator',
@@ -37,25 +48,35 @@ class ResidenceForm(ModelForm):
 			'location': 'Localización',
 			}
 
+	# Override __init__ so 'request' can be accessed in the clean() function.
 	def __init__(self, *args, **kwargs):
 		self.request = kwargs.pop('request', None)
 		super(ResidenceForm, self).__init__(*args, **kwargs)
 
+	# Override clean so forms can be saved without validating (so data isn't lost if the form can't be completed), but still raises exceptions when form is done incorrectly.
 	def clean(self):
-		msg = "Este campo es obligatorio."
+		msg = "Este campo es obligatorio." # Validation exception message
 		cleaned_data = super(ResidenceForm, self).clean()
 
-		if self.request.method=='POST':
-			if 'submit' in self.request.POST:
+		# On validation ('submit' in request), checks if signature forms fields are filled out and raises exceptions on any fields left blank.
+		if (self.request.method == 'POST'):
+			if ('submit' in self.request.POST):
+				
 				residence_name = cleaned_data.get('residence_name')
-				if residence_name=='':
+				if (residence_name == ''):
 					self.add_error('residence_name', msg)
+				
 				location = cleaned_data.get('location')
-				if location=='':
+				if (location == ''):
 					self.add_error('location', msg)
+				
 				administrator = cleaned_data.get('administrator')
-				if administrator=='':
+				if (administrator == ''):
 					self.add_error('administrator', msg)
+				
+				photo = cleaned_data.get('photo')
+                if (photo is None):
+                    self.add_error('photo', msg)
 
 
 

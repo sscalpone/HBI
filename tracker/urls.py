@@ -3,9 +3,7 @@ from django.conf.urls import patterns, url
 from tracker.views import main
 from tracker.views import residence
 from tracker.views import child
-from tracker.views import blood_exam
 from tracker.views import documents
-from tracker.views import consultation_history
 from tracker.views import dental_exam
 from tracker.views import disease_history
 from tracker.views import medical_exam_part1
@@ -27,7 +25,6 @@ urlpatterns = patterns('',
     url(r'^users/new/$', profile.new, name='add_profile'),
     url(r'^user/(?P<profile_id>\d+)', profile.view, name='profile'),
     # url(r'^user/edit/(?P<user_id>\d+)', user.edit, name='edit_user'),
-
     
     url(r'^residences/$', residence.index, name='residences'),
     url(r'^residences/new/$', residence.new, name='add_residence'),
@@ -38,10 +35,6 @@ urlpatterns = patterns('',
     url(r'^child/edit/(?P<child_id>\d+)', child.edit, name='edit_child'),
     url(r'^child/(?P<child_id>\d+)', exam_views.index, name='child'),
 
-    url(r'^blood_exam/(?P<child_id>\d+)/(?P<exam_id>\d+)', blood_exam.view, name='blood_exam'),
-    url(r'^blood_exam/edit/(?P<child_id>\d+)/(?P<exam_id>\d+)', blood_exam.edit, name='edit_blood_exam'),
-    url(r'^blood_exam/new/(?P<child_id>\d+)', blood_exam.new, name='new_blood_exam'),
-
     url(r'^documents/(?P<child_id>\d+)/(?P<exam_id>\d+)', documents.view, name='document'),
     url(r'^documents/edit/(?P<child_id>\d+)/(?P<exam_id>\d+)', documents.edit, name='edit_document'),
     url(r'^documents/new/(?P<child_id>\d+)', documents.new, name='new_document'),
@@ -49,10 +42,6 @@ urlpatterns = patterns('',
     url(r'^dental_exam/(?P<child_id>\d+)/(?P<exam_id>\d+)', dental_exam.view, name='dental_exam'),
     url(r'^dental_exam/edit/(?P<child_id>\d+)/(?P<exam_id>\d+)', dental_exam.edit, name='edit_dental_exam'),
     url(r'^dental_exam/new/(?P<child_id>\d+)', dental_exam.new, name='new_dental_exam'),
-
-    url(r'^consultation_history/(?P<child_id>\d+)/(?P<exam_id>\d+)', consultation_history.view, name='consultation_history'),
-    url(r'^consultation_history/edit/(?P<child_id>\d+)/(?P<exam_id>\d+)', consultation_history.edit, name='edit_consultation_history'),
-    url(r'^consultation_history/new/(?P<child_id>\d+)', consultation_history.new, name='new_consultation_history'),
 
     url(r'^disease_history/(?P<child_id>\d+)/(?P<exam_id>\d+)', disease_history.view, name='disease_history'),
     url(r'^disease_history/edit/(?P<child_id>\d+)/(?P<exam_id>\d+)', disease_history.edit, name='edit_disease_history'),

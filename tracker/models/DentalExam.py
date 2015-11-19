@@ -11,6 +11,8 @@ from Child import Child
 from Signature import Signature
 
 
+"""The model to track the dental information of the children. Currently incomplete (still requiring visual representation of teeth). This model affects child priority.
+"""
 class DentalExam(models.Model):
     HIGH = 1
     MEDIUM = 2
@@ -28,15 +30,19 @@ class DentalExam(models.Model):
     priority = models.IntegerField(choices=PRIORITY_CHOICES, 
                                 default=HIGH)
     signature = models.ForeignKey(Signature, blank=True, null=True)
-    last_saved = models.DateTimeField()
+    last_saved = models.DateTimeField() # for de-duping forms that have been edited.
 
+    # Meta class defines database table and labels, and clears any default permissions.
     class Meta:
         app_label = 'tracker'
         db_table = 'tracker_dentalexam'
         default_permissions = ()
 
 
+"""The form for the Dental model."""
 class DentalExamForm(ModelForm):
+
+    # Meta class defines the fields and Spanish labels for the form.
     class Meta:
         model = DentalExam
         fields = (
@@ -52,21 +58,24 @@ class DentalExamForm(ModelForm):
             'priority': 'Prioridad',
         }
 
+    # Override __init__ so 'request' can be accessed in the clean() function.
     def __init__(self, *args, **kwargs):
         self.request = kwargs.pop('request', None)
         super(DentalExamForm, self).__init__(*args, **kwargs)
 
+    # Override clean so forms can be saved without validating (so data isn't lost if the form can't be completed), but still raises exceptions when form is done incorrectly.
     def clean(self):
         msg = "Este campo es obligatorio."
         cleaned_data = super(DentalExamForm, self).clean()
 
-        if self.request.method == 'POST':
-            if 'submit' in self.request.POST:
+        # On validation ('submit' in request), checks if signature forms fields are filled out and raises exceptions on any fields left blank.
+        if (self.request.method == 'POST'):
+            if ('submit' in self.request.POST):
                 diagnosis = cleaned_data.get('diagnosis')
-                if diagnosis=='':
+                if (diagnosis == ''):
                     self.add_error('diagnosis', msg)
                 recommendation = cleaned_data.get('recommendation')
-                if recommendation=='':
+                if (recommendation == ''):
                     self.add_error('recommendation', msg)
 
 

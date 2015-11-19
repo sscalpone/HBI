@@ -23,13 +23,8 @@ class MedicalExamPart2(models.Model):
     uuid = models.CharField(max_length=200, primary_key=True)
     child = models.ForeignKey(Child)
     date = models.DateField()
-    illness_notes = models.TextField(blank=True, null=True)
     appetite_notes = models.TextField(blank=True, null=True)
     sleep_notes = models.TextField(blank=True, null=True)
-    blood_pressure = models.TextField(blank=True, null=True) #not in schema
-    pulse = models.TextField(blank=True, null=True) #not in schema
-    visual_acuity_left = models.TextField(blank=True, null=True)
-    visual_acuity_right = models.TextField(blank=True, null=True)
     appearance_notes = models.TextField(blank=True, null=True)
     skin_notes = models.TextField(blank=True, null=True)
     lymph_notes = models.TextField(blank=True, null=True)
@@ -58,13 +53,8 @@ class MedicalExamPart2Form(ModelForm):
         model = MedicalExamPart2
         fields = (
             'date',
-            'illness_notes',
             'appetite_notes',
             'sleep_notes',
-            'blood_pressure',
-            'pulse',
-            'visual_acuity_left',
-            'visual_acuity_right',
             'appearance_notes',
             'skin_notes',
             'lymph_notes',
@@ -82,12 +72,8 @@ class MedicalExamPart2Form(ModelForm):
         )
         labels = {
             'date': 'Fecha',
-            'illness_notes': 'Enfermedad Actual',
             'appetite_notes': 'Apetito',
             'sleep_notes': 'Sueño',
-            'concerns_notes': 'Otras Problemas de Salud',
-            'blood_pressure': 'Presión Arterial',
-            'pulse': 'Pulso',
             'visual_acuity_left': 'Agudeza Visual Izquierdo',
             'visual_acuity_right': 'Agudeza Visual Derecha',
             'appearance_notes': 'Comentarios',
@@ -116,10 +102,6 @@ class MedicalExamPart2Form(ModelForm):
 
         if self.request.method == 'POST':
             if 'submit' in self.request.POST:
-                illness_notes = cleaned_data.get('illness_notes')
-                if illness_notes=='':
-                    self.add_error('illness_notes', msg)
-
                 appetite_notes = cleaned_data.get('appetite_notes')
                 if appetite_notes=='':
                     self.add_error('appetite_notes', msg)
@@ -127,26 +109,6 @@ class MedicalExamPart2Form(ModelForm):
                 sleep_notes = cleaned_data.get('sleep_notes')
                 if sleep_notes=='':
                     self.add_error('sleep_notes', msg)
-
-                concerns_notes = cleaned_data.get('concerns_notes')
-                if concerns_notes=='':
-                    self.add_error('concerns_notes', msg)
-
-                blood_pressure = cleaned_data.get('blood_pressure')
-                if blood_pressure=='':
-                    self.add_error('blood_pressure', msg)
-
-                pulse = cleaned_data.get('pulse')
-                if pulse=='':
-                    self.add_error('pulse', msg)
-
-                visual_acuity_left = cleaned_data.get('visual_acuity_left')
-                if visual_acuity_left=='':
-                    self.add_error('visual_acuity_left', msg)
-
-                visual_acuity_right = cleaned_data.get('visual_acuity_right')
-                if visual_acuity_right=='':
-                    self.add_error('visual_acuity_right', msg)
 
                 recommendations = cleaned_data.get('recommendations')
                 if recommendations=='':

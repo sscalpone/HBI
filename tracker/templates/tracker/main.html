@@ -8,7 +8,6 @@
 	<ul>
 		<li><a href="{% url 'tracker:logout' %}">Cerrar sesión</a></li>
 		<li class="selected"><a href="{% url 'tracker:residences' %}">Residencias</a></li>
-		<li><a href="{% url 'tracker:profiles' %}">Usuarios</a></li>
 	</ul>
 {% endblock %}
 
@@ -18,18 +17,20 @@
 		<ul>
 		{% if residences %}
 			{% for residence in residences %}
-				<a href="{% url 'tracker:residence' residence.id %}"><li>{% load staticfiles %}<img src="{% static "tracker/house-icon.svg" %}">
+			<li>
+				<a href="{% url 'tracker:residence' residence.id %}"><div class="thumbnail gray">{% load staticfiles %}<img src="{% static "tracker/house-icon.svg" %}"></div>
 					{% if residence.residence_name == '' %}
 						Unknown Name
 					{% else %}
 						{{ residence.residence_name }}
 					{% endif %}
 
-				</li></a>
+				</a>
+			</li>
 			{% endfor %}
 		{% endif %}
 		{% if perms.tracker.add_edit_forms %}
-		<a href="{% url 'tracker:add_residence' %}"><li class="add-new"><div>+</div><span>Añadir Nueva Casa</span></li></a>
+		<li><a href="{% url 'tracker:add_residence' %}"><div class="thumbnail gray">{% load staticfiles %}<img src="{% static "tracker/add-new.svg" %}"></div>Añadir Nueva Casa</a></li>
 		{% endif %}
 		</ul>
 	</div>

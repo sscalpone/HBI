@@ -1,55 +1,5 @@
 /**************************
 ***************************
-MEYER CSS RESET
-http://meyerweb.com/eric/tools/css/reset/ 
-***************************
-**************************/
-
-html, body, div, span, applet, object, iframe,
-h1, h2, h3, h4, h5, h6, p, blockquote, pre,
-a, abbr, acronym, address, big, cite, code,
-del, dfn, em, img, ins, kbd, q, s, samp,
-small, strike, strong, sub, sup, tt, var,
-b, u, i, center,
-dl, dt, dd, ol, ul, li,
-fieldset, form, label, legend,
-table, caption, tbody, tfoot, thead, tr, th, td,
-article, aside, canvas, details, embed, 
-figure, figcaption, footer, header, hgroup, 
-menu, nav, output, ruby, section, summary,
-time, mark, audio, video {
-  margin: 0;
-  padding: 0;
-  border: 0;
-  font-size: 100%;
-  vertical-align: baseline;
-}
-/* HTML5 display-role reset for older browsers */
-article, aside, details, figcaption, figure, 
-footer, header, hgroup, menu, nav, section {
-  display: block;
-}
-body {
-  line-height: 1;
-}
-ul {
-  list-style: none;
-}
-blockquote, q {
-  quotes: none;
-}
-blockquote:before, blockquote:after,
-q:before, q:after {
-  content: '';
-  content: none;
-}
-table {
-  border-collapse: collapse;
-  border-spacing: 0;
-}
-
-/**************************
-***************************
 HBI TRACKER STYLES
 ***************************
 **************************/
@@ -87,9 +37,9 @@ a {
   color: #000;
 }
 
-*:focus {
+/**:focus {
   outline: 2px #95bcf2 groove;
-}
+}*/
 
 footer {
   text-align: center;
@@ -99,31 +49,8 @@ footer p {
   padding-top: 10px;
 }
 
-.no-display {
-  display: none;
-}
-
-.ui-dialog {
-  background: #fff;
-  border: 2px solid #666;
-  border-radius: 5px;
-}
-
-#dialog p {
-  line-height: 120%;
-}
-
-#dialog input[type="submit"] {
-  width: 60px;
-  background: #fff;
-  border: 1px solid #666;
-  padding: 5px;
-  font-size: 1em;
-  box-shadow: 5px 5px 10px #000;
-}
-
-#dialog input[type="submit"]:active {
-  box-shadow: 0 0 0;
+label {
+  text-align: right;
 }
 
 /*********************
@@ -132,7 +59,7 @@ HEADER STYLES
 
 #header {
   background: #fff;
-  padding: 1em;
+  padding: 10px 10px 0;
   color: #000;
 }
 
@@ -142,6 +69,7 @@ HEADER STYLES
   height: 25px;
   background: #cf2a27;
   border: 1px #000 solid;
+  margin-top: 10px;
 }
 
 #logo {
@@ -150,6 +78,20 @@ HEADER STYLES
   margin-right: auto;
   width: 250px;
 
+}
+
+/*********************
+FOOTER STYLES
+**********************/
+
+footer {
+  text-align: right;
+  padding-top: 5px;
+}
+
+footer li {
+  display: inline-block;
+  padding: 5px;
 }
 
 /************************
@@ -178,8 +120,8 @@ LOGIN STYLES
   font-size: 1em;
 }
 
-#login input[type="submit"], 
-.add-new-exam {
+#login input[type="submit"]
+/*, .add-new-exam*/ {
   background: #fff;
   text-align: center;
   font-size: 1em;
@@ -187,20 +129,105 @@ LOGIN STYLES
   box-shadow: 5px 5px 10px #000;
 }
 
-.add-new-exam {
+/*.add-new-exam {
   display: inline-block;
   margin: 5px 0 15px;
-}
+}*/
 
 #login input[type="submit"]:active {
   box-shadow: 0 0 0;
 }
 
+
+/************************
+SIDEBAR STYLES 
+*************************/
+
+.selected {
+  background: #95bcf2 ;
+}
+
+#sidebar {
+  display: block;
+  width: 100%;
+  padding-bottom: 5px;
+}
+
+#sidebar a {
+  text-decoration: none;
+}
+#sidebar ul {
+  text-align: center;
+}
+
+#sidebar li {
+  display: inline-block;
+  font-size: 1.1em;
+  padding: 10px 5px ;
+}
+
+#sidebar a {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* Two-Column Sidebar */
+
+#sidebar #secondary li {
+  border: none;
+  margin-left: 25px;
+}
+
+
 /************************
 CHILDREN LIST STYLES 
 *************************/
 
+#residences {
+  margin: 0 auto;
+}
+
+#residences li {
+  position: relative;
+  display: inline-block;
+  width: 110px;
+  vertical-align: top;
+  text-align: center;
+  margin: 5px 1%;
+  font-size: 1.5em;
+}
+
 .children-list {
+  margin: 0 auto;
+}
+
+.children-list li {
+  position: relative;
+  display: inline-block;
+  width: 110px;
+  vertical-align: top;
+  text-align: center;
+  margin: 5px 1%;
+  font-size: 1.5em;
+}
+
+.children-list h3 {
+  font-size: 1.7em;
+}
+
+#active {
+  padding-bottom: 10px;
+}
+
+.thumbnail {
+  width: 100px;
+  height: 100px;
+  overflow: hidden;
+}
+
+
+/*.children-list {
   height: 100%;
   display: inline-block;
 }
@@ -211,6 +238,33 @@ CHILDREN LIST STYLES
   font-size: 1.7em;
   display: block;
 }
+
+.children-list li, #residences ul li {
+  float: left;
+}
+
+.children-list li, #residences ul li {
+  width: 100px;
+  margin: 10px 2.5%;
+  text-align: center;
+  font-size: 1.5em;
+}
+
+
+
+
+.add-new div, #residences img {
+  width: 100px;
+  height: 100px;
+  border: 4px #666 solid;
+  font-size: 4em;
+  color: #666;
+}
+
+
+}*/
+
+/* Visual Priority Styles */
 
 .thumbnail.green {
   border: 4px #009e0f solid;
@@ -228,44 +282,11 @@ CHILDREN LIST STYLES
   border: 4px #666 solid;
 }
 
-.children-list li, #residences ul li {
-  float: left;
-}
-
-.children-list li, #residences ul li {
-  width: 100px;
-  margin: 10px 2.5%;
-  text-align: center;
-  font-size: 1.5em;
-}
-
-.add-new span {
-  font-size: .8em;
-}
-
-.thumbnail {
-  width: 100px;
-  height: 100px;
-  overflow: hidden;
-}
-
-.add-new div, #residences img {
-  width: 100px;
-  height: 100px;
-  border: 4px #666 solid;
-  font-size: 4em;
-  color: #666;
-}
-
-#active {
-  padding-bottom: 10px;
-}
-
 /*********************************
 TWO-COLUMN and THREE-COLUMN STYLES
 *********************************/
 
-.two-column, .three-column {
+/*.two-column, .three-column {
   display: block;
   height: 100%;
 }
@@ -295,7 +316,7 @@ TWO-COLUMN and THREE-COLUMN STYLES
 
 .two-column #content p {
   padding: 20px 0 10px;
-}
+}*/
 
 /* FORM STYLES */
 
@@ -341,42 +362,6 @@ TWO-COLUMN and THREE-COLUMN STYLES
   display: block;
   max-width: 700px;
   margin: 0 auto;
-}
-
-
-/* MENU STYLES */
-
-.selected {
-  background: #95bcf2 ;
-}
-
-#sidebar {
-  display: block;
-  width: 100%;
-}
-
-#sidebar a {
-  text-decoration: none;
-}
-#sidebar ul {
-  text-align: center;
-}
-
-#sidebar li {
-  display: inline-block;
-  font-size: 1.1em;
-  padding: 10px 5px ;
-}
-
-#sidebar a {
-  display: block;
-  width: 100%;
-  height: 100%;
-}
-
-#sidebar #secondary li {
-  border: none;
-  margin-left: 25px;
 }
 
 /************************
@@ -492,7 +477,6 @@ SUMMARY AND RISK ASSESSMENT;
 
 #content form {
   min-height: 150px;
-
 }
 
 #photo {
@@ -501,165 +485,38 @@ SUMMARY AND RISK ASSESSMENT;
   margin: 0 auto;
 }
 
-/**********************
-MEDIA QUERIES
-**********************/
+/************************
+DIALOG BOX STYLES
+for confirmation boxes and user edits
+*************************/
 
-@media screen and (min-width: 510px) {
-
-  /* Updates HEADER */
-
-  #header {
-    min-height: 99px;
-  }
-
-  h1, h2 {
-    text-align: right;
-    margin-top: 25px;
-  }  
-
-  h1 {
-    font-size: 2.2em;
-  }
-
-  #logo {
-    display: inline-block;
-    width: 250px;
-    float: left;
-  }
-
+.no-display {
+  display: none;
 }
 
-@media screen and (min-width: 550px) {
-
-  /* Updates TWO-COLUMN STYLES */
-
-  .two-column #content {
-    display: inline-block;
-    float: left;
-    padding-left: 10px;
-    width: 78%;
-  }
-
-  /* Updates MENU */
-
-  .two-column #sidebar {
-    display: block;
-    min-width: 100px;
-    width: 20%;
-    max-width: 250px;
-    padding: 0;
-    float: left;
-    border-bottom: 1px solid #000;
-    border-right: 1px solid #000;
-    height: 100%;
-  }
-
-  .two-column #sidebar li {
-    display: block;
-    text-align: left;
-    border-top: 1px solid #000;
-    padding: 0;
-  }
-
-  .two-column #sidebar a {
-    display: block;
-    width: 98%;
-    height: 100%;
-    padding: 10px 0 10px 5px ;
-  }
-
-  .two-column #sidebar li:first-child {
-    border-top: 0;
-  }
-
-  .two-column #content input[type="text"],
-  .two-column #content textarea,
-  .two-column #content input[type="number"] {
-    width: 60%;
-  }
-
-  .two-column #content input[type="submit"] {
-    float: left;
-    margin: 10px 20px;
-  }
-
-  /* Updates CHILD INFORMATION STYLES*/
-
-  .child-info, #child-view-lists {
-    width: 79%;
-  }
-
-  .child-info {
-    min-height: 200px;
-    padding-bottom: 10px;
-  }
-
+.ui-dialog {
+  background: #fff;
+  border: 2px solid #666;
+  border-radius: 5px;
 }
 
-@media screen and (min-width: 775px) {
-
-  /* Updates CHILDREN LIST STYLES */
-
-  .children-list {
-    width: 100%;
-  }
-
-  /* Updates THREE COLUMN STYLES
-     Children List Page */
-
-  .three-column #content {
-    margin-left: 21%;
-  }
-
-  .three-column #sidebar, .three-column #details {
-    display: block;
-    min-width: 100px;
-    width: 10%;
-    max-width: 250px;
-    padding: 0;
-    float: left;
-    border-bottom: 1px solid #000;
-    border-right: 1px solid #000;
-    min-height: 400px;
-    height: 100%;
-  }
-
-  .three-column #sidebar li {
-    display: block;
-    text-align: left;
-    border-bottom: 1px solid #000;
-    border-left: 1px solid #000;
-  }
-
-  .three-column #details li {
-    display: block;
-    text-align: left;
-    padding: 10px ;
-  }
-
-  /* Update CHILD INFORMATION STYLES */
-
-  .profile-picture {
-    float: right;
-  }
-
-  .exam-list {
-    width: 150px;
-    float: left;
-  }
-
-  .exam-list h3 {
-    text-align: center;
-  }
-
-  .exam {
-    padding-left: 155px;
-  }
-
-  .summary .recommendation {
-    width: 80%;
-  }             
-
+#dialog p {
+  line-height: 120%;
 }
+
+#dialog input[type="submit"] {
+  width: 60px;
+  background: #fff;
+  border: 1px solid #666;
+  padding: 5px;
+  font-size: 1em;
+  box-shadow: 5px 5px 10px #000;
+}
+
+#dialog input[type="submit"]:active {
+  box-shadow: 0 0 0;
+}
+
+
+
 
