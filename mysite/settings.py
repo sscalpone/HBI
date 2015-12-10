@@ -43,6 +43,13 @@ SITE_ID = 1
 # to load the internationalization machinery.
 USE_I18N = True
 
+DATE_INPUT_FORMATS = (
+    '%d/%m/%Y', '%d-%m-%Y', # 20/4/2014, 20-4-2014
+    '%d/%m/%y', '%d-%m-%y', # 20/4/14, 20-4-14
+    '%d %b %Y', '%d %b, %Y', # 20 Abr 2014, 20 Abr, 2014
+    '%d %B %Y', '%d %B, %Y', # 20 Abril 2014, 20 Abril, 2014
+)
+
 DATE_FORMAT = 'j n, Y'
 
 # If you set this to False, Django will not format dates, numbers and

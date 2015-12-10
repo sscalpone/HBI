@@ -12,9 +12,16 @@ from Child import Child
 from Signature import Signature
 
 
-"""Model for the Social Exam, which keeps track of the children's social status, including family situations and legal status. This model affects child priority.
+"""Model for the Social Exam, which keeps track of the children's 
+social status, including family situations and legal status. This 
+model affects child priority. This model references the Signature 
+model and the Child model. All fields are allowed to be saved null so 
+that forms can be saved before validation to prevent losing 
+information if the form can't be completed. This is overriden in the 
+clean() method.
 """
 class SocialExam(models.Model):
+    # The priority choices
     HIGH = 1
     MEDIUM = 2
     LOW = 3
@@ -44,9 +51,11 @@ class SocialExam(models.Model):
     priority = models.IntegerField(choices=PRIORITY_CHOICES, 
                                    default=HIGH)
     signature = models.ForeignKey(Signature, blank=True, null=True)
+    # For de-duping forms that have been edited.
     last_saved = models.DateTimeField(blank=True, null=True)
 
-    # Meta class defines database table and labels, and clears any default permissions.
+    # Meta class defines database table and labels, and clears any 
+    # default permissions.
     class Meta:
         app_label = 'tracker'
         db_table = 'tracker_socialexam'
@@ -55,7 +64,8 @@ class SocialExam(models.Model):
 """The form for the Social Exam."""
 class SocialExamForm(ModelForm):
 
-    # Meta class defines the fields and Spanish labels for the form. Also defines any widgets being used.
+    # Meta class defines the fields and Spanish labels for the form. 
+    # Also defines any widgets being used.
     class Meta:
         model = SocialExam
         
@@ -97,7 +107,7 @@ class SocialExamForm(ModelForm):
             'priority': 'Prioridad',
         }
 
-        #Boolean fields represented with checkbox widgets in form.
+        # Boolean fields represented with checkbox widgets in form.
         widgets = {
             'has_birth_certificate': CheckboxInput(),
             'original_birth_certificate': CheckboxInput(),
@@ -108,19 +118,24 @@ class SocialExamForm(ModelForm):
             'visitors_allowed': CheckboxInput(),
         }
 
-    # Override __init__ so 'request' can be accessed in the clean() function.
+    # Override __init__ so 'request' can be accessed in the clean() 
+    # function.
     def __init__(self, *args, **kwargs):
         self.request = kwargs.pop('request', None)
         super(SocialExamForm, self).__init__(*args, **kwargs)
 
-    # Override clean so forms can be saved without validating (so data isn't lost if the form can't be completed), but still raises exceptions when form is done incorrectly.
+    # Override clean so forms can be saved without validating (so data 
+    # isn't lost if the form can't be completed), but still raises 
+    # exceptions when form is done incorrectly.
     def clean(self):
-        msg = "Este campo es obligatorio." #Validation exception message
+        msg = "Este campo es obligatorio."
         cleaned_data = super(SocialExamForm, self).clean()
         
-        if self.request.method=='POST':
+        if self.request.POST:
             
-            # On validation ('submit' in request), checks if signature forms fields are filled out and raises exceptions on any fields left blank.
+            # On validation ('submit' in request), checks if signature 
+            # forms fields are filled out and raises exceptions on any 
+            # fields left blank.
             if 'submit' in self.request.POST:
                 
                 antecedents = cleaned_data.get('antecedents')
@@ -140,26 +155,36 @@ class SocialExamForm(ModelForm):
                     self.add_error('diagnosis', msg)
                 
                 recommendation = cleaned_data.get('recommendation')
-                if (recommendation == '':
+                if (recommendation == ''):
                     self.add_error('recommendation', msg)
 
-                # If the child does not have an Identity Card (DNI) or public health insurance (SIS), there must be an explanation, and child must be automatically high priority.
+                # If the child does not have an Identity Card (DNI) or 
+                # public health insurance (SIS), there must be an 
+                # explanation, and child must be automatically high 
+                # priority.
                 dni = cleaned_data.get('dni')
                 dni_in_process = cleaned_data.get('dni_in_process')
                 sis = cleaned_data.get('sis')
                 sis_in_process = cleaned_data.get('sis_in_process')
                 dni_sis_no_comments = cleaned_data.get('dni_sis_no_comments')
-                if (not sis and not sis_in_process) or 
-                (not dni and not dni_in_process):
-                    if (dni_sis_no_comments == ''):
+                if (not sis and not sis_in_process and 
+                    dni_sis_no_comments == ''):
                         self.add_error('dni_sis_no_comments', msg)
+                if (not dni and not sis_in_process and 
+                    dni_sis_no_comments == ''):
+                    self.add_error('dni_sis_no_comments', msg)
                 if (not dni and not sis and priority is not 1):
-                    self.add_error('priority', 'Sin un DNI o SIS , niño debe ser etiquetado de alta prioridad.')   
+                    self.add_error('priority', 
+                        'Sin un DNI o SIS , niño debe ser etiquetado de alta '
+                        'prioridad.')   
 
-                # If the child is not allowed visiters, there must be an explanation.
+                # If the child is not allowed visiters, there must be 
+                # an explanation.
                 visitors_allowed = cleaned_data.get('visitors_allowed')
-                visitors_allowed_no_comments = cleaned_data.get('visitors_allowed_no_comments')
-                if (not visitors_allowed and visitors_allowed_no_comments == ''):
+                visitors_allowed_no_comments = cleaned_data.get(
+                    'visitors_allowed_no_comments')
+                if (not visitors_allowed and 
+                    visitors_allowed_no_comments == ''):
                     self.add_error('visitors_allowed_no_comments', msg)
 
 

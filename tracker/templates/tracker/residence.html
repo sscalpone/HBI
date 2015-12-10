@@ -17,9 +17,9 @@
 	<ul>
 		<li>Residencia: {{ residence.residence_name }}</li>
 		<li>Administrador: {{ residence.administrator }}</li>
-		<li>Niños: {{ boys.count }}</li>
-		<li>Niñas: {{ girls.count }}</li>
-		<li>En riesgo: {{ at_risk.count }} </li>
+		<li>Niños: {{ boys }}</li>
+		<li>Niñas: {{ girls }}</li>
+		<li>En riesgo: {{ at_risk }} </li>
 		{% if perms.tracker.add_edit_forms %}
 		<a href="{% url 'tracker:edit_residence' residence_id %}"><li>Edita Detalles</li></a>
 		{% endif %}

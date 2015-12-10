@@ -10,7 +10,15 @@ from Child import Child
 from Signature import Signature
 
 
+"""The PsychologicalExam model stores information about each child's 
+psychological health. It references the Child model and the Signature 
+model. It affects priority. All fields are allowed to be saved null so 
+that forms can be saved before validation to prevent losing 
+information if the form can't be completed. This is overriden in the 
+clean() method.
+"""
 class PsychologicalExam(models.Model):
+    # Priority choices
     HIGH = 1
     MEDIUM = 2
     LOW = 3
@@ -19,6 +27,8 @@ class PsychologicalExam(models.Model):
         (MEDIUM, 'Prioridad Media'),
         (LOW, 'Prioridad Baja')
     )
+
+    # Fields
     uuid = models.CharField(max_length=200, unique=True, default=uuid.uuid4)
     child = models.ForeignKey(Child)
     date = models.DateField()
@@ -33,17 +43,23 @@ class PsychologicalExam(models.Model):
     priority = models.IntegerField(choices=PRIORITY_CHOICES, 
                                    default=HIGH)
     signature = models.ForeignKey(Signature, blank=True, null=True)
-    last_saved = models.DateTimeField()
+    # For de-duping forms that have been edited.
+    last_saved = models.DateTimeField(blank=True, null=True)
 
+    # Meta class defines database table and labels, and clears any 
+    # default permissions.
     class Meta:
         app_label = 'tracker'
         db_table = 'tracker_psychologicalexam'
         default_permissions = ()
 
 
+"""Form for the PsychologicalExam model."""
 class PsychologicalExamForm(ModelForm):
+    # Meta class defines the fields and Spanish labels for the form.
     class Meta:
         model = PsychologicalExam
+        
         fields = (
             'date',
             'family_notes',
@@ -56,6 +72,7 @@ class PsychologicalExamForm(ModelForm):
             'recommendation',
             'priority'
         )
+        
         labels = {
             'date': 'Fecha',
             'family_notes': 'Antecedents Patológicos Personales y Familiares Importantes',
@@ -69,37 +86,53 @@ class PsychologicalExamForm(ModelForm):
             'priority': 'Prioridad',
         }
 
+    # Override __init__ so 'request' can be accessed in the clean() 
+    # function.
     def __init__(self, *args, **kwargs):
         self.request = kwargs.pop('request', None)
         super(PsychologicalExamForm, self).__init__(*args, **kwargs)
 
+    # Override clean so forms can be saved without validating (so data 
+    # isn't lost if the form can't be completed), but still raises 
+    # exceptions when form is done incorrectly.
     def clean(self):
         msg = "Este campo es obligatorio."
         cleaned_data = super(PsychologicalExamForm, self).clean()
-        if self.request.method=='POST':
-            if 'submit' in self.request.POST:
+        
+        # On validation ('submit' in request), checks if signature 
+        # forms fields are filled out and raises exceptions on any 
+        # fields left blank.
+        if (self.request.POST):
+            if ('submit' in self.request.POST):
                 family_notes = cleaned_data.get('family_notes')
-                if background_notes=='':
+                if (family_notes == ''):
                     self.add_error('family_notes', msg)
+                
                 physical_description = cleaned_data.get('physical_description')
-                if physical_description=='':
+                if (physical_description == ''):
                     self.add_error('physical_description', msg)
+                
                 intellectual_notes = cleaned_data.get('intellectual_notes')
-                if intellectual_notes=='':
+                if (intellectual_notes == ''):
                     self.add_error('intellectual_notes', msg)
+                
                 organicity_notes = cleaned_data.get('organicity_notes')
-                if organicity_notes=='':
+                if (organicity_notes == ''):
                     self.add_error('organicity_notes', msg)
+                
                 psychomotor_notes = cleaned_data.get('psychomotor_notes')
-                if psychomotor_notes=='':
+                if (psychomotor_notes == ''):
                     self.add_error('psychomotor_notes', msg)
+                
                 emotional_notes = cleaned_data.get('emotional_notes')
-                if emotional_notes=='':
+                if (emotional_notes == ''):
                     self.add_error('emotional_notes', msg)
+                
                 diagnosis = cleaned_data.get('diagnosis')
-                if diagnosis=='':
+                if (diagnosis == ''):
                     self.add_error('diagnosis', msg)
+                
                 recommendation = cleaned_data.get('recommendation')
-                if recommendation=='':
+                if (recommendation == ''):
                     self.add_error('recommendation', msg)
 

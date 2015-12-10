@@ -10,7 +10,17 @@ from django.forms import RadioSelect
 from Child import Child
 from Signature import Signature
 
+
+"""The model for Medical Exam Part 2 stores the second half the 
+medical exam, primarily observations on the child's physical and 
+mental health. Also notes any treatment plans. It references the Child 
+model and the Signature model. It affects priority. All fields are 
+allowed to be saved null so that forms can be saved before validation 
+to prevent losing information if the form can't be completed. This is 
+overriden in the clean() method.
+"""
 class MedicalExamPart2(models.Model):
+    # Priority choices
     HIGH = 1
     MEDIUM = 2
     LOW = 3
@@ -25,6 +35,7 @@ class MedicalExamPart2(models.Model):
     date = models.DateField()
     appetite_notes = models.TextField(blank=True, null=True)
     sleep_notes = models.TextField(blank=True, null=True)
+    bowel_notes = models.TextField(blank=True, null=True)
     appearance_notes = models.TextField(blank=True, null=True)
     skin_notes = models.TextField(blank=True, null=True)
     lymph_notes = models.TextField(blank=True, null=True)
@@ -41,20 +52,29 @@ class MedicalExamPart2(models.Model):
     priority = models.IntegerField(choices=PRIORITY_CHOICES, 
                                    default=HIGH)
     signature = models.ForeignKey(Signature, blank=True, null=True)
+    # For de-duping forms that have been edited.
+    last_saved = models.DateTimeField(blank=True, null=True) 
 
+    # Meta class defines database table and labels, and clears any 
+    # default permissions.
     class Meta:
         app_label = 'tracker'
         db_table = 'tracker_medicalexampart2'
         default_permissions = ()
 
 
+"""Form for the Mecical Exam Part 2 model."""
 class MedicalExamPart2Form(ModelForm):
+
+    # Meta class defines the fields and Spanish labels for the form.
     class Meta:
         model = MedicalExamPart2
+        
         fields = (
             'date',
             'appetite_notes',
             'sleep_notes',
+            'bowel_notes',
             'appearance_notes',
             'skin_notes',
             'lymph_notes',
@@ -70,10 +90,12 @@ class MedicalExamPart2Form(ModelForm):
             'recommendation',
             'priority',
         )
+        
         labels = {
             'date': 'Fecha',
             'appetite_notes': 'Apetito',
             'sleep_notes': 'Sueño',
+            'bowel_notes': 'Deposiciones',
             'visual_acuity_left': 'Agudeza Visual Izquierdo',
             'visual_acuity_right': 'Agudeza Visual Derecha',
             'appearance_notes': 'Comentarios',
@@ -92,82 +114,86 @@ class MedicalExamPart2Form(ModelForm):
             'priority': 'Prioridad',
         }
 
+    # Override __init__ so 'request' can be accessed in the clean() 
+    # function.
     def __init__(self, *args, **kwargs):
         self.request = kwargs.pop('request', None)
         super(MedicalExamPart2Form, self).__init__(*args, **kwargs)
 
+    # Override clean so forms can be saved without validating (so data 
+    # isn't lost if the form can't be completed), but still raises 
+    # exceptions when form is done incorrectly.
     def clean(self):
         msg = "Este campo es obligatorio."
         cleaned_data = super(MedicalExamPart2Form, self).clean()
 
-        if self.request.method == 'POST':
-            if 'submit' in self.request.POST:
+        # On validation ('submit' in request), checks if signature 
+        # forms fields are filled out and raises exceptions on any 
+        # fields left blank.
+        if (self.request.POST):
+            if ('submit' in self.request.POST):
                 appetite_notes = cleaned_data.get('appetite_notes')
-                if appetite_notes=='':
+                if (appetite_notes == ''):
                     self.add_error('appetite_notes', msg)
 
                 sleep_notes = cleaned_data.get('sleep_notes')
-                if sleep_notes=='':
+                if (sleep_notes == ''):
                     self.add_error('sleep_notes', msg)
 
-                recommendations = cleaned_data.get('recommendations')
-                if recommendations=='':
-                    self.add_error('recommendations', msg)
-
-                diagnosis = cleaned_data.get('diagnosis')
-                if diagnosis=='':
-                    self.add_error('diagnosis', msg)
+                bowel_notes = cleaned_data.get('bowel_notes')
+                if (bowel_notes == ''):
+                    self.add_error('bowel_notes', msg)
 
                 appearance_notes = cleaned_data.get('appearance_notes')
-                if appearance_notes=='':
+                if (appearance_notes == ''):
                     self.add_error('appearance_notes', msg) 
                 
                 skin_notes = cleaned_data.get('skin_notes')
-                if skin_notes=='':
+                if (skin_notes == ''):
                     self.add_error('skin_mucosa_notes', msg) 
                 
                 lymph_notes = cleaned_data.get('TCSC_lymph_notes')
-                if lymph_notes=='':
+                if (lymph_notes == ''):
                     self.add_error('lymph_notes', msg) 
 
                 neck_notes = cleaned_data.get('neck_notes')
-                if neck_normal and neck_notes=='':
+                if (neck_notes == ''):
                     self.add_error('neck_notes', msg)
 
                 lung_notes = cleaned_data.get('lung_notes')
-                if lung_notes=='':
+                if (lung_notes == ''):
                     self.add_error('lung_notes', msg)
 
                 cardio_notes = cleaned_data.get('cardio_notes')
-                if cardio_notes=='':
+                if (cardio_notes == ''):
                     self.add_error('cardio_notes', msg)
 
                 abdomen_notes = cleaned_data.get('abdomen_notes')
-                if abdomen_notes=='':
+                if (abdomen_notes == ''):
                     self.add_error('abdomen_notes', msg)
 
                 genitourinary_notes = cleaned_data.get('genitourinary_notes')
-                if genitourinary_notes=='':
+                if (genitourinary_notes == ''):
                     self.add_error('genitourinary_notes', msg)
 
                 extremities_notes = cleaned_data.get('extremities_notes')
-                if extremities_notes=='':
+                if (extremities_notes == ''):
                     self.add_error('extremities_notes', msg)
 
                 neurological_notes = cleaned_data.get('neurological_notes')
-                if neurological_notes=='':
+                if (neurological_notes == ''):
                     self.add_error('neurological_notes', msg)
 
                 treatment_notes = cleaned_data.get('treatment_notes')
-                if treatment_notes=='':
+                if (treatment_notes == ''):
                     self.add_error('treatment_notes', msg)
 
                 recommendation = cleaned_data.get('recommendation')
-                if recommendation=='':
+                if (recommendation == ''):
                     self.add_error('recommendation', msg)
 
                 diagnosis = cleaned_data('diagnosis')
-                if diagnosis=='':
+                if (diagnosis == ''):
                     self.add_error('diagnosis', msg)
 
 

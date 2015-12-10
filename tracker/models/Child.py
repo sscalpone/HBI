@@ -11,7 +11,15 @@ from django.forms import CheckboxInput
 from Residence import Residence
 
 
-"""The Child model stores the basic information of each child saved in the database. It includes a function to calculate age. Child priority is saved in this model but cannot be set programmatically (set in exam_views.py). The residence ForeignKey references the Residence model: it saves the information about the house they live in.
+"""The Child model stores the basic information of each child saved in 
+the database. It includes a function to calculate age. Child priority 
+is saved in this model but cannot be set programmatically (set in 
+exam_views.py). The residence ForeignKey references the Residence 
+model: it saves the information about the house they live in. All 
+forms reference this model to save which child each form belongs to. 
+All fields are allowed to be saved null so that forms can be saved 
+before validation to prevent losing information if the form can't be 
+completed. This is overriden in the clean() method.
 """
 class Child(models.Model):
     # The gender choices for the children
@@ -47,11 +55,13 @@ class Child(models.Model):
     discharge_date = models.DateField(blank=True, null=True)
     photo = models.ImageField(upload_to='photos', blank=True, null=True)
     priority = models.IntegerField(choices=PRIORITY_CHOICES, 
-                                default=LOW)
-    active = models.BooleanField(default=True)
-    last_saved = models.DateTimeField()
+                                   default=LOW)
+    is_active = models.BooleanField(default=True)
+    # for de-duping forms that have been edited.
+    last_saved = models.DateTimeField(blank=True, null=True)
 
-    # Meta class defines database table and labels, and clears any default permissions.
+    # Meta class defines database table and labels, and clears any 
+    # default permissions.
     class Meta:
         app_label = 'tracker'
         db_table = 'tracker_child'
@@ -62,22 +72,24 @@ class Child(models.Model):
     def __unicode__(self):
         return self.first_name
 
-    # Calculates age of child in years based on age_in_years() function.
+    # Calculates age of child in years based on age_in_years() 
+    # function.
     def age(self):
         return self.age_in_years(self.birthdate, datetime.datetime.utcnow())
 
-    # Calculates age in years of child based on birthday and whether the birthday is on a leap day or not.
-    def age_in_years(self, from_date, to_date, leap_day_anniversary_Feb28=True):
-        computed_age = to_date.year - from_date.year
+    # Calculates age in years of child based on birthday and whether
+    # the birthday is on a leap day or not.
+    def age_in_years(self, f_date, t_date, leap_day_anniversary_Feb28=True):
+        computed_age = t_date.year - f_date.year
         try:
-            anniversary = from_date.replace(year=to_date.year)
+            anniversary = f_date.replace(year=t_date.year)
         except ValueError:
-            assert from_date.day == 29 and from_date.month == 2
+            assert f_date.day == 29 and f_date.month == 2
             if (leap_day_anniversary_Feb28):
-                anniversary = datetime.date(to_date.year, 2, 28)
+                anniversary = datetime.date(t_date.year, 2, 28)
             else:
-                anniversary = datetime.date(to_date.year, 3, 1)
-            if (to_date < anniversary):
+                anniversary = datetime.date(t_date.year, 3, 1)
+            if (t_date < anniversary):
                 computed_age -= 1
         return computed_age
 
@@ -85,7 +97,8 @@ class Child(models.Model):
 """Form for the Child model."""
 class ChildForm(ModelForm):
 
-    # Meta class defines the fields and Spanish labels for the form. Also defines any weidgets being used.
+    # Meta class defines the fields and Spanish labels for the form. 
+    # Also defines any weidgets being used.
     class Meta:
         model = Child
         
@@ -100,7 +113,7 @@ class ChildForm(ModelForm):
             'intake_date',
             'discharge_date',
             'photo',
-            'active',
+            'is_active',
         )
         
         labels = {
@@ -114,25 +127,30 @@ class ChildForm(ModelForm):
             'intake_date': 'Fecha de Ingreso',
             'discharge_date': 'Fecha de Salida',
             'photo': 'Fotografía',
-            'active': 'Activo',
+            'is_active': 'Activo',
         }
 
         widgets = {
-            'active': CheckboxInput(),
+            'is_active': CheckboxInput(),
         }
 
-    # Override __init__ so 'request' can be accessed in the clean() function.
+    # Override __init__ so 'request' can be accessed in the clean() 
+    # function.
     def __init__(self, *args, **kwargs):
         self.request = kwargs.pop('request', None)
         super(ChildForm, self).__init__(*args, **kwargs)
 
-    # Override clean so forms can be saved without validating (so data isn't lost if the form can't be completed), but still raises exceptions when form is done incorrectly.
+    # Override clean so forms can be saved without validating (so data 
+    # isn't lost if the form can't be completed), but still raises 
+    # exceptions when form is done incorrectly.
     def clean(self):
         msg = "Este campo es obligatorio."
         cleaned_data = super(ChildForm, self).clean()
 
-        # On validation ('submit' in request), checks if signature forms fields are filled out and raises exceptions on any fields left blank.
-        if (self.request.method == 'POST'):
+        # On validation ('submit' in request), checks if signature 
+        # forms fields are filled out and raises exceptions on any 
+        # fields left blank.
+        if (self.request.POST):
             if ('submit' in self.request.POST):
                 
                 residence = cleaned_data.get('residence')
@@ -165,11 +183,12 @@ class ChildForm(ModelForm):
                 
                 # Checks that inactive children have discharge date
                 discharge_date = cleaned_data.get('discharge_date')
-                active = cleaned_data('active')
-                if (not active and discharge_date is None):
+                is_active = cleaned_data.get('is_active')
+                if (not is_active and discharge_date is None):
                     self.add_error('discharge_date', msg)
 
-                # Checks that active children do not have discharge date
-                if (active and discharge_date is not None):
+                # Checks that active children do not have discharge 
+                # date
+                if (is_active and discharge_date is not None):
                     self.add_error('discharge_date', 'Sin fecha de alta se puede especificar para niños activos.')
 

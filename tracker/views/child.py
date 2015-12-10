@@ -12,43 +12,68 @@ from tracker.models import Child, ChildForm
 from tracker.models import Residence
 
 
+"""The new() function creates and processes a new Child form. It then 
+creates a new Child object from the Child model, populates it with the 
+form info, and saves it to the database. It is protected with the 
+login_required decorator, so that no one who isn't logged in can add a 
+form. The new() function renders the add_child template.
+"""
 @login_required()
 def new(request, residence_id):
-    if request.POST:
+    # If POST request, get posted Child form.
+    if (request.POST):
         form = ChildForm(request.POST, request.FILES, request=request)
-        if 'discard' in request.POST:
-            p = get_object_or_404(Residence, pk=residence_id)
-            children = Child.objects.filter(residence_id=residence_id)
-            active = Child.objects.filter(residence_id=residence_id).filter(active=True)
-            inactive = Child.objects.filter(residence_id=residence_id).filter(active=False)
-            boys = Child.objects.filter(residence_id=residence_id).filter(gender='m')
-            girls = Child.objects.filter(residence_id=residence_id).filter(gender='f')
-            at_risk = Child.objects.filter(residence_id=residence_id).filter(priority='1')
-            context = {
-                'residence': p,
-                'children': children,
-                'active': active,
-                'inactive': inactive,
-                'residence_id': p.id,
-                'boys': boys,
-                'girls': girls,
-                'at_risk': at_risk
-            }
-            return render(request, 'tracker/residence.html', context)
+        
+        # If user clicked discard button, discard posted form and 
+        # render the residence template.
+        if ('discard' in request.POST):
+            return HttpResponseRedirect(
+                reverse('tracker:residence', 
+                    kwargs={'residence_id': residence_id}))
+        
+        # If user clicked 'save' or 'submit', process and save form 
+        # (form will validate no matter what in 'save', will be 
+        # validated in custom clean() in 'submit'), create and save 
+        # new Child object.
         else:
-            if form.is_valid():
+            if (form.is_valid()):
                 saved_child = form.save(commit=False)
                 saved_child.last_saved = datetime.datetime.utcnow()
                 saved_child.save()
                 form.save_m2m()
-                if saved_child:
-                    child_id = saved_child.id
-                    if 'save' in request.POST:
-                        return HttpResponseRedirect(reverse('tracker:edit_child', kwargs={'child_id': child_id}))
+                
+                # make sure child saved
+                if (saved_child):
+                    
+                    # If user clicked 'save', render edit_child 
+                    # template.
+                    if ('save' in request.POST):
+                        return HttpResponseRedirect(
+                            reverse('tracker:edit_child', 
+                                kwargs={'child_id': save_child.id}))
+                    
+                    # If user clicked 'submit', render child template.
                     else:
-                        return HttpResponseRedirect(reverse('tracker:child', kwargs={'child_id': child_id}))
+                        return HttpResponseRedirect(
+                            reverse('tracker:child', 
+                                kwargs={'child_id': saved_child.id}))
+               
+               # if validation passed but child still didn't save, 
+               # return to add_child template with "Sorry, please try
+               # again" error message
+                else:
+                    return render(request, 'tracker/add_child.html', 
+                        {
+                         'error_message': 'Lo sentimos, el formulario no se '
+                         'puede guardar en este momento. Por favor, ' 
+                         'vuelva a intentarlo.',
+                        })
+    
+    # If not POST request, create new Child form.
     else:
         form = ChildForm()
+    
+    # Render add_child template
     context = {
         'form': form.as_ul,
         'residence_id': residence_id,
@@ -57,6 +82,11 @@ def new(request, residence_id):
     return render(request, 'tracker/add_child.html', context)
 
 
+"""The view() function renders the child_information template, 
+populated with information from the Child model. It is protected with 
+the login_required decorator, so that no one who isn't logged in can 
+add a form.
+"""
 @login_required
 def view(request, child_id):
     p = get_object_or_404(Child, pk=child_id)
@@ -69,41 +99,75 @@ def view(request, child_id):
     return render(request, 'tracker/child_information.html', context)
 
 
+"""The edit() function creates and processes a Child form populated 
+with an existing Child object. It then adds the edits to the Child 
+object and saves it to the database. It is protected with the 
+login_required decorator, so that no one who isn't logged in can add a 
+form. The new() function renders the edit_child template.
+"""
 @login_required
 def edit(request, child_id):
     child = get_object_or_404(Child, pk=child_id)
     residence_id = child.residence_id
-    if request.POST:
-        form = ChildForm(request.POST, request.FILES, instance=child, request=request)
-        if 'discard' in request.POST:
-            p = get_object_or_404(Residence, pk=residence_id)
-            children = Child.objects.filter(residence_id=residence_id)
-            active = Child.objects.filter(residence_id=residence_id).filter(active=True)
-            inactive = Child.objects.filter(residence_id=residence_id).filter(active=False)
-            boys = Child.objects.filter(residence_id=residence_id).filter(gender='m')
-            girls = Child.objects.filter(residence_id=residence_id).filter(gender='f')
-            at_risk = Child.objects.filter(residence_id=residence_id).filter(priority='1')
-            context = {
-                'residence': p,
-                'children': children,
-                'residence_id': p.id,
-                'active': active,
-                'inactive': inactive,
-                'boys': boys,
-                'girls': girls,
-                'at_risk': at_risk
-            }
+
+    # If POST request, get posted Child form.
+    if (request.POST):
+        form = ChildForm(request.POST, request.FILES, instance=child, 
+            request=request)
+        
+        # If user clicked discard button, discard posted form and 
+        # render the residence template.
+        if ('discard' in request.POST):
+            return HttpResponseRedirect(
+                reverse('tracker:residence', 
+                    kwargs={'residence_id': residence_id}))
+
+        # If user clicked 'save' or 'submit', process and save form 
+        # (form will validate no matter what in 'save', will be 
+        # validated in custom clean() in 'submit'), and edit and save 
+        # Child object.
         else:
-            if form.is_valid():
-                form.id = child.id
-                saved_child = form.save()
-                child_id = saved_child.id
-                if 'save' in request.POST:
-                    return HttpResponseRedirect(reverse('tracker:edit_child', kwargs={'child_id': child_id}))
+            if (form.is_valid()):
+                saved_child = form.save(commit=False)
+                saved_child.last_saved = datetime.datetime.utcnow()
+                saved_child.save()
+                form.save_m2m()
+
+                # Check that the child object saved
+                if (saved_child):
+                
+                    # If user clicked 'save', render edit_child 
+                    # template.
+                    if ('save' in request.POST):
+                        return HttpResponseRedirect(reverse(
+                            'tracker:edit_child', 
+                            kwargs={'child_id': saved_child.id}
+                        ))
+                    
+                    # If user clicked 'submit', render child template.
+                    else:
+                        return HttpResponseRedirect(
+                            reverse('tracker:child', 
+                                kwargs={'child_id': saved_child.id}
+                            ))
+
+                # if validation passed but child still didn't save, 
+                # return to add_child template with "Sorry, please try 
+                # again" error message
                 else:
-                    return HttpResponseRedirect(reverse('tracker:child', kwargs={'child_id': child_id}))
+                    return render(request, 'tracker/edit_child.html', 
+                        {
+                         'error_message': 'Lo sentimos, el formulario no se '
+                         'puede guardar en este momento. Por favor, vuelva a '
+                         'intentarlo.',
+                        })
+    
+    # If not POST request, create new Child form, populated with Child 
+    # object.
     else:
         form = ChildForm(instance=child)
+    
+    # Render edit_child template
     context = {
         'form': form.as_ul,
         'residence_id': residence_id,

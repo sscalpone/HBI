@@ -30,57 +30,49 @@
     <span id="dialog">
         <form action ="" method="post" class="name no-display">{% csrf_token %}
             <ul>
-                <li><label for="first_name">Nombre:</label><input id="first_name" maxlength="30" name="first_name" type="text" value="{{ profile.first_name }}"></li>
-                <li><label for="last_name">Apellido:</label><input id="last_name" maxlength="30" name="last_name" type="text" value="{{ profile.last_name }}"></li>
+                {{ name_form }}
                 <li><input type="submit" name="name_form" value="Enviar"></li>
             </ul>
         </form>
 
         <form action ="" method="post" class="password no-display">{% csrf_token %}
             <ul>
-                <li><label for="old_password">Contraseña anterior</label><input id="old_password" maxlength="200" name="old_password" type="password"></li>
-                <li><label for="new_password">Contraseña Nueva</label><input id="new_password" maxlength="200" name="new_password" type="password"></li>
-                <li><label for="confirm_password">Confirmar Contraseña</label><input id="confirm_password" maxlength="200" name="confirm_password" type="password"></li>
+                {{ password_form }}
                 <li><input type="submit" name="password_form" value="Enviar"></li>
             </ul>
         </form>
 
         <form action ="" method="post" class="add_users no-display">{% csrf_token %}
-            <input type="hidden" name="add_users" value="False">
             <ul>
-                <li><label for="add_users">¿Puede añadir usuarios?</label><input {% if 'tracker.add_users' in permissions %}checked="checked" {% endif %} id="add_users" name="add_users" type="checkbox" value="True"></li>
+                {{ add_users_form }}
                 <li><input type="submit" name="add_users_form" value="Enviar"></li>
             </ul>
         </form>
 
         <form action ="" method="post" class="delete_info no-display">{% csrf_token %}
-            <input type="hidden" name="delete_info" value="False">
             <ul>
-                <li><label for="delete_info">¿Puede borrar la información?</label><input {% if 'tracker.delete_info' in permissions %}checked="checked" {% endif %} id="delete_info" name="delete_info" type="checkbox" value="True"></li>
+                {{ delete_info_form }}
                 <li><input type="submit" name="delete_info_form" value="Enviar"></li>
             </ul>
         </form>
 
         <form action ="" method="post" class="add_edit_forms no-display">{% csrf_token %}
-            <input type="hidden" name="add_edit_forms" value="False">
             <ul>
-                <li><label for="add_edit_forms">¿Puede añadir y editar formas?</label><input {% if 'tracker.add_edit_forms' in permissions %}checked="checked" {% endif %} id="add_edit_forms" name="add_edit_forms" value="True" type="checkbox"></li>
+                {{ add_edit_forms_form }}
                 <li><input type="submit" name="add_edit_forms_form" value="Enviar"></li>
             </ul>
         </form>
 
         <form action ="" method="post" class="is_staff no-display">{% csrf_token %}
-            <input type="hidden" name="is_staff" value="False">
             <ul>
-                <li><label for="is_staff">¿Es el personal?</label><input {% if profile.is_staff %}checked="checked" {% endif %} id="is_staff" name="is_staff" type="checkbox" value="True"></li>
+                {{ is_staff_form }}
                 <li><input type="submit" name="is_staff_form" value="Enviar"></li>
             </ul>
         </form>
 
         <form action ="" method="post" class="is_active no-display">{% csrf_token %}
-            <input type="hidden" name="is_active" value="False">
             <ul>
-                <li><label for="is_active">¿Es activo?</label><input {% if profile.is_active %}checked="checked"{% endif %} id="is_active" name="is_active" type="checkbox" value="True"></li>
+                {{ is_active_form }}
                 <li><input type="submit" name="is_active_form" value="Enviar"></li>
             </ul>
         </form>
