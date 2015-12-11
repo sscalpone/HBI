@@ -1,6 +1,7 @@
 # coding=utf-8
 
-# Initialize models, so all models are imported to the database table
+""" Initialize models, so all models are imported to the database table.
+"""
 from Child import Child, ChildForm
 from DentalExam import DentalExam, DentalExamForm
 from Documents import Documents, DocumentsForm
@@ -18,3 +19,4 @@ from Profile import EditNameForm, EditPasswordForm, EditIsStaffForm
 from Profile import EditIsActiveForm, EditAddUsersForm
 from Profile import EditDeleteInfoForm, EditAddEditFormsForm
 from Profile import EditShowOnlyForm, EditRestrictToHomeForm
+from HelpEmail import HelpEmailForm

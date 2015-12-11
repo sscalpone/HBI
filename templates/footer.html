@@ -1,6 +1,6 @@
             <footer>
                 <ul>
-                    <li {% if page == 'help' %} class="selected" {% endif %}><a href="">Ayuda</a></li>
+                    <li {% if page == 'help' %} class="selected" {% endif %}><a href="{% url 'tracker:help' %}">Ayuda</a></li>
                     <li {% if page == 'user' %} class="selected" {% endif %}><a href="{% url 'tracker:profiles' %}">Usuarios</a></li>
                 </ul>
             <footer>
