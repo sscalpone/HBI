@@ -16,7 +16,7 @@ from Signature import Signature, SignatureForm
 from SocialExam import SocialExam, SocialExamForm
 from Profile import ProfileForm, UserUUID
 from Profile import EditNameForm, EditPasswordForm, EditIsStaffForm
-from Profile import EditIsActiveForm, EditAddUsersForm
+from Profile import EditIsActiveForm, EditAddUsersForm, EditEmailForm
 from Profile import EditDeleteInfoForm, EditAddEditFormsForm
 from Profile import EditShowOnlyForm, EditRestrictToHomeForm
 from HelpEmail import HelpEmailForm

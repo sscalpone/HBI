@@ -37,20 +37,36 @@ a {
   color: #000;
 }
 
-/**:focus {
-  outline: 2px #95bcf2 groove;
-}*/
-
-footer {
-  text-align: center;
-}
-footer p {
-  margin: 20px 50px;
-  padding-top: 10px;
+.no-display {
+  display: none;
 }
 
-label {
-  text-align: right;
+.ui-dialog {
+  background: #fff;
+  border: 2px solid #666;
+  border-radius: 5px;
+}
+
+
+/*********************
+DIALOG BOX STYLES
+**********************/
+
+#dialog p {
+  line-height: 120%;
+}
+
+#dialog input[type="submit"] {
+  width: 60px;
+  background: #fff;
+  border: 1px solid #666;
+  padding: 5px;
+  font-size: 1em;
+  box-shadow: 5px 5px 10px #000;
+}
+
+#dialog input[type="submit"]:active {
+  box-shadow: 0 0 0;
 }
 
 /*********************
@@ -83,6 +99,11 @@ HEADER STYLES
 /*********************
 FOOTER STYLES
 **********************/
+
+footer p {
+  margin: 20px 50px;
+  padding-top: 10px;
+}
 
 footer {
   text-align: right;
@@ -120,8 +141,8 @@ LOGIN STYLES
   font-size: 1em;
 }
 
-#login input[type="submit"]
-/*, .add-new-exam*/ {
+#login input[type="submit"], 
+.add-new-exam {
   background: #fff;
   text-align: center;
   font-size: 1em;
@@ -129,19 +150,13 @@ LOGIN STYLES
   box-shadow: 5px 5px 10px #000;
 }
 
-/*.add-new-exam {
-  display: inline-block;
-  margin: 5px 0 15px;
-}*/
-
 #login input[type="submit"]:active {
   box-shadow: 0 0 0;
 }
 
-
-/************************
-SIDEBAR STYLES 
-*************************/
+/*****************
+SIDEBAR STYLES
+******************/
 
 .selected {
   background: #95bcf2 ;
@@ -169,7 +184,6 @@ SIDEBAR STYLES
 #sidebar a {
   display: block;
   width: 100%;
-  height: 100%;
 }
 
 /* Two-Column Sidebar */
@@ -178,7 +192,6 @@ SIDEBAR STYLES
   border: none;
   margin-left: 25px;
 }
-
 
 /************************
 CHILDREN LIST STYLES 
@@ -226,44 +239,6 @@ CHILDREN LIST STYLES
   overflow: hidden;
 }
 
-
-/*.children-list {
-  height: 100%;
-  display: inline-block;
-}
-
-.children-list h3 {
-  text-align: center;
-  padding: 10px 0;
-  font-size: 1.7em;
-  display: block;
-}
-
-.children-list li, #residences ul li {
-  float: left;
-}
-
-.children-list li, #residences ul li {
-  width: 100px;
-  margin: 10px 2.5%;
-  text-align: center;
-  font-size: 1.5em;
-}
-
-
-
-
-.add-new div, #residences img {
-  width: 100px;
-  height: 100px;
-  border: 4px #666 solid;
-  font-size: 4em;
-  color: #666;
-}
-
-
-}*/
-
 /* Visual Priority Styles */
 
 .thumbnail.green {
@@ -286,9 +261,12 @@ CHILDREN LIST STYLES
 TWO-COLUMN and THREE-COLUMN STYLES
 *********************************/
 
-/*.two-column, .three-column {
+/* FORM STYLES */
+
+.two-column, .three-column {
   display: block;
   height: 100%;
+  overflow: hidden;
 }
 
 .two-column h2 {
@@ -307,6 +285,8 @@ TWO-COLUMN and THREE-COLUMN STYLES
 .two-column #content label {
   display: inline-block;
   width: 166px;
+  text-align: right;
+  vertical-align: top;
 }
 
 .three-column #details {
@@ -316,7 +296,7 @@ TWO-COLUMN and THREE-COLUMN STYLES
 
 .two-column #content p {
   padding: 20px 0 10px;
-}*/
+}
 
 /* FORM STYLES */
 
@@ -327,10 +307,34 @@ TWO-COLUMN and THREE-COLUMN STYLES
 .two-column #content input[type="text"],
 .two-column #content textarea,
 .two-column #content input[type="number"],
-.two-column #content select {
+.two-column #content select,
+.two-column #content input[type="password"], 
+.two-column #content input[type="email"] {
   font-size: 1em;
   padding: 4px;
   border: 2px #666 solid;
+}
+
+.two-column #content input[type="text"]:focus,
+.two-column #content textarea:focus,
+.two-column #content input[type="number"]:focus,
+.two-column #content select:focus,
+.two-column #content input[type="password"]:focus, 
+.two-column #content input[type="email"]:focus,
+input[type="checkbox"]:focus {
+  outline: 2px #95bcf2 groove;
+}
+
+input[type="checkbox"] {
+    -webkit-appearance: none;
+    width: 20px;
+    height: 20px;
+    background: transparent;
+    border-radius: 5px;
+    border: 2px solid #666;
+}
+input[type='checkbox']:checked {
+    background: #95bcf2;
 }
 
 .two-column #content textarea {
@@ -362,6 +366,11 @@ TWO-COLUMN and THREE-COLUMN STYLES
   display: block;
   max-width: 700px;
   margin: 0 auto;
+}
+
+.add-new-exam {
+  display: inline-block;
+  margin: 5px 0 15px;
 }
 
 /************************
@@ -477,6 +486,7 @@ SUMMARY AND RISK ASSESSMENT;
 
 #content form {
   min-height: 150px;
+
 }
 
 #photo {
@@ -484,39 +494,3 @@ SUMMARY AND RISK ASSESSMENT;
   max-width: 500px;
   margin: 0 auto;
 }
-
-/************************
-DIALOG BOX STYLES
-for confirmation boxes and user edits
-*************************/
-
-.no-display {
-  display: none;
-}
-
-.ui-dialog {
-  background: #fff;
-  border: 2px solid #666;
-  border-radius: 5px;
-}
-
-#dialog p {
-  line-height: 120%;
-}
-
-#dialog input[type="submit"] {
-  width: 60px;
-  background: #fff;
-  border: 1px solid #666;
-  padding: 5px;
-  font-size: 1em;
-  box-shadow: 5px 5px 10px #000;
-}
-
-#dialog input[type="submit"]:active {
-  box-shadow: 0 0 0;
-}
-
-
-
-

@@ -4,7 +4,7 @@
         <title>{% block title %}Unión Bíblica Evaluación de Girasoles{% endblock %}</title>
         {% load staticfiles %}<link rel="stylesheet" href="{% static "tracker/css-reset.css" %}">
         {% load staticfiles %}<link rel="stylesheet" href="{% static "tracker/tracker.css" %}">
-        <!-- {% load staticfiles %}<link rel="stylesheet" href="{% static "tracker/responsive.css" %}"> -->
+        {% load staticfiles %}<link rel="stylesheet" href="{% static "tracker/responsive.css" %}">
         <meta name="viewport" content="width=device-width">
         <meta name="description" content="Health Bridges International Record Keeping">
         <meta charset="utf-8">
@@ -17,9 +17,9 @@
                 <h2>{% block h2 %}{% endblock %}</h2>
             </header>
             <div id="border"></div>
-            <div id="content">
+            <section id="content">
                 {% block content %}{% endblock %}
-            </div>
+            </section>
             <div id="border"></div>
         </div>
     </body>

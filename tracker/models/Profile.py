@@ -148,7 +148,7 @@ class ProfileForm(forms.Form):
 				restrict_to_home = cleaned_data.get('restrict_to_home')
 				home = cleaned_data.get('home')
 				if (restrict_to_home and home is None):
-					self.add_error('show_only', 'Se ha seleccionado ningún '
+					self.add_error('restrict_to_home', 'Se ha seleccionado ningún '
 						'hogar.')
 
 
@@ -180,10 +180,40 @@ class EditNameForm(forms.Form):
 		# forms fields are filled out and raises exceptions on any 
 		# fields left blank.
 		if (self.request.POST):
-			if ('submit' in self.request.POST):
-				password = cleaned_data.get('password')
-				if (not request.user.check_password(password)):
-					self.add_error('password', 'Tu contraseña es incorrecta.')
+			password = cleaned_data.get('password')
+			if (not self.request.user.check_password(password)):
+				self.add_error('password', 'Tu contraseña es incorrecta.')
+				print self._errors
+
+
+"""Form to edit the email of a user in the User model. The clean() 
+method checks the password for security.
+"""
+class EditEmailForm(forms.Form):
+	email = forms.EmailField(max_length=200, label='Correo Electrónico')
+	password = forms.CharField(max_length=200, label='Contraseña', 
+		widget=forms.PasswordInput)
+
+	# Override __init__ so 'request' can be accessed in the clean() 
+	# function.
+	def __init__(self, *args, **kwargs):
+		self.request = kwargs.pop('request', None)
+		super(EditEmailForm, self).__init__(*args, **kwargs)
+
+	# Override clean so forms can be saved without validating (so data
+	# isn't lost if the form can't be completed), but still raises 
+	# exceptions when form is done incorrectly.
+	def clean(self):
+		msg = "Este campo es obligatorio." #Validation exception message
+		cleaned_data = super(EditEmailForm, self).clean()
+
+		# On validation ('submit' in request), checks if password 
+		# forms fields are filled out and raises exceptions on any 
+		# fields left blank.
+		if (self.request.POST):
+			password = cleaned_data.get('password')
+			if (not self.request.user.check_password(password)):
+				self.add_error('password', 'Tu contraseña es incorrecta.')
 
 
 """Form to edit the password of a user in the User model. The clean() 
@@ -214,23 +244,22 @@ class EditPasswordForm(forms.Form):
 		# forms fields are filled out and raises exceptions on any 
 		# fields left blank.
 		if (self.request.POST):
-			if ('submit' in self.request.POST):
-				old_password = cleaned_data.get('old_password')
-				if (request.user.check_password(old_password)):
-					password = cleaned_data.get('password')
-					cpassword = cleaned_data.get('cpassword')
-					if password == '':
-						self.add_error('password', 'Por favor, añada una '
-							'nueva contraseña.')
-					elif cpassword == '':
-						self.add_error('password', 'Por favor, confirme su '
-							'nueva contraseña.')
-					else:
-						if (password != cpassword):
-							self.add_error('password', 'Sus nuevas '
-								'contraseñas no coinciden.')
+			old_password = cleaned_data.get('old_password')
+			if (self.request.user.check_password(old_password)):
+				password = cleaned_data.get('password')
+				cpassword = cleaned_data.get('cpassword')
+				if password == '':
+					self.add_error('password', 'Por favor, añada una '
+						'nueva contraseña.')
+				elif cpassword == '':
+					self.add_error('password', 'Por favor, confirme su '
+						'nueva contraseña.')
 				else:
-					self.add_error('password', 'Tu contraseña es incorrecta.')
+					if (password != cpassword):
+						self.add_error('password', 'Sus nuevas '
+							'contraseñas no coinciden.')
+			else:
+				self.add_error('password', 'Tu contraseña es incorrecta.')
 
 
 """Form to edit the staff status of a user in the User model. The 
@@ -238,7 +267,8 @@ clean() method checks the password for security.
 """
 class EditIsStaffForm(forms.Form):
 	is_staff = forms.BooleanField(required=False, label='¿Es el personal?', widget=forms.CheckboxInput)
-	password = forms.CharField(max_length=200, label='Contraseña', widget=forms.PasswordInput)
+	password = forms.CharField(max_length=200, label='Contraseña', 
+		widget=forms.PasswordInput)
 
 	# Override __init__ so 'request' can be accessed in the clean() 
 	# function.
@@ -258,7 +288,7 @@ class EditIsStaffForm(forms.Form):
 		# fields left blank.
 		if (self.request.POST):
 			password = cleaned_data.get('password')
-			if (not request.user.check_password(password)):
+			if (not self.request.user.check_password(password)):
 				self.add_error('password', 'Tu contraseña es incorrecta.')
 
 
@@ -266,7 +296,8 @@ class EditIsStaffForm(forms.Form):
 clean() method checks the password for security.
 """
 class EditIsActiveForm(forms.Form):
-	is_active = forms.BooleanField(required=False, label='¿Es el personal?', widget=forms.CheckboxInput)
+	is_active = forms.BooleanField(required=False, label='¿Es activo?', 
+		widget=forms.CheckboxInput)
 	password = forms.CharField(max_length=200, label='Contraseña', 
 		widget=forms.PasswordInput)
 
@@ -288,7 +319,7 @@ class EditIsActiveForm(forms.Form):
 		# fields left blank.
 		if (self.request.POST):
 			password = cleaned_data.get('password')
-			if (not request.user.check_password(password)):
+			if (not self.request.user.check_password(password)):
 				self.add_error('password', 'Tu contraseña es incorrecta.')
 
 
@@ -321,7 +352,7 @@ class EditAddUsersForm(forms.Form):
 		# fields left blank.
 		if (self.request.POST):
 			password = cleaned_data.get('password')
-			if (not request.user.check_password(password)):
+			if (not self.request.user.check_password(password)):
 				self.add_error('password', 'Tu contraseña es incorrecta.')
 
 
@@ -330,8 +361,11 @@ edits their ability to delete information. The clean() method checks
 the password for security.
 """
 class EditDeleteInfoForm(forms.Form):
-	delete_info = forms.BooleanField(required=False, label='Añadir Otros Usuarios', widget=forms.CheckboxInput)
-	password = forms.CharField(max_length=200, label='Contraseña', widget=forms.PasswordInput)
+	delete_info = forms.BooleanField(required=False, 
+									 label='Eliminar Información', 
+									 widget=forms.CheckboxInput)
+	password = forms.CharField(max_length=200, label='Contraseña', 
+		widget=forms.PasswordInput)
 
 	# Override __init__ so 'request' can be accessed in the clean() 
 	# function.
@@ -351,7 +385,7 @@ class EditDeleteInfoForm(forms.Form):
 		# fields left blank.
 		if (self.request.POST):
 			password = cleaned_data.get('password')
-			if (not request.user.check_password(password)):
+			if (not self.request.user.check_password(password)):
 				self.add_error('password', 'Tu contraseña es incorrecta.')
 
 
@@ -360,8 +394,8 @@ edits their ability to add and edit forms. The clean() method checks
 the password for security.
 """
 class EditAddEditFormsForm(forms.Form):
-	edit_add_forms = forms.BooleanField(required=False, 
-										label='Añadir Otros Usuarios',
+	add_edit_forms = forms.BooleanField(required=False, 
+										label='Añadir y Editar Formas', 
 										widget=forms.CheckboxInput)
 	password = forms.CharField(max_length=200, label='Contraseña', 
 		widget=forms.PasswordInput)
@@ -384,7 +418,7 @@ class EditAddEditFormsForm(forms.Form):
 		# fields left blank.
 		if (self.request.POST):
 			password = cleaned_data.get('password')
-			if (not request.user.check_password(password)):
+			if (not self.request.user.check_password(password)):
 				self.add_error('password', 'Tu contraseña es incorrecta.')
 
 
@@ -414,7 +448,7 @@ class EditShowOnlyForm(forms.Form):
 		# fields left blank.
 		if (self.request.POST):
 			password = cleaned_data.get('password')
-			if (not request.user.check_password(password)):
+			if (not self.request.user.check_password(password)):
 				self.add_error('password', 'Tu contraseña es incorrecta.')
 
 
@@ -450,7 +484,7 @@ class EditRestrictToHomeForm(forms.Form):
 		# fields left blank.
 		if (self.request.POST):
 			password = cleaned_data.get('password')
-			if (request.user.check_password(password)):
+			if (self.request.user.check_password(password)):
 				restrict_to_home = cleaned_data.get('restrict_to_home')
 				home = cleaned_data.get('home')
 				if (restrict_to_home and home is None):

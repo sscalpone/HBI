@@ -24,29 +24,96 @@
     {% if 'error_message_password' %} <p>{{ error_message_password }}</p>{% endif %}
 
     <ul id="user-info">
-        <li><span>Nombre:</span> <span>{{ profile.first_name }} {{ profile.last_name }}</span> <a href="" class="name change">Cambiar</a></li>
-        <li><span>Nombre de Usuario:</span> <span>{{ profile.username }}</span></li>
-        <li><a href="" class="password change">Cambiar la contraseña</a></li>
-        <li><span>¿Puede añadir usuarios?</span> <span>{% if 'tracker.add_users' in permissions %}Sí{% else %}No{% endif %}{% if perms.tracker.add_users %}</span> <a href="" class="add_users change">Cambiar</a>{% endif %}</li>
-        <li><span>¿Puede borrar la información?</span> <span>{% if 'tracker.delete_info' in permissions %}Sí{% else %}No{% endif %}{% if perms.tracker.add_users %}</span> <a href="" class="delete_info change">Cambiar</a>{% endif %}</li>
-        <li><span>¿Puede añadir y editar formas?</span> <span>{% if 'tracker.add_edit_forms' in permissions %}Sí{% else %}No{% endif %}{% if perms.tracker.add_users %}</span> <a href="" class="add_edit_forms change">Cambiar</a>{% endif %}</li>
-        <li><span>¿Puede consultar la información?</span> {% if 'tracker.view' in permissions %}Sí{% else %}No{% endif %}</li>
-         <li><span>¿Es el personal?</span> <span>{% if profile.is_staff %}Sí{% else %}No{% endif %}{% if perms.tracker.add_users %}</span> <a href="" class="is_staff change">Cambiar</a>{% endif %}</li>
-        <li><span>¿Es activo?</span> <span>{% if profile.is_active %}Sí{% else %}No{% endif %}{% if perms.tracker.add_users %}</span> <a href="" class="is_active change">Cambiar</a>{% endif %}</li>
+        <li>
+            <span>Nombre:</span>
+            <span>{{ profile.first_name }} {{ profile.last_name }}</span>
+            <a href="" class="name change">Cambiar</a>
+        </li>
+        <li>
+            <span>Nombre de Usuario:</span>
+            <span>{{ profile.username }}</span>
+        </li>
+        <li>
+            <span>Nombre:</span>
+            <span>{{ profile.email }}</span>
+            <a href="" class="email change">Cambiar</a>
+        </li>
+        <li>
+            <a href="" class="password change">Cambiar la contraseña</a>
+        </li>
+        <li>
+            <span>¿Puede añadir usuarios?</span>
+            <span>
+            {% if 'tracker.add_users' in permissions %}
+                Sí
+            {% else %}
+                No
+            {% endif %}
+            </span>
+        {% if perms.tracker.add_users %}
+            <a href="" class="add_users change">Cambiar</a>
+        {% endif %}
+        </li>
+        <li>
+            <span>¿Puede borrar la información?</span>
+            <span>
+            {% if 'tracker.delete_info' in permissions %}
+                Sí
+            {% else %}
+                No
+            {% endif %}
+            </span>
+        {% if perms.tracker.add_users %}
+            <a href="" class="delete_info change">Cambiar</a>
+        {% endif %}
+        </li>
+        <li>
+            <span>¿Puede añadir y editar formas?</span>
+            <span>{% if 'tracker.add_edit_forms' in permissions %}Sí{% else %}No{% endif %}{% if perms.tracker.add_users %}</span> <a href="" class="add_edit_forms change">Cambiar</a>{% endif %}
+        </li>
+        <li>
+            <span>¿Puede consultar la información?</span>
+            {% if 'tracker.view' in permissions %}Sí{% else %}No{% endif %}
+        </li>
+         <li>
+            <span>¿Es el personal?</span>
+            <span>{% if profile.is_staff %}Sí{% else %}No{% endif %}{% if perms.tracker.add_users %}</span>
+            <a href="" class="is_staff change">Cambiar</a>{% endif %}
+        </li>
+        <li>
+            <span>¿Es activo?</span>
+            <span>{% if profile.is_active %}Sí{% else %}No{% endif %}{% if perms.tracker.add_users %}</span>
+            <a href="" class="is_active change">Cambiar</a>{% endif %}
+        </li>
     </ul>
 
     <span id="dialog">
-        <form action ="" method="post" class="name no-display">{% csrf_token %}
+        <form action ="" method="post" class="name no-display">
+            {% csrf_token %}
             <ul>
                 {{ name_form }}
                 <li><input type="submit" name="name_form" value="Enviar"></li>
             </ul>
         </form>
 
-        <form action ="" method="post" class="password no-display">{% csrf_token %}
+        <form action ="" method="post" class="email no-display">
+            {% csrf_token %}
+            <ul>
+                {{ email_form }}
+                <li>
+                    <input type="submit" name="email_form" value="Enviar">
+                </li>
+            </ul>
+        </form>
+
+
+        <form action ="" method="post" class="password no-display">
+            {% csrf_token %}
             <ul>
                 {{ password_form }}
-                <li><input type="submit" name="password_form" value="Enviar"></li>
+                <li>
+                    <input type="submit" name="password_form" value="Enviar">
+                </li>
             </ul>
         </form>
 
@@ -64,10 +131,13 @@
             </ul>
         </form>
 
-        <form action ="" method="post" class="add_edit_forms no-display">{% csrf_token %}
+        <form action ="" method="post" class="add_edit_forms no-display">
+            {% csrf_token %}
             <ul>
                 {{ add_edit_forms_form }}
-                <li><input type="submit" name="add_edit_forms_form" value="Enviar"></li>
+                <li>
+                    <input type="submit" name="add_edit_forms_form" value="Enviar">
+                </li>
             </ul>
         </form>
 

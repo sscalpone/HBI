@@ -122,6 +122,7 @@ def new(request, child_id):
         'signature_form': signature_form.as_ul,
         'SocialExams': exam_list,
         'page': 'social_exam',
+        'exam': True,
     }
     return render(request, 'tracker/add_social_exam.html', context)
 
@@ -142,6 +143,7 @@ def view(request, child_id, exam_id):
         'residence_id': child.residence_id,
         'signature': signature,
         'page': 'social_exam',
+        'exam': True,
     }
     return render(request, 'tracker/social_exam.html', context)
 
@@ -250,6 +252,7 @@ def edit(request, child_id, exam_id):
         'signature_form': signature_form.as_ul,
         'SocialExams': exam_list,
         'page': 'social_exam',
+        'exam': True,
     }
     return render(request, 'tracker/edit_social_exam.html', context)
 

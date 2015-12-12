@@ -21,7 +21,7 @@ from tracker.models import EditNameForm, EditPasswordForm
 from tracker.models import EditIsStaffForm, EditIsActiveForm
 from tracker.models import EditAddUsersForm, EditDeleteInfoForm
 from tracker.models import EditAddEditFormsForm, EditShowOnlyForm
-from tracker.models import EditRestrictToHomeForm
+from tracker.models import EditRestrictToHomeForm, EditEmailForm
 
 
 """add_users_check() checks if a user can add_users and returns a 
@@ -29,10 +29,8 @@ boolean.
 """
 def add_users_check(user):
     if (user.has_perm('tracker.add_users')):
-        print "Can add Users"
         return True
     else:
-        print "Can't add Users"
         return False
 
 """add_edit_forms_check() checks if a user can add and edit forms for 
@@ -55,10 +53,8 @@ def restrict_to_home_check(user):
 
 def current_user_profile_check(user_id, profile_id):
     if (user_id == int(profile_id)):
-        print "Is Current User"
         return True
     else: 
-        "Is not current User"
         return False
 
 """index() gets a list of users and renders the profiles.html template 
@@ -290,9 +286,37 @@ def view(request, profile_id):
                     request=request)
                 if (form.is_valid()):
                     saved_form = form.cleaned_data
+                    if (not request.user.check_password(
+                        saved_form['password'])):
+                        messages.add_message(request, messages.INFO, 
+                            'Su contraseña es incorrecta.', extra_tags='name')
+                        return HttpResponseRedirect(reverse(
+                            'tracker:profile', 
+                             kwargs={'profile_id': profile_id}))
                     profile = get_object_or_404(User, pk=profile_id)
                     profile.first_name = saved_form['first_name']
                     profile.last_name = saved_form['last_name']
+                    profile.save()
+                # Render the profile.html template
+                return HttpResponseRedirect(reverse('tracker:profile', 
+                    kwargs={'profile_id': profile_id}))
+
+            # If the user is editing the email, process the form 
+            # and edit the user's email
+            elif ('email_form' in request.POST):
+                form = EditEmailForm(request.POST, request.FILES, 
+                    request=request)
+                if (form.is_valid()):
+                    saved_form = form.cleaned_data
+                    if (not request.user.check_password(
+                        saved_form['password'])):
+                        messages.add_message(request, messages.INFO, 
+                            'Su contraseña es incorrecta.', extra_tags='name')
+                        return HttpResponseRedirect(reverse(
+                            'tracker:profile', 
+                            kwargs={'profile_id': profile_id}))
+                    profile = get_object_or_404(User, pk=profile_id)
+                    profile.email = saved_form['email']
                     profile.save()
                 # Render the profile.html template
                 return HttpResponseRedirect(reverse('tracker:profile', 
@@ -416,6 +440,10 @@ def view(request, profile_id):
                     'last_name': profile.last_name,
                 })
             
+            email_form = EditEmailForm(initial={
+                    'email': profile.email,
+                })
+            
             password_form = EditPasswordForm()
             
             is_active_form = EditIsActiveForm(initial={
@@ -470,6 +498,7 @@ def view(request, profile_id):
             'add_edit_forms_form': add_edit_forms_form.as_ul,
             'show_only_form': show_only_form.as_ul,
             'restrict_to_home_form': restrict_to_home_form.as_ul,
+            'email_form': email_form.as_ul,
         }
         return render(request, 'tracker/profile.html', context)
 

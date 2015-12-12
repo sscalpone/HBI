@@ -5,7 +5,7 @@
         {% load staticfiles %}<link rel="stylesheet" href="{% static "tracker/jquery-ui.min.css" %}">
         {% load staticfiles %}<link rel="stylesheet" href="{% static "tracker/css-reset.css" %}">
         {% load staticfiles %}<link rel="stylesheet" href="{% static "tracker/tracker.css" %}">
-        <!-- {% load staticfiles %}<link rel="stylesheet" href="{% static "tracker/responsive.css" %}"> -->
+        {% load staticfiles %}<link rel="stylesheet" href="{% static "tracker/responsive.css" %}">
         <meta name="viewport" content="width=device-width">
         <meta name="description" content="Health Bridges International Record Keeping">
         <meta charset="utf-8">
@@ -21,19 +21,20 @@
         <div id="border"></div>
 
         <div class="two-column">
-            <div id="sidebar">
+            <nav id="sidebar">
                 {% block sidebar %}
                  <ul>
                     <li>Ohai! I'm a menu item.</li>
                 </ul>
                 {% endblock %}
-            </div>
-            <div id="content">
+            </nav>
+            <section id="content">
                 {% block content %}{% endblock %}
-            </div>
-            <div id="border"></div>
-            {% include 'footer.html' %}
+            </section>
         </div>
+        <div id="border"></div>
+        {% include 'footer.html' %}
+
         {% load staticfiles %}<script type="text/javascript" src="{% static "tracker/jquery-1.11.3.min.js" %}"></script>
         {% load staticfiles %}<script type="text/javascript" src="{% static "tracker/jquery-ui.min.js" %}"></script>
         <script type="text/javascript">
@@ -68,6 +69,9 @@
                 if ($(this).hasClass('name')) {
                     $('#dialog .name').removeClass('no-display');
                 }
+                else if ($(this).hasClass('email')) {
+                    $('#dialog .email').removeClass('no-display');
+                }
                 else if ($(this).hasClass('password')) {
                     $('#dialog .password').removeClass('no-display');
                 }
@@ -98,6 +102,12 @@
                     
                 });
             });
+            if ($.contains('#dialog .name', '.errorlist')) {
+                console.log('Yup!');
+            }
+            else {
+                console.log("Nope.");
+            }
 
         </script>
     </body>

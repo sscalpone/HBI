@@ -125,6 +125,7 @@ def new(request, child_id):
         'signature_form': signature_form.as_ul,
         'DentalExams': dental_exam_list,
         'page': 'dental_exam',
+        'exam': True,
     }
     return render(request, 'tracker/add_dental_exam.html', context)
 
@@ -146,6 +147,7 @@ def view(request, child_id, exam_id):
         'residence_id': child.residence_id,
         'signature': signature,
         'page': 'dental_exam',
+        'exam': True,
     }
     return render(request, 'tracker/dental_exam.html', context)
 
@@ -255,6 +257,7 @@ def edit(request, child_id, exam_id):
         'signature_form': signature_form.as_ul,
         'DentalExams': exam_list,
         'page': 'dental_exam',
+        'exam': True,
     }
     return render(request, 'tracker/edit_dental_exam.html', context)
 

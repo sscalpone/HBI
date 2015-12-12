@@ -4,7 +4,7 @@
         <title>{% block title %}Unión Bíblica Evaluación de Girasoles{% endblock %}</title>
         {% load staticfiles %}<link rel="stylesheet" href="{% static "tracker/css-reset.css" %}">
         {% load staticfiles %}<link rel="stylesheet" href="{% static "tracker/tracker.css" %}">
-        <!-- {% load staticfiles %}<link rel="stylesheet" href="{% static "tracker/responsive.css" %}"> -->
+        {% load staticfiles %}<link rel="stylesheet" href="{% static "tracker/responsive.css" %}">
         <meta name="viewport" content="width=device-width">
         <meta name="description" content="Health Bridges International Record Keeping">
         <meta charset="utf-8">
@@ -19,20 +19,20 @@
         <div id="border"></div>
 
         <div class="three-column">
-            <div id="sidebar">
+            <nav id="sidebar">
                 {% block sidebar %}
                  <ul>
                     <li>Ohai! I'm a menu item.</li>
                 </ul>
                 {% endblock %}
-            </div>
-            <div id="details">
+            </nav>
+            <section id="details">
                 {% block details %}
                 {% endblock %}
-            </div>
-            <div id="content">
+            </section>
+            <section id="content">
                 {% block content %}{% endblock %}
-            </div>
+            </section>
             <div id="border"></div>
             {% include 'footer.html' %}
         </div>

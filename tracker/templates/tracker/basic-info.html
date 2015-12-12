@@ -6,7 +6,7 @@
         <div class="profile-picture">
         {% load staticfiles %}<img src="{% static "tracker/person-icon.svg" %}"></div>
         {% endif %}
-        <ul>
+        <ul class="basic-info">
             <li><span>Nombre:</span> {% if child.first_name %}{{ child.first_name }}{% endif %} {% if child.last_name %}{{ child.last_name }}{% endif %}</li>
             <li><span>Fecha de Naciemiento:</span> {% if child.birthdate %}{{ child.birthdate }}</li>
                 {% if child.birthdate %}

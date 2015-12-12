@@ -42,7 +42,7 @@ MEDIA QUERIES
 
   .two-column #sidebar {
     display: block;
-    min-width: 100px;
+    min-width: 150px;
     width: 20%;
     max-width: 250px;
     padding: 0;
@@ -56,6 +56,7 @@ MEDIA QUERIES
     display: block;
     text-align: left;
     border-top: 1px solid #000;
+    /*padding: 0;*/
     padding: 0;
   }
 
@@ -63,7 +64,7 @@ MEDIA QUERIES
     display: block;
     width: 98%;
     height: 100%;
-    padding: 10px 0 10px 5px ;
+    padding: 5px 0 5px 5px ;
   }
 
   .two-column #sidebar #evals {
@@ -76,7 +77,9 @@ MEDIA QUERIES
 
   .two-column #content input[type="text"],
   .two-column #content textarea,
-  .two-column #content input[type="number"] {
+  .two-column #content input[type="number"],
+  .two-column #content input[type="password"],
+  .two-column #content input[type="email"] {
     width: 60%;
   }
 
@@ -115,7 +118,7 @@ MEDIA QUERIES
 
   .three-column #sidebar, .three-column #details {
     display: block;
-    min-width: 100px;
+    min-width: 115px;
     width: 10%;
     max-width: 250px;
     padding: 0;
