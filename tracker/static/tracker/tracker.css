@@ -215,6 +215,10 @@ CHILDREN LIST STYLES
   margin: 0 auto;
 }
 
+.child-list li {
+  text-align: justify;
+}
+
 .children-list li {
   position: relative;
   display: inline-block;

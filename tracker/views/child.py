@@ -12,6 +12,9 @@ from tracker.models import Child, ChildForm
 from tracker.models import Residence
 
 
+def num_fields(request):
+    return len(request._meta.fields)
+
 """The new() function creates and processes a new Child form. It then 
 creates a new Child object from the Child model, populates it with the 
 form info, and saves it to the database. It is protected with the 

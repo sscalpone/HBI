@@ -15,6 +15,7 @@ from tracker.views import social_exam
 from tracker.views import exam_views
 from tracker.views import profile
 from tracker.views import help_email
+from tracker.views import import_export_db
 
 urlpatterns = patterns('',
     # ex: /tracker/
@@ -27,6 +28,8 @@ urlpatterns = patterns('',
     url(r'^user/(?P<profile_id>\d+)', profile.view, name='profile'),
 
     url(r'^help/$', help_email.send_email, name='help'),
+
+    url(r'^import_export/$', import_export_db.import_export_db, name='import_export'),
 
     url(r'^residences/$', residence.index, name='residences'),
     url(r'^residences/new/$', residence.new, name='add_residence'),
