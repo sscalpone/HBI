@@ -1,8 +1,9 @@
 # coding=utf-8
 
 import datetime
-# from zipfile import ZipFile
-# import csv
+import zipfile
+import tarfile
+import zlib
 import gzip
 import shutil
 
@@ -13,7 +14,7 @@ from django.contrib.contenttypes.models import ContentType
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.core.urlresolvers import reverse
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import response, HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
 from django.core.mail import send_mail
 
@@ -37,41 +38,99 @@ from tracker.models import SocialExam
 def import_export_db(request):
 	if (request.POST):
 
-		# If request was to export the database
+		# If request was to export the database, 
+		# make csv files of each table and gzip them
 		if ('submit_export' in request.POST):
 			
+			# Making the csv files using django-import-export app
+			# saving them to the csvs directory
+			tables = []
+
 			child = ChildResource().export()
-			with open('csvs/child.csv', 'w') as child_csv:
+			with open('../child.csv', 'w') as child_csv:
 				child_csv.write(child.csv)
-
-			with open('csvs/child.csv', 'rb') as f_in, gzip.open('child.csv.gz', 'wb') as f_out:
-				shutil.copyfileobj(f_in, f_out) 
-
-			# gzipped = gzip.GzipFile(mode='wb', fileobj=child_csv)
-
-			# with ZipFile('hbi_db.zip', 'w') as myzip:
-			# 	myzip.write(child_csv)
+			tables.append('csvs/child.csv')
 			
 			dental_exam = DentalExamResource().export()
-			documents = DocumentsResource().export()
-			growth = GrowthResource().export()
-			medical_exam_part1 = MedicalExamPart1Resource().export()
-			medical_exam_part2 = MedicalExamPart2Resource().export()
-			operation_history = OperationHistoryResource().export()
-			photograph = PhotographResource().export()
-			user_uuid = UserUUIDResource().export()
-			psychological_exam = PsychologicalExamResource().export()
-			residence = ResidenceResource().export()
-			signature = SignatureResource().export()
-			social_exam = SocialExamResource().export()
+			with open('../dental_exam.csv', 'w') as dental_exam_csv:
+				dental_exam_csv.write(dental_exam.csv)
+			tables.append('csvs/dental_exam.csv')
 
-			messages.add_message(request, messages.SUCCESS, 
-				'The database was printed!')
-			return HttpResponseRedirect(reverse('tracker:import_export'))
+			documents = DocumentsResource().export()
+			with open('../documents.csv', 'w') as documents_csv:
+				documents_csv.write(documents.csv)
+			tables.append('csvs/documents.csv')
+
+			growth = GrowthResource().export()
+			with open('../growth.csv', 'w') as growth_csv:
+				growth_csv.write(growth.csv)
+			tables.append('csvs/growth.csv')
+
+			medical_exam_part1 = MedicalExamPart1Resource().export()
+			with open('../medical_exam_part1.csv', 'w') as medical_exam_part1_csv:
+				medical_exam_part1_csv.write(medical_exam_part1.csv)
+			tables.append('csvs/medical_exam_part1.csv')
+
+			medical_exam_part2 = MedicalExamPart2Resource().export()
+			with open('csvs/medical_exam_part2.csv', 'w') as medical_exam_part2_csv:
+				medical_exam_part2_csv.write(medical_exam_part2.csv)
+			tables.append('csvs/medical_exam_part2.csv')
+
+			operation_history = OperationHistoryResource().export()
+			with open('csvs/operation_history.csv', 'w') as operation_history_csv:
+				operation_history_csv.write(operation_history.csv)
+			tables.append('csvs/operation_history.csv')
+
+			photograph = PhotographResource().export()
+			with open('csvs/photograph.csv', 'w') as photograph_csv:
+				photograph_csv.write(photograph.csv)
+			tables.append('csvs/photograph.csv')
+
+			user_uuid = UserUUIDResource().export()
+			with open('csvs/user_uuid.csv', 'w') as user_uuid_csv:
+				user_uuid_csv.write(user_uuid.csv)
+			tables.append('csvs/user_uuid.csv')
+
+			psychological_exam = PsychologicalExamResource().export()
+			with open('csvs/psychological_exam.csv', 'w') as psychological_exam_csv:
+				psychological_exam_csv.write(psychological_exam.csv)
+			tables.append('csvs/psychological_exam.csv')
+
+			residence = ResidenceResource().export()
+			with open('csvs/residence.csv', 'w') as residence_csv:
+				residence_csv.write(residence.csv)
+			tables.append('csvs/residence.csv')
+
+			signature = SignatureResource().export()
+			with open('csvs/signature.csv', 'w') as signature_csv:
+				signature_csv.write(signature.csv)
+			tables.append('csvs/signature.csv')
+
+			social_exam = SocialExamResource().export()
+			with open('csvs/social_exam.csv', 'w') as social_exam_csv:
+				social_exam_csv.write(social_exam.csv)
+			tables.append('csvs/social_exam.csv')
+
+			# Archive and gzip the files
+			with tarfile.open('media/hbi_db.tar.gz', 'w:gz') as tar:
+				for item in tables:
+					tar.add(item)
+
+			# return to the import_export.html template with a success message
+
+			response = HttpResponse(tar, content_type='application/gzip')
+			response['Content-Disposition'] = 'attachment; filename="hbi-db-export.tar.gz"'
+			return response
+
+			# messages.add_message(request, messages.SUCCESS, 
+			# 	'The database was printed!')
+			# return HttpResponseRedirect(reverse('tracker:import_export'))
 		
 		# If request is to import the database - algorithm still being built
 		elif ('submit_import' in request.POST):
-			pass
+			messages.add_message(request, messages.SUCCESS, 
+				'The database was imported')
+			return HttpResponseRedirect(reverse('tracker:import_export'))
 
 	# Render the help.html template
 	context = {

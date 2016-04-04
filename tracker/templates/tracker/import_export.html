@@ -26,9 +26,9 @@
 	<form action="{% url 'tracker:import_export' %}" enctype="multipart/form-data" method="post">
         {% csrf_token %}
         <ul>
-            <li>Exportar la base de datos</li>
+            <li><input type="submit" name="submit_export" value="Exportar la Base de Datos"></li>
+            <li><input type="submit" name="submit_import" value="Importar la Base de Datos"></li>
         </ul>
-        <input type="submit" name="submit_export" value="Enviar">
     </form>
 
 {% endblock %}

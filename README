@@ -19,6 +19,9 @@ sudo pip install Pillow
 Install Python Graphing Tools:
 sudo pip install matplotlib
 
+Install Django Import Export:
+sudo pip install import-export
+
 First you'll want a fresh database:
 rm -f database/mysite.db
 python manage.py syncdb
