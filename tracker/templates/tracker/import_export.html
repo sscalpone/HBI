@@ -21,6 +21,11 @@
     </ul>
    {% endif %}
 
+   <!-- {% load staticfiles %} -->
+    {% if zip_file %}
+    <a href="../../media/hbi-db-export.zip">Click here!</a>
+    {% endif %}
+
 	{% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
 
 	<form action="{% url 'tracker:import_export' %}" enctype="multipart/form-data" method="post">

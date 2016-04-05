@@ -2,14 +2,13 @@
 
 import datetime
 import os
-import StringIO
 import zipfile
-import tarfile
-import zlib
-import gzip
-import shutil
-import mimetypes
+import StringIO
+import os
+import os.path
 import csv
+
+from django.core.servers.basehttp import FileWrapper
 
 from django.contrib.auth.models import User
 from django.contrib.auth.models import Permission
@@ -18,7 +17,7 @@ from django.contrib.contenttypes.models import ContentType
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.core.urlresolvers import reverse
-from django.http import response, HttpResponse, HttpResponseRedirect
+from django.http import response, StreamingHttpResponse, HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
 from django.core.mail import send_mail
 
@@ -45,6 +44,21 @@ def check_file_type(file):
 
 def handle_uploaded_file(file):
 	pass
+
+
+def compare_csv(model_csv, model_instance):
+	with open(model_csv, 'rb') as f:
+		reader = csv.reader(f)
+		csv_list = list(reader)
+		# print csv_list[0][1]
+		for item in model_instance:
+			for sublist in csv_list:
+				if item.uuid in sublist[1]:
+					# model_field_names = item._meta.get_all_field_names()
+					# print len(model_field_names)
+					# for i in csv_list[0]:
+					# 	if i == 
+		
 
 def import_export_db(request):
 	if (request.POST):
@@ -122,30 +136,36 @@ def import_export_db(request):
 				social_exam_csv.write(social_exam.csv)
 			tables.append('csvs/social_exam.csv')
 
-			#Archive and gzip the files
-			# with tarfile.open('media/hbi_db.tar.gz', 'w:gz') as tar:
-			# 	for item in tables:
-			# 		tar.add(item)
+			if (os.path.isfile('media/hbi-db-export.zip')):
+				os.remove('media/hbi-db-export.zip')
 
-			with zipfile.ZipFile('media/hbi_db.zip', 'a') as zippy:
-				for item in tables:
-					zippy.write(item)
+			zippy = zipfile.ZipFile('media/hbi-db-export.zip', 'a')
+			for item in tables:
+				zippy.write(item)
 
-			# shutil.make_archive("hbi_db.csv", "zip", 'media', 'csvs')
-			
-			# return to the import_export.html template with a success message
-			response = HttpResponse(zippy, content_type='application/zip')
-			response['Content-Disposition'] = 'attachment; filename="hbi-db-export.zip'
-			return response
-		
+			# response = HttpResponse(zippy, content_type="application/zip")
+			# response['Content-Disposition'] = 'attachment; filename="hbi-db-export.zip"'
 
-		# If request is to import the database - algorithm still being built
+			# zippy.close()
+			# return response
+			form = ImportDBForm()
+
+			context = {
+				'zip_file': True,
+				'page': 'import_export',
+				'form': form.as_ul,
+			}
+			return render(request, 'tracker/import_export.html', context)
+
+		# If request is to import the database - algorithm still being built 
 		elif ('submit_import' in request.POST):
 			form = ImportDBForm(request.POST, request.FILES)
 			if form.is_valid():
 				# handle_uploaded_file(request.FILES['upload'])
+				with zipfile.ZipFile(request.FILES['upload']) as zf:
+					zf.extractall('database/db_merging')
 
-
+				compare_csv('database/db_merging/csvs/child.csv', Child.objects.all())
 
 				messages.add_message(request, messages.SUCCESS, 
 				'Yes!')
