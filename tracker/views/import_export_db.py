@@ -1,11 +1,15 @@
 # coding=utf-8
 
 import datetime
+import os
+import StringIO
 import zipfile
 import tarfile
 import zlib
 import gzip
 import shutil
+import mimetypes
+import csv
 
 from django.contrib.auth.models import User
 from django.contrib.auth.models import Permission
@@ -33,8 +37,26 @@ from tracker.models import PsychologicalExam
 from tracker.models import Residence
 from tracker.models import Signature
 from tracker.models import SocialExam
+from tracker.models import ImportDBForm
 
-@login_required
+def check_file_type(file):
+	file_type = mimetypes.guess_type(file.name)
+	return file_type[0]
+
+def handle_uploaded_file(file):
+	with tarfile.open(file) as tar:
+		reader = csv.reader(tar)
+			
+	# except Exception as e:
+	# 	print e
+
+
+	# if (check_file_type(file) == ''
+	# with open('database/db_merging/hb_db.tar.gz', 'wb+') as destination:
+	# 	for chunk in file.chunks():
+	# 		destination.write(chunk)
+	# print check_file_type(file)
+
 def import_export_db(request):
 	if (request.POST):
 
@@ -50,7 +72,7 @@ def import_export_db(request):
 			with open('../child.csv', 'w') as child_csv:
 				child_csv.write(child.csv)
 			tables.append('csvs/child.csv')
-			
+
 			dental_exam = DentalExamResource().export()
 			with open('../dental_exam.csv', 'w') as dental_exam_csv:
 				dental_exam_csv.write(dental_exam.csv)
@@ -111,32 +133,44 @@ def import_export_db(request):
 				social_exam_csv.write(social_exam.csv)
 			tables.append('csvs/social_exam.csv')
 
-			# Archive and gzip the files
+			#Archive and gzip the files
 			with tarfile.open('media/hbi_db.tar.gz', 'w:gz') as tar:
 				for item in tables:
 					tar.add(item)
-
+			
 			# return to the import_export.html template with a success message
-
 			response = HttpResponse(tar, content_type='application/gzip')
 			response['Content-Disposition'] = 'attachment; filename="hbi-db-export.tar.gz"'
 			return response
-
-			# messages.add_message(request, messages.SUCCESS, 
-			# 	'The database was printed!')
-			# return HttpResponseRedirect(reverse('tracker:import_export'))
 		
+
 		# If request is to import the database - algorithm still being built
 		elif ('submit_import' in request.POST):
-			messages.add_message(request, messages.SUCCESS, 
-				'The database was imported')
-			return HttpResponseRedirect(reverse('tracker:import_export'))
+			form = ImportDBForm(request.POST, request.FILES)
+			if form.is_valid():
+				# handle_uploaded_file(request.FILES['upload'])
 
-	# Render the help.html template
-	context = {
-		'page': 'import_export',
-	}
-	return render(request, 'tracker/import_export.html', context)
+				with gzip.open(request.FILES['upload'], 'r') as gzipped:
+					fcontent = gzipped.read()
+
+				messages.add_message(request, messages.SUCCESS, 
+				'Yes!')
+				return HttpResponseRedirect(reverse('tracker:import_export'))
+			else:
+				messages.add_message(request, messages.SUCCESS, 
+				'No!')
+				return HttpResponseRedirect(reverse('tracker:import_export'))
+	
+	else:
+		form = ImportDBForm()			
+
+		# Render the help.html template
+		context = {
+			'page': 'import_export',
+			'form': form.as_ul,
+		}
+		return render(request, 'tracker/import_export.html', context)
+
 
 
 class ChildResource(resources.ModelResource):

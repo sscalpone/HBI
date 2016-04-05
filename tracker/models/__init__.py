@@ -6,6 +6,7 @@ from Child import Child, ChildForm
 from DentalExam import DentalExam, DentalExamForm
 from Documents import Documents, DocumentsForm
 from DiseaseHistory import DiseaseHistory, DiseaseHistoryForm
+from ImportDB import ImportDBForm
 from MedicalExamPart1 import MedicalExamPart1, MedicalExamPart1Form, Growth
 from MedicalExamPart2 import MedicalExamPart2, MedicalExamPart2Form
 from OperationHistory import OperationHistoryForm, OperationHistory

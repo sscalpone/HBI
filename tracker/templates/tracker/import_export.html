@@ -25,10 +25,15 @@
 
 	<form action="{% url 'tracker:import_export' %}" enctype="multipart/form-data" method="post">
         {% csrf_token %}
+            <input type="submit" name="submit_export" value="Exportar la Base de Datos">
+    </form>
+
+    <form action="{% url 'tracker:import_export' %}" enctype="multipart/form-data" method="post">
+        {% csrf_token %}
         <ul>
-            <li><input type="submit" name="submit_export" value="Exportar la Base de Datos"></li>
-            <li><input type="submit" name="submit_import" value="Importar la Base de Datos"></li>
+            {{ form }}
         </ul>
+            <input type="submit" name="submit_import" value="Importar la Base de Datos">
     </form>
 
 {% endblock %}
