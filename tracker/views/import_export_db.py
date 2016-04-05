@@ -44,18 +44,7 @@ def check_file_type(file):
 	return file_type[0]
 
 def handle_uploaded_file(file):
-	with tarfile.open(file) as tar:
-		reader = csv.reader(tar)
-			
-	# except Exception as e:
-	# 	print e
-
-
-	# if (check_file_type(file) == ''
-	# with open('database/db_merging/hb_db.tar.gz', 'wb+') as destination:
-	# 	for chunk in file.chunks():
-	# 		destination.write(chunk)
-	# print check_file_type(file)
+	pass
 
 def import_export_db(request):
 	if (request.POST):
@@ -69,27 +58,27 @@ def import_export_db(request):
 			tables = []
 
 			child = ChildResource().export()
-			with open('../child.csv', 'w') as child_csv:
+			with open('csvs/child.csv', 'w') as child_csv:
 				child_csv.write(child.csv)
 			tables.append('csvs/child.csv')
 
 			dental_exam = DentalExamResource().export()
-			with open('../dental_exam.csv', 'w') as dental_exam_csv:
+			with open('csvs/dental_exam.csv', 'w') as dental_exam_csv:
 				dental_exam_csv.write(dental_exam.csv)
 			tables.append('csvs/dental_exam.csv')
 
 			documents = DocumentsResource().export()
-			with open('../documents.csv', 'w') as documents_csv:
+			with open('csvs/documents.csv', 'w') as documents_csv:
 				documents_csv.write(documents.csv)
 			tables.append('csvs/documents.csv')
 
 			growth = GrowthResource().export()
-			with open('../growth.csv', 'w') as growth_csv:
+			with open('csvs/growth.csv', 'w') as growth_csv:
 				growth_csv.write(growth.csv)
 			tables.append('csvs/growth.csv')
 
 			medical_exam_part1 = MedicalExamPart1Resource().export()
-			with open('../medical_exam_part1.csv', 'w') as medical_exam_part1_csv:
+			with open('csvs/medical_exam_part1.csv', 'w') as medical_exam_part1_csv:
 				medical_exam_part1_csv.write(medical_exam_part1.csv)
 			tables.append('csvs/medical_exam_part1.csv')
 
@@ -134,13 +123,19 @@ def import_export_db(request):
 			tables.append('csvs/social_exam.csv')
 
 			#Archive and gzip the files
-			with tarfile.open('media/hbi_db.tar.gz', 'w:gz') as tar:
+			# with tarfile.open('media/hbi_db.tar.gz', 'w:gz') as tar:
+			# 	for item in tables:
+			# 		tar.add(item)
+
+			with zipfile.ZipFile('media/hbi_db.zip', 'a') as zippy:
 				for item in tables:
-					tar.add(item)
+					zippy.write(item)
+
+			# shutil.make_archive("hbi_db.csv", "zip", 'media', 'csvs')
 			
 			# return to the import_export.html template with a success message
-			response = HttpResponse(tar, content_type='application/gzip')
-			response['Content-Disposition'] = 'attachment; filename="hbi-db-export.tar.gz"'
+			response = HttpResponse(zippy, content_type='application/zip')
+			response['Content-Disposition'] = 'attachment; filename="hbi-db-export.zip'
 			return response
 		
 
@@ -150,8 +145,7 @@ def import_export_db(request):
 			if form.is_valid():
 				# handle_uploaded_file(request.FILES['upload'])
 
-				with gzip.open(request.FILES['upload'], 'r') as gzipped:
-					fcontent = gzipped.read()
+
 
 				messages.add_message(request, messages.SUCCESS, 
 				'Yes!')
