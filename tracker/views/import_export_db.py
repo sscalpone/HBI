@@ -1,14 +1,11 @@
 # coding=utf-8
 
 import datetime
-import os
+import pytz
 import zipfile
-import StringIO
 import os
 import os.path
 import csv
-
-from django.core.servers.basehttp import FileWrapper
 
 from django.contrib.auth.models import User
 from django.contrib.auth.models import Permission
@@ -45,19 +42,143 @@ def check_file_type(file):
 def handle_uploaded_file(file):
 	pass
 
+def compare_csv(file, model_instance, dependant_file_1=None, 
+	dependant_file_2=None, dependant_file_3=None):
 
-def compare_csv(model_csv, model_instance):
-	with open(model_csv, 'rb') as f:
-		reader = csv.reader(f)
-		csv_list = list(reader)
-		# print csv_list[0][1]
-		for item in model_instance:
-			for sublist in csv_list:
-				if item.uuid in sublist[1]:
-					# model_field_names = item._meta.get_all_field_names()
-					# print len(model_field_names)
-					# for i in csv_list[0]:
-					# 	if i == 
+	csvfile = open(file, 'rb')
+	not_reader = csv.reader(csvfile)
+	headers = not_reader.next()
+	csvfile.close()
+
+	if (model_instance == 'residence'):
+		field_names = [f.name for f in Residence._meta.fields]
+	# elif (model_instance == 'child'):
+	# 	field_names = [f.name for f in Child._meta.fields]
+	for name in field_names:
+		if name not in headers:
+			return False
+
+	csvfile = open(file, 'rb')
+	reader = csv.DictReader(csvfile)
+
+	# Iterate through the csv file, matching the UUIDs in the file to 
+	# the children in the master database. If they exist, compare the
+	# entire csv row to the Child and update appropriately. If they 
+	# don't exist, create new children in the master.
+	for row in reader:
+		uuid_csv = row['uuid']
+		try:
+			if (model_instance == 'residence'):
+				obj = Residence.objects.get(uuid=uuid_csv)
+			# elif if (model_instance == 'child'):
+			# 	obj = Child.objects.get(uuid=uuid_csv)
+		
+		except:
+			# Create new instance of model who has never been in the 
+			# database before
+			if (not row['uuid']):
+				pass
+			
+			# Create new instance of model who has been in the 
+			# database, but not the master
+			else:
+				pass
+
+		if obj:
+			# if (pytz.utc.localize(datetime.datetime.strptime(
+			# 	row['last_saved'], "%Y-%m-%d %H:%M:%S")) > getattr(obj, 'last_saved')):
+			# 	csv_new = True
+			# else:
+			# 	csv_new = False
+			
+			# if (csv_new):
+			for name in field_names:
+				print type(getattr(obj,name))
+				if (type(getattr(obj, name)) is int):
+
+					# If the integer is an id of any sort, leave it.
+					# It's either a reference to another object (in 
+					# which case we already changed it in the master) 
+					# or it's the pk, which we don't want to change in 
+					# the master
+					if "id" in name:
+						pass
+					# If it's not an id, convert the csv string to an 
+					# integer and save it to the object
+					else:
+						setattr(obj, name, int(row[name]))
+
+				# If it's a datetime, convert the string to a utc-aware 
+				# datetime object and save it to the object (should 
+				# only be applicable to last_saved)
+				elif (type(getattr(obj, name)) is datetime.datetime):
+					pytz.utc.localize(datetime.datetime.strptime(row[name], '%Y-%m-%d %H:%M:%S'))
+					# doesn't work, not sure why
+				
+				# If it's a boolean object, check if the csv has it 
+				# saved as true or false (1 or 0) and then set the 
+				# object field with as a boolean
+				elif (type(getattr(obj, name)) is bool):
+					if (row[name] == '1'):
+						setattr(obj, name, True)
+					else:
+						setattr(obj, name, False)
+
+				# Since ImageFieldFile is a django class and there's no 
+				# easy way to evaluate the time of django classes 
+				# dynamically (that I could find), convert the type to 
+				# a string and compare strings.
+				# If it's an ImageFieldFile, probably save as a string probably don't do any conversions since it'll save as a string to the database anyway but we'll see.
+				elif (type(getattr(obj, name)).__name__ == "ImageFieldFile"):
+					pass
+					# NEEDS WRITING
+				# if it's a unicode field, just set the object, no 
+				# conversion required.
+
+				elif (type(getattr(obj, name)) is unicode):
+					print "I am a string"
+					setattr(obj, name, row[name])
+
+			# Save the object to the database
+			obj.save()
+				# if (model_instance == 'residence'):
+				# 	obj.residence_name = row['residence_name']
+				# 	obj.administrator = row['administrator']
+				# 	obj.administrator = row['location']
+				# 	obj.administrator = row['photo']
+
+				# elif (model_instance == 'child'):
+				# 	d_csvfile = open(d_file_1, 'rb')
+				# 	d_reader = csv.DictReader(d_csvfile)
+				# 	for r in d_reader:
+				# 		if (r['id'] == row['residence_id'])
+				# 			residence_uuid=r['uuid']
+				# 			break
+				# 	residence = Residence.objects.get(uuid=residence_uudi)
+				# 	obj.residence_id = residence.id
+				# 	d_csvfile.close()
+
+				# 	obj.first_name = row['first_name']
+				# 	obj.last_name = row['last_name']
+				# 	obj.nickname = row['nickname']
+				# 	obj.birthdate = datetime.datetime.strptime(
+				# 		row['birthdate'], '%Y-%M-%D')
+				# 	obj.gender = row['gender']
+				# 	obj.birthplace = row['birthplace']
+				# 	obj.intake_date = datetime.datetime.strptime(
+				# 		row['intake_date'], '%Y-%M-%D')
+				# 	obj.discharge_date = datetime.datetime.strptime(
+				# 		row['discharge_date'], '%Y-%M-%D')
+				# 	obj.photo = row['photo']
+				# 	obj.priority = int(row['priority'])
+				# 	if (row['is_active'] == '1'):
+				# 		obj.priority = True
+				# 	else:
+				# 		obj.priority = False
+
+				# obj.last_saved = (pytz.utc.localize(datetime.datetime.strptime(row['last_saved'], "%Y-%m-%d %H:%M:%S"))
+
+	csvfile.close()
 		
 
 def import_export_db(request):
@@ -165,14 +286,23 @@ def import_export_db(request):
 				with zipfile.ZipFile(request.FILES['upload']) as zf:
 					zf.extractall('database/db_merging')
 
-				compare_csv('database/db_merging/csvs/child.csv', Child.objects.all())
+				db_merging = compare_csv(
+					'database/db_merging/csvs/residence.csv', 'residence')
+				
+				# db_merging = compare_csv(
+				# 	'database/db_merging/csvs/child.csv', 'child', 'database/db_merging/csvs/residence.csv')				
 
-				messages.add_message(request, messages.SUCCESS, 
-				'Yes!')
-				return HttpResponseRedirect(reverse('tracker:import_export'))
+				if (db_merging == False):
+					messages.add_message(request, messages.SUCCESS, 
+						'Please make sure all columns are present in your CSVs!')
+					return HttpResponseRedirect(reverse('tracker:import_export'))
+				else:
+					
+					messages.add_message(request, messages.SUCCESS, 'Yes!')
+					return HttpResponseRedirect(
+						reverse('tracker:import_export'))
 			else:
-				messages.add_message(request, messages.SUCCESS, 
-				'No!')
+				messages.add_message(request, messages.SUCCESS, 'No!')
 				return HttpResponseRedirect(reverse('tracker:import_export'))
 	
 	else:

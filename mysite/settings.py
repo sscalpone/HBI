@@ -50,7 +50,7 @@ DATE_INPUT_FORMATS = (
     '%d %B %Y', '%d %B, %Y', # 20 Abril 2014, 20 Abril, 2014
 )
 
-DATE_FORMAT = 'j n, Y'
+DATE_FORMAT = 'j N Y'
 
 # If you set this to False, Django will not format dates, numbers and
 # calendars according to the current locale.

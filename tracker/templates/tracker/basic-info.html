@@ -9,11 +9,9 @@
         <ul class="basic-info">
             <li><span>Nombre:</span> {% if child.first_name %}{{ child.first_name }}{% endif %} {% if child.last_name %}{{ child.last_name }}{% endif %}</li>
             <li><span>Fecha de Naciemiento:</span> {% if child.birthdate %}{{ child.birthdate }}</li>
-                {% if child.birthdate %}
-                <li><span>Años:</span> {{ child.age }}</li>
-                {% endif %}  
+            <li><span>Años:</span> {{ child.age }}</li>
             {% endif %}
-            <li><span>Género:</span> {{ child.gender }}</li>
+            <li><span>Género:</span> {% if child.gender == 'f' %} Niña {% elif child.gender == 'm' %} Niño {% endif %}</li>
             <li><span>Casa Girasoles:</span>{{ child.residence.residence_name }}</li>
             <li><span>Fecha de Ingreso:</span> {% if child.intake_date %}{{ child.intake_date }}{% endif %}</li>
             <li><span>Lugar de Naciemiento:</span> {% if child.birthplace %}{{ child.birthplace }}{% endif %}</li>

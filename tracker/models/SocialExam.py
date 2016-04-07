@@ -167,6 +167,7 @@ class SocialExamForm(ModelForm):
                 sis = cleaned_data.get('sis')
                 sis_in_process = cleaned_data.get('sis_in_process')
                 dni_sis_no_comments = cleaned_data.get('dni_sis_no_comments')
+                priority = cleaned_data.get('priority')
                 if (not sis and not sis_in_process and 
                     dni_sis_no_comments == ''):
                         self.add_error('dni_sis_no_comments', msg)

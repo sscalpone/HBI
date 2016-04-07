@@ -124,7 +124,7 @@ def new(request, child_id):
         'signature_form': signature_form.as_ul,
         'PsychologicalExams': exam_list,
         'page': 'psychological_exam',
-        'exam': True,
+        # 'exam': True,
     }
     return render(request, 'tracker/add_psychological_exam.html', context)
 
@@ -146,7 +146,7 @@ def view(request, child_id, exam_id):
         'residence_id': child.residence_id,
         'signature': signature,
         'page': 'psychological_exam',
-        'exam': True,
+        # 'exam': True,
     }
     return render(request, 'tracker/psychological_exam.html', context)
 
@@ -257,7 +257,7 @@ def edit(request, child_id, exam_id):
         'signature_form': signature_form.as_ul,
         'PsychologicalExams': exam_list,
         'page': 'psychological_exam',
-        'exam': True,
+        # 'exam': True,
     }
     return render(request, 'tracker/edit_psychological_exam.html', context)
 

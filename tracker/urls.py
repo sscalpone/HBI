@@ -109,4 +109,3 @@ urlpatterns = patterns('',
     url(r'^social_exam/new/(?P<child_id>\d+)', social_exam.new, 
         name='new_social_exam'),
 )
-

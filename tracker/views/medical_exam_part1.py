@@ -74,8 +74,8 @@ def new(request, child_id):
                         height=saved_exam.height, 
                         weight=saved_exam.weight, 
                         age=child.age_in_years(
-                            from_date=child.birthdate, 
-                            to_date=saved_exam.date), 
+                            child.birthdate, 
+                            saved_exam.date), 
                         gender=child.gender
                         )
 
@@ -142,7 +142,7 @@ def new(request, child_id):
         'signature_form': signature_form.as_ul,
         'MedicalExamPart1s': exam_list,
         'page': 'medical_exam_part1',
-        'exam': True,
+        # 'exam': True,
     }
     return render(request, 'tracker/add_medical_exam_part1.html', context)
 
@@ -164,7 +164,7 @@ def view(request, child_id, exam_id):
         'residence_id': child.residence_id,
         'signature': signature,
         'page': 'medical_exam_part1',
-        'exam': True,
+        # 'exam': True,
     }
     return render(request, 'tracker/medical_exam_part1.html', context)
 
@@ -286,7 +286,7 @@ def edit(request, child_id, exam_id):
         'signature_form': signature_form.as_ul,
         'MedicalExamPart1s': exam_list,
         'page': 'medical_exam_part1',
-        'exam': True,
+        # 'exam': True,
     }
     return render(request, 'tracker/edit_medical_exam_part1.html', context)
 

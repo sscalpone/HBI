@@ -122,7 +122,7 @@ def new(request, child_id):
         'signature_form': signature_form.as_ul,
         'OperationHistories': exam_list,
         'page': 'operation_history',
-        'exam': True,
+        # 'exam': True,
     }
     return render(request, 'tracker/add_operation_history.html', context)
 
@@ -144,7 +144,7 @@ def view(request, child_id, exam_id):
         'residence_id': child.residence_id,
         'signature': signature,
         'page': 'operation_history',
-        'exam': True,
+        # 'exam': True,
     }
     return render(request, 'tracker/operation_history.html', context)
 
@@ -255,7 +255,7 @@ def edit(request, child_id, exam_id):
         'signature_form': signature_form.as_ul,
         'OperationHistories': exam_list,
         'page': 'operation_history',
-        'exam': True,
+        # 'exam': True,
     }
     return render(request, 'tracker/edit_operation_history.html', context)
 

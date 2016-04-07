@@ -122,7 +122,7 @@ def new(request, child_id):
         'signature_form': signature_form.as_ul,
         'SocialExams': exam_list,
         'page': 'social_exam',
-        'exam': True,
+        # 'exam': True,
     }
     return render(request, 'tracker/add_social_exam.html', context)
 
@@ -133,7 +133,9 @@ form.
 """
 @login_required
 def view(request, child_id, exam_id):
+    print exam_id
     p = get_object_or_404(SocialExam, pk=exam_id)
+    print p
     child = get_object_or_404(Child, pk=child_id)
     signature = get_object_or_404(Signature, pk=p.signature_id)
     context = {
@@ -143,7 +145,7 @@ def view(request, child_id, exam_id):
         'residence_id': child.residence_id,
         'signature': signature,
         'page': 'social_exam',
-        'exam': True,
+        # 'exam': True,
     }
     return render(request, 'tracker/social_exam.html', context)
 
@@ -252,7 +254,7 @@ def edit(request, child_id, exam_id):
         'signature_form': signature_form.as_ul,
         'SocialExams': exam_list,
         'page': 'social_exam',
-        'exam': True,
+        # 'exam': True,
     }
     return render(request, 'tracker/edit_social_exam.html', context)
 
