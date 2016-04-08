@@ -1,0 +1,15 @@
+            <footer>
+                <ul>
+                    <li {% if page == 'help' %} class="selected" {% endif %}>
+                    	<a href="{% url 'tracker:help' %}">Ayuda</a>
+                    </li>
+                    <li {% if page == 'user' %} class="selected" {% endif %}>
+                    	<a href="{% url 'tracker:profiles' %}">Usuarios</a>
+                    </li>
+                    {% if user.is_superuser %}
+                    <li {% if page == 'import_export' %} class="selected" {% endif %}>
+                        <a href="{% url 'tracker:import_export' %}">Exportar la base de datos</a>
+                    {% endif %}
+                    </li>
+                </ul>
+            <footer>

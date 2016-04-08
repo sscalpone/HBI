@@ -221,8 +221,8 @@ def edit(request, child_id, exam_id):
                     growth.date = saved_exam.date
                     height=saved_exam.height
                     weight = saved_exam.weight
-                    growth.age=child.age_in_years(from_date=child.birthdate, 
-                        to_date=saved_exam.date)
+                    growth.age=child.age_in_years(child.birthdate, 
+                        saved_exam.date)
                     growth.gender = child.gender
                     growth.save()
 

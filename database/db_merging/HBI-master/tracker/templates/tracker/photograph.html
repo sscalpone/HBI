@@ -1,0 +1,32 @@
+{% extends 'two-column.html' %}
+
+{% block title %}Fotografía{% endblock %}
+
+{% block h2 %}Fotografía {{exam.date}}{% endblock %}
+
+{% block sidebar %}
+    {% include 'tracker/sidebar.html' %}
+{% endblock %}
+{% block content %}
+
+    {% include 'tracker/basic-info.html' %}
+    <div>
+        <img id="photo" src="{{ exam.photo.url }}">  
+    </div>
+    <ul>
+        {% if perms.tracker.add_edit_forms %}
+        <li><a href="{% url 'tracker:edit_photo' child_id exam.id %}">Edita Detalles</a></li>
+        {% endif %}
+        {% if perms.tracker.delete_info %}
+        <li><a href="#" class="delete delete_photo">Borrar</a></li>
+        {% endif %}
+    </ul>
+    <span id="dialog">
+        <form action ="" method="post" class="no-display">{% csrf_token %}
+            <p>¿Estás seguro que quieres borrar esta foto?</p>
+            <input type="submit" name="discard" value="Sí">
+            <input type="submit" value="No" id="no">
+        </form>
+     </span>
+    
+{% endblock %}

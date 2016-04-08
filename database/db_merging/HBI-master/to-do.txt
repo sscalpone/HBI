@@ -1,0 +1,13 @@
+1. Orthodontic charts. An interactive click-sensitive picture of teeth. The clicks must be recorded & visible, and then saved to the database.  Data from the database must be able to be re-displayed as the picture. Example pictures here:  http://ortho-experience.com/teeth-names--numbers.html
+
+2. Photo upload and management. Photo page currently exists but need a way to delete photo from media/photos when photo is deleted from database.
+
+3. Data export.  Need to be able to export data so it can be re-imported into another instance of the app or into excel. I propose that we add GUIDs for each child and each record so it is easy to de-dup imports.
+
+4. Data import. Need to be able to import existing excel data (mapping from columns to the app's db).
+
+5. Data import. Need to be able to import data that was exported from the app, de-duping as needed.
+
+6. Accounts & security. The desire is to have three-levels of security -- super user, medial staff, others -- each with a unique login and rights to view data.
+
+7. Code review and security review.

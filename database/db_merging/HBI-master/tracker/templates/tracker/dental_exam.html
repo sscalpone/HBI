@@ -1,0 +1,33 @@
+{% extends 'two-column.html' %}
+
+{% block title %}Informe Odontológico{% endblock %}
+
+{% block h2 %}Informe Odontológico, {{exam.date}}{% endblock %}
+
+{% block sidebar %}
+    {% include 'tracker/sidebar.html' %}
+{% endblock %}
+
+{% block content %}
+
+    {% include 'tracker/basic-info.html' %}
+    <div>
+    	<ul id="form-info">
+            <li><span>Diagnóstico:</span> {{ exam.diagnosis }}</li>
+            <li><span>Recomendaciones:</span> {{ exam.recommendation }}</li>
+        </ul>
+        <ul id="signature">
+            <li><h3>Los Datos del Profesíonal</h3></li>
+            <li><span>Nombre:</span> {{ signature.name }} {{ signature.surname }}</li>
+            <li><span>EMP:</span> {{ signature.emp }}</li>
+            <li><span>Direccion:</span> {{ signature.direction }}</li>
+            <li><span>Celular:</span> {{ signature.cell }}</li>
+        </ul>
+
+        {% if perms.tracker.add_edit_forms %}
+        <a href="{% url 'tracker:edit_dental_exam' child_id exam.id %}">Edita Detalles</a>
+        {% endif %}
+
+    </div>
+    
+{% endblock %}

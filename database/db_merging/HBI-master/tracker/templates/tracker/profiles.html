@@ -1,0 +1,41 @@
+{% extends 'two-column.html' %}
+
+{% block title %}Usuarios{% endblock %}
+
+{% block h2 %}Usuarios{% endblock %}
+
+{% block sidebar %}
+	<ul>
+		<li><a href="{% url 'tracker:logout' %}">Cerrar sesión</a></li>
+		<li><a href="{% url 'tracker:residences' %}" >Residencias</a></li>
+	</ul>
+{% endblock %}
+
+{% block content %}
+
+	<div id="residences">
+		{% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+		<ul>
+		{% if profile_list %}
+			{% for profile in profile_list %}
+				{% if perms.tracker.add_users or user.id == profile.id %}
+					<a href="{% url 'tracker:profile' profile.id %}"><li><div class="thumbnail gray">{% load staticfiles %}<img src="{% static "tracker/person-icon.svg" %}"></div>
+						{% if profile.first_name == '' and profile.last_name == '' %}
+							Unknown Name
+						{% else %}
+							{% if profile.first_name %}{{ profile.first_name }}{%endif%} {% if profile.last_name %}{{ profile.last_name }}{%endif%}
+						{% endif %}
+
+					</li></a>
+				{% endif %}
+			{% endfor %}
+		{% endif %}
+
+		{% if user.is_superuser or perms.tracker.add_users %}
+			<a href="{% url 'tracker:add_profile' %}"><li><div class="thumbnail gray">{% load staticfiles %}<img src="{% static "tracker/add-new.svg" %}"></div>Añadir Nuevo Usuario</li></a>
+		{% endif %}
+
+		</ul>
+	</div>
+
+{% endblock %}

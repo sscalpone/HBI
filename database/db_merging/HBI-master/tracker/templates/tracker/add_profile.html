@@ -1,0 +1,43 @@
+{% extends 'two-column.html' %}
+
+{% block title %}Añadir Nuevo Usuario{% endblock %}
+
+{% block h2 %}Añadir Nuevo Usuario{% endblock %}
+
+{% block sidebar %}
+    <ul>
+        <li><a href="{% url 'tracker:logout' %}" class="delete">Cerrar sesión</a></li>
+        <li><a href="{% url 'tracker:residences' %}" class="delete">Residencias</a></li>
+        <li class="selected"><a href="{% url 'tracker:profiles' %}" class="delete">Usuarios</a></li>
+    </ul>
+{% endblock %}
+
+{% block content %}
+
+    {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+
+    {% if perms.tracker.add_edit_forms %}
+
+    <form action="{% url 'tracker:add_profile' %}" enctype="multipart/form-data" method="post">
+        {% csrf_token %}
+        <ul>
+            {{ profile_form }}
+        </ul>
+        <input type="submit" name="submit" value="Enviar">
+    </form>
+
+    <span id="dialog">
+        <form action ="" method="post" class="no-display">{% csrf_token %}
+            <p>¿Seguro que quieres descartar esta información?</p>
+            <input type="submit" name="discard" value="Sí">
+            <input type="submit" value="No" id="no">
+        </form>
+     </span>
+
+    {% else %}
+
+    <p><strong>Usted no tiene permiso para agregar o formularios de edición.</strong></p>
+
+    {% endif %}
+     
+{% endblock %}

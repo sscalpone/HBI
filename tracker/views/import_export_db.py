@@ -1,11 +1,12 @@
 # coding=utf-8
 
+import csv
 import datetime
+import glob
+import os
+# import os.path
 import pytz
 import zipfile
-import os
-import os.path
-import csv
 
 from django.contrib.auth.models import User
 from django.contrib.auth.models import Permission
@@ -22,6 +23,7 @@ from import_export import resources
 
 from tracker.models import Child
 from tracker.models import DentalExam
+from tracker.models import DiseaseHistory
 from tracker.models import Documents
 from tracker.models import Growth
 from tracker.models import MedicalExamPart1
@@ -33,31 +35,119 @@ from tracker.models import PsychologicalExam
 from tracker.models import Residence
 from tracker.models import Signature
 from tracker.models import SocialExam
+
 from tracker.models import ImportDBForm
 
-def check_file_type(file):
-	file_type = mimetypes.guess_type(file.name)
-	return file_type[0]
+# Dictionary of the models that have dependencies and what those 
+# dependencies are, so that when they're compared to the database, 
+# tables aren't accidentally overwritten because the pks were the same.
+dependancies = {
+	'child': list('residence'),
+	'dental_exam': list('child', 'signature'),
+	'disease_history': list('child', 'signature'),
+	'medical_exam_part1': list('child', 'signature'),
+	'medical_exam_part2': list('child', 'signature'),
+	'operation_history': list('child', 'signature'),
+	'psychological_exam': list('child', 'signature'),
+	'social_exam': list('child', 'signature'),
+	'documents': list('child', 'signature'),
+	'photograph': list('child'),
+	'user_uuid': list('user'),
+	'growth': list('child', 'medical_exam_part1'),
+}
 
-def handle_uploaded_file(file):
-	pass
-
-def compare_csv(file, model_instance, dependant_file_1=None, 
-	dependant_file_2=None, dependant_file_3=None):
-
+"""Function to check if any of the csv files are empty (except the
+header). If they're empty, compare_csv doesn't need to be called 
+because there's nothing to compare. Returns false is the file is empty,
+returns true if it's not.
+"""
+def file_not_empty(file):
+	# get the headers in the csv file
 	csvfile = open(file, 'rb')
-	not_reader = csv.reader(csvfile)
-	headers = not_reader.next()
+	reader = csv.reader(csvfile)
+	first_row = reader.next().next()
 	csvfile.close()
 
-	if (model_instance == 'residence'):
-		field_names = [f.name for f in Residence._meta.fields]
-	# elif (model_instance == 'child'):
-	# 	field_names = [f.name for f in Child._meta.fields]
+	if (first_row is None):
+		return False
+	else:
+		return True
+
+"""Function returns an object based on the string that matches it's 
+name, and returns False if that string doesn't match one of the models
+listed. This will have to be updated if models are added.
+"""
+def get_object(object_name):
+	if (object_name == 'residence'):
+		return Residence
+	elif (object_name == 'child'):
+		return Child
+	elif (object_name == 'dental_exam'):
+		return DentalExam
+	elif (object_name == 'documents'):
+		Documents
+	elif (object_name == 'disease_history'):
+		return DiseaseHistory
+	elif (object_name == 'growth'):
+		return Growth
+	elif (object_name == 'medical_exam_part1'):
+		return MedicalExamPart1
+	elif (object_name == 'medical_exam_part2'):
+		return MedicalExamPart2
+	elif (object_name == 'photograph'):
+		return Photograph
+	elif (object_name == 'operation_history'):
+		return OperationHistory
+	elif (object_name == 'user_uuid'):
+		return UserUUID
+	elif (object_name == 'psychological_exam'):
+		return PsychologicalExam
+	elif (object_name == 'signature'):
+		return Signature
+	elif (object_name == 'social_exam'):
+		return SocialExam
+	else:
+		return False
+
+"""Function to make sure all fields in the database are accounted for 
+in the csv file. It compares the header in the csv to the field names 
+in the object and returns True in all of them are there. If it finds 
+any missing, or finds extra fields in the csv header, it adds them to 
+two lists and returns them in a dict.
+"""
+def all_fields_exist(file, obj):
+	# get the headers in the csv file
+	csvfile = open(file, 'rb')
+	reader = csv.reader(csvfile)
+	headers = reader.next()
+	csvfile.close()
+
+	# get field names from object
+	field_names = [f.name for f in obj._meta.fields]
+	
+	missing_headers = list()
+	extra_headers = list()
+	# Check for missing fields in csv
 	for name in field_names:
 		if name not in headers:
-			return False
+			missing_headers.append(name)
+	# Check for extra fields in csv
+	for h in headers:
+		if h not in field_names:
+			extra_headers.append(h)
+	
+	# All fields are there and there are no extra fields. Return true.
+	if not missing_headers or extra_headers:
+		return True
+	# There are missing or extra fields in the csv. Return those fields 
+	# in a dictionary so they can be added to a message.
+	else:
+		return {'missing_headers': missing_headers, 'extra_headers': extra_headers,}
 
+"""This function opens the passed-in csv file and compares it to the 
+master database, saving the more recent row to the master database.
+"""
+def compare_csv(file, model_instance, dcsvs_list=None, dependents_list=None):
 	csvfile = open(file, 'rb')
 	reader = csv.DictReader(csvfile)
 
@@ -68,10 +158,12 @@ def compare_csv(file, model_instance, dependant_file_1=None,
 	for row in reader:
 		uuid_csv = row['uuid']
 		try:
+			# Based on the model_instance string, get the object that
+			# might be edited from the master db.
 			if (model_instance == 'residence'):
 				obj = Residence.objects.get(uuid=uuid_csv)
-			# elif if (model_instance == 'child'):
-			# 	obj = Child.objects.get(uuid=uuid_csv)
+			elif (model_instance == 'child'):
+				obj = Child.objects.get(uuid=uuid_csv)
 		
 		except:
 			# Create new instance of model who has never been in the 
@@ -84,103 +176,73 @@ def compare_csv(file, model_instance, dependant_file_1=None,
 			else:
 				pass
 
+		# If object exists, compare the object's last_saved field with
+		# the corresponding object in the csv. If the csv object is 
+		# newer, edit the master db.
 		if obj:
-			# if (pytz.utc.localize(datetime.datetime.strptime(
-			# 	row['last_saved'], "%Y-%m-%d %H:%M:%S")) > getattr(obj, 'last_saved')):
-			# 	csv_new = True
-			# else:
-			# 	csv_new = False
-			
-			# if (csv_new):
-			for name in field_names:
-				print type(getattr(obj,name))
-				if (type(getattr(obj, name)) is int):
+			if (pytz.utc.localize(datetime.datetime.strptime(
+				row['last_saved'], "%Y-%m-%d %H:%M:%S")) > getattr(obj, 'last_saved')):
+				for name in field_names:
 
-					# If the integer is an id of any sort, leave it.
-					# It's either a reference to another object (in 
-					# which case we already changed it in the master) 
-					# or it's the pk, which we don't want to change in 
-					# the master
-					if "id" in name:
-						pass
-					# If it's not an id, convert the csv string to an 
-					# integer and save it to the object
+					if dependents_list:
+						for d in dependents_list:
+							# get dependent_id from row and use it to search the pks in dependent
+							# get uuid from dependent
+							# get object with uuid and get it's pk
+							# save pk to dependent_id in obj
+
+					
+					# IntegerField: convert string to integer and save to object
+					if (obj._meta.get_field(name).get_internal_type() == 'IntegerField'):
+							setattr(obj, name, int(row[name]))
+
+					# FloatField: convert string to float and save to object
+					elif (obj._meta.get_field(name).get_internal_type() == 'FloatField'):
+						setattr(obj, name, float(row[name]))
+
+					# DateTimeField: convert string to a utc-aware datetime object and save it to object (should only be applicable to last_saved)
+					elif (obj._meta.get_field(name).get_internal_type() == 'DateTimeField'):
+						setattr(obj, name, pytz.utc.localize(datetime.datetime.strptime(row[name], '%Y-%m-%d %H:%M:%S')))
+
+					# DateField: convert string to datetime object, conert that to a date object and and save it to object
+					elif (obj._meta.get_field(name).get_internal_type() == 'DateField'):
+						setattr(obj, name, datetime.datetime.strptime(row[name], '%d/%m/%Y').date())
+					
+					# BooleanField: check if the csv has it saved as true or false (1 or 0) and then set the object field with as a boolean
+					elif (obj._meta.get_field(name).get_internal_type() == 'BooleanField'):
+						if (row[name] == '1'):
+							setattr(obj, name, True)
+						else:
+							setattr(obj, name, False)
+
+					# FileFieldField: just set the object, no conversion required.
+					elif (obj._meta.get_field(name).get_internal_type() == 'FileField'):
+						setattr(obj, name, row[name])
+						# NEEDS WRITING
+
+					# CharField: just set the object, no conversion required.
+					elif (obj._meta.get_field(name).get_internal_type() == 'CharField'):
+						setattr(obj, name, row[name])
+
+					# TextField: just set the object, no conversion required.
+					elif (obj._meta.get_field(name).get_internal_type() == 'TextField'):
+						setattr(obj, name, row[name])
+
+					# If none of those are correct, print them out so I can see what I'm missing
 					else:
-						setattr(obj, name, int(row[name]))
+						print "Unknown field type: %s" % obj._meta.get_field(name).get_internal_type()
 
-				# If it's a datetime, convert the string to a utc-aware 
-				# datetime object and save it to the object (should 
-				# only be applicable to last_saved)
-				elif (type(getattr(obj, name)) is datetime.datetime):
-					pytz.utc.localize(datetime.datetime.strptime(row[name], '%Y-%m-%d %H:%M:%S'))
-					# doesn't work, not sure why
-				
-				# If it's a boolean object, check if the csv has it 
-				# saved as true or false (1 or 0) and then set the 
-				# object field with as a boolean
-				elif (type(getattr(obj, name)) is bool):
-					if (row[name] == '1'):
-						setattr(obj, name, True)
-					else:
-						setattr(obj, name, False)
+				# Save the object to the database
+				obj.save()
 
-				# Since ImageFieldFile is a django class and there's no 
-				# easy way to evaluate the time of django classes 
-				# dynamically (that I could find), convert the type to 
-				# a string and compare strings.
-				# If it's an ImageFieldFile, probably save as a string probably don't do any conversions since it'll save as a string to the database anyway but we'll see.
-				elif (type(getattr(obj, name)).__name__ == "ImageFieldFile"):
-					pass
-					# NEEDS WRITING
-				# if it's a unicode field, just set the object, no 
-				# conversion required.
-
-				elif (type(getattr(obj, name)) is unicode):
-					print "I am a string"
-					setattr(obj, name, row[name])
-
-			# Save the object to the database
-			obj.save()
-				# if (model_instance == 'residence'):
-				# 	obj.residence_name = row['residence_name']
-				# 	obj.administrator = row['administrator']
-				# 	obj.administrator = row['location']
-				# 	obj.administrator = row['photo']
-
-				# elif (model_instance == 'child'):
-				# 	d_csvfile = open(d_file_1, 'rb')
-				# 	d_reader = csv.DictReader(d_csvfile)
-				# 	for r in d_reader:
-				# 		if (r['id'] == row['residence_id'])
-				# 			residence_uuid=r['uuid']
-				# 			break
-				# 	residence = Residence.objects.get(uuid=residence_uudi)
-				# 	obj.residence_id = residence.id
-				# 	d_csvfile.close()
-
-				# 	obj.first_name = row['first_name']
-				# 	obj.last_name = row['last_name']
-				# 	obj.nickname = row['nickname']
-				# 	obj.birthdate = datetime.datetime.strptime(
-				# 		row['birthdate'], '%Y-%M-%D')
-				# 	obj.gender = row['gender']
-				# 	obj.birthplace = row['birthplace']
-				# 	obj.intake_date = datetime.datetime.strptime(
-				# 		row['intake_date'], '%Y-%M-%D')
-				# 	obj.discharge_date = datetime.datetime.strptime(
-				# 		row['discharge_date'], '%Y-%M-%D')
-				# 	obj.photo = row['photo']
-				# 	obj.priority = int(row['priority'])
-				# 	if (row['is_active'] == '1'):
-				# 		obj.priority = True
-				# 	else:
-				# 		obj.priority = False
-
-				# obj.last_saved = (pytz.utc.localize(datetime.datetime.strptime(row['last_saved'], "%Y-%m-%d %H:%M:%S"))
+			else:
+				pass
 
 	csvfile.close()
 		
-
+"""This function exports the database using the import-export django 
+app, and imports csvs to be read into the database.
+"""
 def import_export_db(request):
 	if (request.POST):
 
@@ -190,7 +252,8 @@ def import_export_db(request):
 			
 			# Making the csv files using django-import-export app
 			# saving them to the csvs directory
-			tables = []
+			# LOOK INTO TURNING THIS INTO A LOOP
+			tables = [] # logs the csv names to be zipped
 
 			child = ChildResource().export()
 			with open('csvs/child.csv', 'w') as child_csv:
@@ -206,6 +269,11 @@ def import_export_db(request):
 			with open('csvs/documents.csv', 'w') as documents_csv:
 				documents_csv.write(documents.csv)
 			tables.append('csvs/documents.csv')
+
+			disease_history = DiseaseHistoryResource().export()
+			with open('csvs/disease_history.csv', 'w') as disease_history_csv:
+				disease_history_csv.write(disease_history.csv)
+			tables.append('csvs/disease_history.csv')
 
 			growth = GrowthResource().export()
 			with open('csvs/growth.csv', 'w') as growth_csv:
@@ -257,18 +325,20 @@ def import_export_db(request):
 				social_exam_csv.write(social_exam.csv)
 			tables.append('csvs/social_exam.csv')
 
+			# Before zipping file, remove any previously zipped 
+			# database file.
 			if (os.path.isfile('media/hbi-db-export.zip')):
 				os.remove('media/hbi-db-export.zip')
 
+			# Zip the csvs together -- currently not compressed because it's not a fan, will try again soon.
 			zippy = zipfile.ZipFile('media/hbi-db-export.zip', 'a')
 			for item in tables:
 				zippy.write(item)
 
-			# response = HttpResponse(zippy, content_type="application/zip")
-			# response['Content-Disposition'] = 'attachment; filename="hbi-db-export.zip"'
-
-			# zippy.close()
-			# return response
+			# Since serving the zipped file as an attachment corrupted
+			#  the file (most likely because django isn't equipped to 
+			# serve larger files), render it in the import_export 
+			# template for download.
 			form = ImportDBForm()
 
 			context = {
@@ -278,31 +348,79 @@ def import_export_db(request):
 			}
 			return render(request, 'tracker/import_export.html', context)
 
-		# If request is to import the database - algorithm still being built 
+
+
+
+
+		# If request is to import the database, get the posted file
 		elif ('submit_import' in request.POST):
 			form = ImportDBForm(request.POST, request.FILES)
+
+			# If the form posted a file, get it and extract it.
 			if form.is_valid():
-				# handle_uploaded_file(request.FILES['upload'])
-				with zipfile.ZipFile(request.FILES['upload']) as zf:
-					zf.extractall('database/db_merging')
-
-				db_merging = compare_csv(
-					'database/db_merging/csvs/residence.csv', 'residence')
+				upload_name, upload_extension = request.FILES(['upload']).split('.')
+				if (extension == 'zip'):
+					with zipfile.ZipFile(request.FILES['upload']) as zf:
+						zf.extractall('database/db_merging')
 				
-				# db_merging = compare_csv(
-				# 	'database/db_merging/csvs/child.csv', 'child', 'database/db_merging/csvs/residence.csv')				
+				# Create a glob path so the paths to the csvs can be 
+				# passed to functions for every csv through a loop
+				path = 'database/db_merging/csvs/*.csv'
 
-				if (db_merging == False):
-					messages.add_message(request, messages.SUCCESS, 
-						'Please make sure all columns are present in your CSVs!')
-					return HttpResponseRedirect(reverse('tracker:import_export'))
-				else:
+				# Loop through the csvs directory three times:
+				# First, check that all the csvs correspond to a model.
+				# Second, check that all fields are present in each 
+				# csv.
+				# Third, compare the csv to the database and save the 
+				# more recent data
+				for i in range(3):
+				for pname in glob.glob(path):
+					# get the table name by parsing the path name
+					basename = os.path.basename(pname)
+					table_name, extension = basename.split('.')
 					
-					messages.add_message(request, messages.SUCCESS, 'Yes!')
-					return HttpResponseRedirect(
-						reverse('tracker:import_export'))
+					# FIRST LOOP
+					if (i == 0):
+						# Check that each csv corresponds to a table in the 
+						# database. If a table that does not exist appears, 
+						# render the import_export template with an error 
+						# message saying which csv doesn't correspond.
+						if (not get_object(table_name)):
+							messages.add_message(request, messages.ERROR, 
+								'%s does not correspond to any table in the '
+								'database. Please re-upload with the correct '
+								'file name.' % basename)
+							os.remove(pname)
+					elif (i == 1):
+
+						model_obj = get_object(table_name)
+
+						# Check if all fields exist in the csv. If it comes up
+						fields_exist = all_field_exist(pathname, model_obj)
+						if (fields_exist != True):
+							messages.add_message(request, messages.ERROR, 
+								'The field %s is missing in %s. Please try again' % (fields_exist, basename))
+						
+					else:
+						if (file_not_empty(pathname)):
+
+							compare_csv(pathname, model_instance)
+
+							compare_csv(
+								'database/db_merging/csvs/residence.csv', 'residence')
+
+						# compare_csv(
+						# 	'database/db_merging/csvs/child.csv', 'child', 'database/db_merging/csvs/child.csv')
+
+
+					
+				messages.add_message(request, messages.SUCCESS, 'Database Imported!')
+				return HttpResponseRedirect(
+					reverse('tracker:import_export'))
+
+
 			else:
-				messages.add_message(request, messages.SUCCESS, 'No!')
+				messages.add_message(request, messages.SUCCESS, 'Please add a file to be imported!')
 				return HttpResponseRedirect(reverse('tracker:import_export'))
 	
 	else:
@@ -333,6 +451,11 @@ class DocumentsResource(resources.ModelResource):
 
     class Meta:
         model = Documents
+
+class DiseaseHistoryResource(resources.ModelResource):
+
+    class Meta:
+        model = DiseaseHistory
 
 class GrowthResource(resources.ModelResource):
 

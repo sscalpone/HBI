@@ -1,0 +1,28 @@
+
+
+Users
+
+ - User
+   * Admin
+   * Medical
+   * MedicalAssistant
+   * ResidentDirector
+   * ResidentParent
+
+
+ - Residence
+   * -> RedsidentDirector
+   * -> RedsidentParents
+   * -> Childrent
+
+
+ - Child
+   * BasicInfo
+   * ExamRecords
+
+
+Login -
+ Show list of places
+
+Select place -
+ Show list of kids

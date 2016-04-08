@@ -1,0 +1,35 @@
+{% extends 'two-column.html' %}
+
+{% block title %}Historia de Operaciones{% endblock %}
+
+{% block h2 %}Historia de Operaciones, {{exam.date}}{% endblock %}
+
+{% block sidebar %}
+    {% include 'tracker/sidebar.html' %}
+{% endblock %}
+
+{% block content %}
+
+    {% include 'tracker/basic-info.html' %}
+    <div>
+    	<ul id="form-info">
+            <li><span>Institución:</span> {{ exam.institution }}</li>
+            <li><span>Diagnóstico Preoperatorio:</span> {{ exam.preop_diagnosis }}</li>
+            <li><span>Intervención:</span> {{ exam.intervention }}</li>
+            <li><span>Diagnóstico Postoperatorio:</span> {{ exam.postop_diagnosis }}</li>
+        </ul>
+        <ul id="signature">
+            <li><h3>Los Datos del Profesíonal</h3></li>
+            <li><span>Nombre:</span> {{ signature.name }} {{ signature.surname }}</li>
+            <li><span>EMP:</span> {{ signature.emp }}</li>
+            <li><span>Direccion:</span> {{ signature.direction }}</li>
+            <li><span>Celular:</span> {{ signature.cell }}</li>
+        </ul>
+
+        {% if perms.tracker.add_edit_forms %}
+        <a href="{% url 'tracker:edit_operation_history' child_id exam.id %}">Edita Detalles</a>
+        {% endif %}
+
+    </div>
+    
+{% endblock %}

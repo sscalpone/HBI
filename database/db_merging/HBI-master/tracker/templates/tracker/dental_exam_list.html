@@ -1,0 +1,11 @@
+	
+	<div class="exam-list">
+		<h3>Informes Odontológicos</h3>
+		<ol>
+		{% if DentalExams %}
+			{% for exam in DentalExams reversed %}
+				<li><a href="{% url 'tracker:dental_exam' child_id exam.id %}">{{ exam.date }}</a></li>
+			{% endfor%}
+		{% endif %}
+		</ol>
+	</div>

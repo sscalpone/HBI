@@ -1,0 +1,20 @@
+{% extends 'two-column.html' %}
+
+{% block title %}Altura Gráfico{% endblock %}
+
+{% block h2 %}Altura Gráfico{% endblock %}
+
+{% block sidebar %}
+    {% include 'tracker/sidebar.html' %}
+{% endblock %}
+
+{% block content %}
+
+    {% include 'tracker/basic-info.html' %}
+
+    <img src="{% url 'tracker:growth_png' child_id %}" id="graph">
+
+    <p>Patrones de crecimiento esperado en base a mediciones percentil 50 de los CDC . Para más información visite <a href="http://www.cdc.gov/growthcharts/clinical_charts.htm">el sitio web de los CDC</a>.</p>
+    
+
+{% endblock %}

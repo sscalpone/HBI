@@ -1,0 +1,56 @@
+{% extends 'two-column.html' %}
+
+{% block title %}Informe Médico / Parte 1{% endblock %}
+
+{% block h2 %}Informe Médico / Parte 1, {{exam.date}}{% endblock %}
+
+{% block sidebar %}
+    {% include 'tracker/sidebar.html' %}
+{% endblock %}
+
+{% block content %}
+
+    {% include 'tracker/basic-info.html' %}
+
+    <div>
+    	<ul id="form-info">
+    		<li><span>Antecedents Familiares Patológicos y de Riesgo Conocidos:</span> {{ exam.background_notes }}</li>
+    		<li><span>Historia Perinatal y Neonatal:</span> {{ exam.birth_history }}</li>
+    		
+            <li><span>BCG:</span> {{ exam.bcg_vaccine }}{% if exam.bcg_vaccine %}, {{ exam.bcg_vaccine_date }}{% endif %}</li>
+    		
+            <li><span>Antipoliomielitica:</span> {{ exam.polio_vaccine }}{% if exam.polio_vaccine %}, {{exam.polio_vaccine_date}}{% endif %}</li>
+    		
+            <li><span>DPT:</span> {{ exam.dpt_vaccine }}{% if exam.dpt_vaccine %}, {{ dpt_vaccine_date }}{% endif %}</li>
+    		
+            <li><span>Hepatitis B:</span> {{ exam.hepatitis_b_vaccine }}{% if exam.hepatitis_b_vaccine %}, {{ exam.hepatitis_b_vaccine_date }}{% endif %}</li>
+    		
+            <li><span>Hemofilus Influenza:</span> {{ exam.flu_vaccine }}{% if exam.flue_vaccine %}, {{ exam.flu_vaccine_date }}{% endif %}</li>
+    		
+            <li><span>Fiebre Amarilla:</span> {{ exam.yellow_fever_vaccine }}{% if exam.yellow_fever_vaccine %}, {{ exam.yellow_fever_vaccine_date }}{% endif %}</li>
+    		
+            <li><span>SPR:</span> {{ exam.spr_vaccine }}{% if exam.spr_vaccine %}, {{ exam.spr_vaccine_date }}{% endif %}</li>
+    		
+            <li><span>HPV:</span> {{ exam.hpv_vaccine }}{% if exam.hpv_vaccine %}, {{ exam.hpv_vaccine_date }}{% endif %}</li>
+    		
+            <li><span>Neumococo:</span> {{ exam.pneumococcal_vaccine }}{% if exam.pneumococcal_vaccine %}, {{ exam.pneumococcal_vaccine_date }}{% endif %}</li>
+    		
+            <li><span>Peso:</span> {{ exam.weight }}</li>
+    		<li><span>Estatura:</span> {{ exam.height }}</li>
+    		
+        </ul>
+        <ul id="signature">
+            <li><h3>Los Datos del Profesíonal</h3></li>
+            <li><span>Nombre:</span> {{ signature.name }} {{ signature.surname }}</li>
+            <li><span>EMP:</span> {{ signature.emp }}</li>
+            <li><span>Direccion:</span> {{ signature.direction }}</li>
+            <li><span>Celular:</span> {{ signature.cell }}</li>
+        </ul>
+
+        {% if perms.tracker.add_edit_forms %}
+        <a href="{% url 'tracker:edit_medical_exam_part1' child_id exam.id %}">Edita Detalles</a>
+        {% endif %}
+
+
+    </div>
+{% endblock %}

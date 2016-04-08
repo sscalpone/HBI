@@ -1,7 +1,6 @@
 # coding=utf-8
 
 import datetime
-import uuid
 
 from django.contrib.auth.models import User
 from django.db import models
@@ -31,7 +30,7 @@ class MedicalExamPart2(models.Model):
         (LOW, 'Prioridad Baja')
     )
     
-    uuid = models.CharField(max_length=200, unique=True, default=uuid.uuid4)
+    uuid = models.CharField(max_length=200, primary_key=True)
     child = models.ForeignKey(Child)
     date = models.DateField()
     appetite_notes = models.TextField(blank=True, null=True)

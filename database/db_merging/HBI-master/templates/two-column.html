@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>{% block title %}Unión Bíblica Evaluación de Girasoles{% endblock %}</title>
+        {% load staticfiles %}<link rel="stylesheet" href="{% static "tracker/jquery-ui.min.css" %}">
+        {% load staticfiles %}<link rel="stylesheet" href="{% static "tracker/css-reset.css" %}">
+        {% load staticfiles %}<link rel="stylesheet" href="{% static "tracker/tracker.css" %}">
+        {% load staticfiles %}<link rel="stylesheet" href="{% static "tracker/responsive.css" %}">
+        <meta name="viewport" content="width=device-width">
+        <meta name="description" content="Health Bridges International Record Keeping">
+        <meta charset="utf-8">
+    </head>
+
+    <body>
+
+        <header id="header">
+            {% load staticfiles %}<img src="{% static "tracker/health-bridges-international-logo.png" %}" alt="Health Bridges International Logo" id="logo">
+            <h1>Unión Bíblica Evaluación de Girasoles</h1>
+            <h2>{% block h2 %}{% endblock %}</h2>
+        </header>
+        <div id="border"></div>
+
+        <div class="two-column">
+            <nav id="sidebar">
+                {% block sidebar %}
+                 <ul>
+                    <li>Ohai! I'm a menu item.</li>
+                </ul>
+                {% endblock %}
+            </nav>
+            <section id="content">
+                {% block content %}{% endblock %}
+            </section>
+        </div>
+        <div id="border"></div>
+        {% include 'footer.html' %}
+
+        {% load staticfiles %}<script type="text/javascript" src="{% static "tracker/jquery-1.11.3.min.js" %}"></script>
+        {% load staticfiles %}<script type="text/javascript" src="{% static "tracker/jquery-ui.min.js" %}"></script>
+        <script type="text/javascript">
+            var changed=false;
+            $("form").on("input", function() {
+                changed=true;
+            });
+            $("form :input").change(function() {
+                changed=true;
+            });
+
+            $('.delete').click(function(event) {
+                if ($('.delete').hasClass('delete_photo')) {
+                    changed=true;
+                    console.log(changed);
+                }
+                if (changed==true) {
+                    event.preventDefault();
+                    $('#dialog form').removeClass('no-display');
+                    $('#dialog').dialog({ autoOpen: false });
+                    $('#dialog').dialog("open");
+                    $('#no').click(function(e) {
+                        e.preventDefault();
+                        $('#dialog').dialog("close");
+                    });
+
+                }
+            });
+
+            $('.change').click(function(event) {
+                event.preventDefault();
+                if ($(this).hasClass('name')) {
+                    $('#dialog .name').removeClass('no-display');
+                }
+                else if ($(this).hasClass('email')) {
+                    $('#dialog .email').removeClass('no-display');
+                }
+                else if ($(this).hasClass('password')) {
+                    $('#dialog .password').removeClass('no-display');
+                }
+                else if ($(this).hasClass('add_users')) {
+                    $('#dialog .add_users').removeClass('no-display');
+                }
+                else if ($(this).hasClass('delete_info')) {
+                    $('#dialog .delete_info').removeClass('no-display');
+                }
+                else if ($(this).hasClass('add_edit_forms')) {
+                    $('#dialog .add_edit_forms').removeClass('no-display');
+                }
+                else if ($(this).hasClass('is_staff')) {
+                    $('#dialog .is_staff').removeClass('no-display');
+                }
+                else if ($(this).hasClass('is_active')) {
+                    $('#dialog .is_active').removeClass('no-display');
+                }
+                $('#dialog').dialog({ autoOpen: false });
+                $('#dialog').dialog("open");
+                $('div').on('dialogclose', function(event) {
+                    console.log('hello');
+                    $('#dialog form').each(function(event) {
+                        if (!$(this).hasClass('no-display')) {
+                            $(this).addClass('no-display');                        
+                        }
+                    });
+                    
+                });
+            });
+            if ($.contains('#dialog .name', '.errorlist')) {
+                console.log('Yup!');
+            }
+            else {
+                console.log("Nope.");
+            }
+
+        </script>
+    </body>
+</html>
