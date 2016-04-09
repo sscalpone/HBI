@@ -267,12 +267,37 @@ def compare_csv(file, model_instance, dependent_objects_dict=None):
 				pass
 
 	csvfile.close()
+
+def dir_not_empty(pathname):
+	if (not os.listdir(pathname)):
+		messages.add_message(request, messages.ERROR, "There's nothing left to return!")
+		return HttpResponseRedirect(reverse('tracker:import_export'))
+
+def move_files(pathname):
+	basename = os.path.basename(pathname)
+
+	# If the file isn't a csv, add a not a csv message and delete file.
+	if not (basename.endswith('.csv')):
+		messages.add_message(request, messages.ERROR, '%s is not a csv file. Please only upload csv files.' % basename)
+		os.remove(pathname)
+
+	# else if the file being moved to csvs is already there, add a conflicting copies message and delete both files
+	elif ('database/db_merging/csvs/%s' % basename):
+		messages.add_message(request, messages.ERROR, 'Conflicting copies of %s uploaded. Please choose one copy and re-upload.' % basename)
+		os.remove(pathname)
+		os.remove('database/db_merging/csvs/%s' % basename)
+	else:
+		shutil.move(pathname, 'database/db_merging/csvs/%s' % basename)
 		
 """This function exports the database using the import-export django 
 app, and imports csvs to be read into the database.
 """
 def import_export_db(request):
 	if (request.POST):
+
+#######################################################################
+# DOWNLOAD DATABASE
+#######################################################################
 
 		# If request was to export the database, 
 		# make csv files of each table and gzip them
@@ -376,9 +401,9 @@ def import_export_db(request):
 			}
 			return render(request, 'tracker/import_export.html', context)
 
-
-
-
+#######################################################################
+# UPLOAD DATABASE
+#######################################################################
 
 		# If request is to import the database, get the posted file
 		elif ('submit_import' in request.POST):
@@ -387,66 +412,92 @@ def import_export_db(request):
 			# If the form posted a file, get it and extract it.
 			if form.is_valid():
 				upload_name, upload_extension = request.FILES['upload'].name.split('.')
-				if os.path.isdir('database/db_merging/csvs'):
-					shutil.rmtree('database/db_merging/csvs')
+				
+				# delete previously uploaded files, if any
+				if os.path.isdir('database/db_merging'):
+					shutil.rmtree('database/db_merging')
+					os.mkdir('database/db_merging')
+				
+				# if uploaded file is a zip, extract files
 				if (upload_extension == 'zip'):
 					with zipfile.ZipFile(request.FILES['upload']) as zf:
 						zf.extractall('database/db_merging')
-					# Check that csvs directory was created
-					if (not os.path.isdir('database/db_merging/csvs')):
-						# If not, check how many directories are in file
-						path = 'database/db_merging/*'
-						dir_count = 0
-						for p in glob.glob(path):
-							if os.path.isdir(p):
-								i++
-						# If there are no directories in the file, 
-						# return "don't zip single files" error message
-						if (dir_count == 0):
-							messages.add_message(request, messages.ERROR, 'There was a problem unzipping your file. If you are uploading a single file, do not upload it in a zip format. Otherwise, please re-compress and try again.')
-							return HttpResponseRedirect(reverse('tracker:import_export'))
-						
-						# If there are two or more directories, return "too many folders" error message
-						elif (dir_count > 1):
-							messages.add_message(request, messages.ERROR, 'There was a problem unzipping your file. If you are zipping multiple folders together, please zip them separately.')
-							return HttpResponseRedirect(reverse('tracker:import_export'))
-						
-						# If there's only one directory, get it and rename it 'csvs'
-						else:
-							for p in glob.glob(path):
-								if isdir(p):
-									os.rename(p, 'csvs')
-									messages.add_message(request, messages.SUCCESS, 'In the future, please make sure the folder you upload is called csvs.')
 
-
+				# if uploaded file is a csv, read it into a file in the csvs directory in chunks
 				elif (upload_extension == 'csv'):
 					os.mkdir('database/db_merging/csvs')
 					with open('database/db_merging/csvs/%s.csv' % upload_name, 'wb+') as destination:
 						for chunk in request.FILES['upload'].chunks():
 							destination.write(chunk)
-				# If file is not zipped or not csv (not currently written yet), return with error message
+				
+				# If file is not zipped or not csv, return with error message
 				else:
 					messages.add_message(request, messages.ERROR, 'Incorrect File Type: .%s files are not compatible with our database.' % upload_extension)
 					return HttpResponseRedirect(reverse('tracker:import_export'))
-
-				path = 'database/db_merging/csvs/*'
+				
+				# create a list of all directories in db_merging	
+				path = 'database/db_merging/*' # glob path to loop through all dirs in db_merging
+				directories = []
 				for pathname in glob.glob(path):
-					basename = os.path.basename(pathname)
-					if (not basename.endswith('.csv')):
-						messages.add_message(request, messages.ERROR, ('%s needs to be a csv file to be read (if file is already a csv, please add the extension .csv).' % basename))
-						os.remove(pathname) # remove empty csv
+					if (os.path.isdir(pathname)):
+						# if directory is empty, remove it
+						try: 
+							os.rmdir(pathname)
+						# if it's not, add the name to the list
+						except:
+							directories.append(os.path.basename(pathname))
 
+				# After deleting all the empty directories, check that db_merging isn't empty
+				dir_not_empty('database/db_merging')):
 
-				# Create a glob path so the paths to the csvs can be 
-				# passed to functions for every csv through a loop
+				# if there are directories, loop through them and move all files to csvs directory
+				if (directories):
+					# create the csvs directory that all files will be read into if it doesn't already exist
+					if 'csvs' not in directories:
+						os.mkdir('database/db_merging/csvs')
+					# if it already exists, great, remove it from the directories list so it doesn't get looped over.
+					else:
+						directories.remove('csvs')
+
+					# If there are stil directories without csvs in the list, loop through directories and move all files to csvs directory, deleting copies and non-csvs
+					if (directories):
+						for d in directories:
+							# loop through files and make sure they aren't directories before evaluating and moving
+							for pathname in glob.glob('database/db_merging/%s/*' % d):
+								if (not os.path.isdir(pathname)):
+									move_files(pathname)
+
+								# If there's a directory within a directory, return a too many levels error and delete directory
+								else:
+									basename = os.path.basename(pathname)
+									essages.add_message(request, messages.ERROR, 'Unable to read %s subfolder. Please add all csvfiles to main folder and re-upload.' % basename)
+									shutil.rmtree(pathname)
+						
+							# after moving all readable files to csvs directory, delete empty directory
+							shutil.rmtree('database/db_merging/%s' % d)
+
+				# if there are no directories, create the csvs directory
+				else:
+					os.mkdir('database/db_merging/csvs')					
+
+				# move all files in db_merging to csvs directory, deleting copies and non-csvs
+				for pathname in glob.glob(path):
+					if (not os.path.isdir(pathname)):
+						move_files(pathname)
+
+				# after removing all non-csvs and files with copies, make sure csvs is not empty
+				dir_not_empty('database/db_merging/csvs')):
+
+				# glob path to read all csvs in the csvs dir
 				path = 'database/db_merging/csvs/*.csv'
 
-				# Loop through the csvs directory four times:
+				# Loop through the csvs directory five times:
 				# First, check that all the csvs correspond to a model.
 				# Second, check that all fields are present in each 
 				# csv.
 				# Third, make sure all files are populated. This won't break anything, but might be useful information for the user.
-				# Fourth, compare the csv to the database and save the 
+				# Fourth, identify and locate dependent objects and their csvs.
+				# Fifh, compare the csv to the database and save the 
 				# more recent data
 				for i in range(5):
 					for pname in glob.glob(path):
