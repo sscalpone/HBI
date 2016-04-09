@@ -71,6 +71,7 @@ exam part 1 page.
 """
 class Growth(models.Model):
     child = models.ForeignKey(Child)
+    uuid = models.CharField(max_length=200, unique=True, default=uuid.uuid4)
     exam = models.ForeignKey(MedicalExamPart1)
     date = models.DateField()
     height = models.FloatField(blank=True, null=True)
