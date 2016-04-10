@@ -38,61 +38,6 @@ from tracker.models import SocialExam
 
 from tracker.models import ImportDBForm
 
-"""Function to check if any of the csv files are empty (except the
-header). If they're empty, compare_csv doesn't need to be called 
-because there's nothing to compare. Returns false is the file is empty,
-returns true if it's not.
-"""
-def file_empty(csv_file):
-	# get the headers in the csv file
-	csvfile = open(csv_file, 'rb')
-	reader = csv.DictReader(csvfile)
-	has_rows = False
-	for line in reader:
-		has_rows = True
-	csvfile.close()
-	if (not has_rows):
-		return True
-	else:
-		return False
-	
-
-"""Function that gets and returns any dependent objects by searching 
-the dependencies dict, calling get_object, and appending them to a list
-to be returned. Returns None if no dependent objects are found.
-"""
-def get_dependent_objects(object_name):
-	# Dictionary of the models that have dependencies and what those 
-	# dependencies are, so that when they're compared to the database, 
-	# tables aren't accidentally overwritten because the pks were the 
-	# same.
-	dependencies = {
-		'child': ['residence'],
-		'dental_exam': ['child', 'signature'],
-		'disease_history': ['child', 'signature'],
-		'medical_exam_part1': ['child', 'signature'],
-		'medical_exam_part2': ['child', 'signature'],
-		'operation_history': ['child', 'signature'],
-		'psychological_exam': ['child', 'signature'],
-		'social_exam': ['child', 'signature'],
-		'documents': ['child', 'signature'],
-		'photograph': ['child'],
-		'user_uuid': ['user'],
-		'growth': ['child', 'medical_exam_part1'],
-	}
-
-	dependents_objects = {}
-	# Search the dependencies dict for passed model name
-	for key in dependencies:
-		# If the model has dependencies, get the dependencies' objects
-		# and add them to a list to be returned
-		if object_name == key:
-			for value in dependencies[key]:
-				dependents_objects[value] = get_object(value)
-
-	return dependents_objects
-
-
 """Function returns an object based on the string that matches it's 
 name, and returns False if that string doesn't match one of the models
 listed. This will have to be updated if models are added.
@@ -128,6 +73,120 @@ def get_object(object_name):
 		return SocialExam
 	else:
 		return False
+
+# Dictionary of the models that have dependencies and what those 
+# dependencies are, so that when they're compared to the database, 
+# tables aren't accidentally overwritten because the pks were the 
+# same.
+dependencies = {
+	'child': ['residence'],
+	'dental_exam': ['child', 'signature'],
+	'disease_history': ['child', 'signature'],
+	'medical_exam_part1': ['child', 'signature'],
+	'medical_exam_part2': ['child', 'signature'],
+	'operation_history': ['child', 'signature'],
+	'psychological_exam': ['child', 'signature'],
+	'social_exam': ['child', 'signature'],
+	'documents': ['child', 'signature'],
+	'photograph': ['child'],
+	'user_uuid': ['user'],
+	'growth': ['child', 'medical_exam_part1'],
+}
+
+"""Returns true if a given object's name can be found in the dependencies function, meaning that the object is dependent on other objects.
+"""
+def is_dependent(object_name):
+	for key in dependencies:
+		if (key == object_name):
+			return True
+	return False
+
+"""If a given object is dependent on other objects, this function will return a list of those dependencies. Otherwise, it returns None.
+"""
+def get_dependents_list(object_name):
+	if (is_dependent(object_name)):
+		for key in dependencies:
+			if (object_name == key):
+				return dependencies[key]
+	else:
+		return None
+
+"""Gets all the csvs that match the names in the dependents list and returns the csvs dict.
+"""
+def get_dependents_csvs(object_name, path):
+	dependents_list = get_dependents_list(object_name)
+	dependents_csvs = {}
+	# check each key against the csvs directory
+	if dependents_list:
+		for dependent in dependents_list:
+			for pathname in glob.glob(path):
+				basename = os.path.basename(pathname)
+				tablename, extension = basename.split('.')
+
+				# if a csv matching the dependent_object exists, add the csv to dependents_csv
+				if (dependent == tablename):
+					dependents_csvs[dependent] = pathname
+		
+		return dependents_csvs
+
+	# if there are no dependents, return None
+	return None
+
+"""Function to check if any of the csv files are empty (except the
+header). If they're empty, compare_csv doesn't need to be called 
+because there's nothing to compare. Returns false is the file is empty,
+returns true if it's not.
+"""
+def file_empty(csv_file):
+	# get the headers in the csv file
+	csvfile = open(csv_file, 'rb')
+	reader = csv.DictReader(csvfile)
+	has_rows = False
+	for line in reader:
+		has_rows = True
+	csvfile.close()
+	if (not has_rows):
+		return True
+	else:
+		return False
+
+"""Function that checks for repeated ids and uuids in a passed-in csv. It returns a list of which fields have repetitions (list is empty if there are no repetitions). This could be DRYer but it can easily cause an infinite loop so it's being left alone for now.
+"""
+def ids_uuids_unique(file):
+	csvfile = open(file, 'rb')
+	reader = csv.DictReader(csvfile)
+	count = 0
+	duplicate_in_field = []
+
+	ids_list = []
+	uuids_list = []
+	for row in reader:
+		ids_list.append(row['id'])
+		uuids_list.append(row['uuid'])
+	csvfile.close()
+	ids_set = set(ids_list)
+	uuids_set = set(uuids_list)
+
+	if (len(ids_set) < len(ids_list)):
+		for element in ids_set:
+			count = 0
+			for item in ids_list:
+				if (element == item):
+					count +=1
+				if (count > 1):
+					duplicate_in_field.append('id')
+	if (len(uuids_set) < len(uuids_list)):
+		for element in uuids_set:
+			count = 0
+			for item in uuids_list:
+				if (element == item):
+					count +=1
+				if (count > 1):
+					duplicate_in_field.append('uuid')
+	if duplicate_in_field:
+		return duplicate_in_field
+	else:
+		return None
 
 """Function to make sure all fields in the database are accounted for 
 in the csv file. It compares the header in the csv to the field names 
@@ -165,112 +224,16 @@ def missing_or_extra_fields(file, obj):
 	else:
 		return {'missing_headers': missing_headers, 'extra_headers': extra_headers,}
 
-"""This function opens the passed-in csv file and compares it to the 
-master database, saving the more recent row to the master database.
+"""Function that returns true if a passed_in path is an empty directory. Otherwise it returns false.
 """
-def compare_csv(file, model_instance, dependent_objects_dict=None, dependent_csvs_dict=None):
-	# Open the csv file as a dictionary so it's searchable by field 
-	# name
-	csvfile = open(file, 'rb')
-	reader = csv.DictReader(csvfile)
-
-	# Iterate through the csv file, matching the UUIDs in the file to 
-	# the children in the master database. If they exist, compare the
-	# entire csv row to the Child and update appropriately. If they 
-	# don't exist, create new children in the master.
-	for row in reader:
-		uuid_csv = row['uuid']
-		obj_inst = None # currently for if obj_inst, but hopefully that'll be written out
-		try:
-			# Based on the model_instance string, get the object that
-			# might be edited from the master db.
-			obj = get_object(model_instance)
-			obj_inst = obj.objects.get(uuid=uuid_csv)
-		
-		except:
-			# Create new instance of model who has never been in the 
-			# database before
-			if (not row['uuid']):
-				pass
-			
-			# Create new instance of model who has been in the 
-			# database, but not the master
-			else:
-				pass
-
-		# If object exists, compare the object's last_saved field with
-		# the corresponding object in the csv. If the csv object is 
-		# newer, edit the master db.
-		if obj_inst:
-			if (pytz.utc.localize(datetime.datetime.strptime(
-				row['last_saved'], "%Y-%m-%d %H:%M:%S")) > getattr(obj_inst, 'last_saved')):
-				if dependent_objects_list:
-						for key, value in dependent_objects_list:
-							dependent_id = row[key]
-							value.objects.get(pk=dependent_id)
-
-							# get dependent_id from row and use it to search the pks in dependent
-							# get uuid from dependent
-							# get object with uuid and get it's pk
-							# save pk to dependent_id in obj
-
-				for name in field_names:
-
-					
-					# IntegerField: convert string to integer and save to object
-					if (obj_inst._meta.get_field(name).get_internal_type() == 'IntegerField'):
-							setattr(obj_inst, name, int(row[name]))
-
-					# FloatField: convert string to float and save to object
-					elif (obj_inst._meta.get_field(name).get_internal_type() == 'FloatField'):
-						setattr(obj_inst, name, float(row[name]))
-
-					# DateTimeField: convert string to a utc-aware datetime object and save it to object (should only be applicable to last_saved)
-					elif (obj_inst._meta.get_field(name).get_internal_type() == 'DateTimeField'):
-						setattr(obj_inst, name, pytz.utc.localize(datetime.datetime.strptime(row[name], '%Y-%m-%d %H:%M:%S')))
-
-					# DateField: convert string to datetime object, conert that to a date object and and save it to object
-					elif (obj_inst._meta.get_field(name).get_internal_type() == 'DateField'):
-						setattr(obj_inst, name, datetime.datetime.strptime(row[name], '%d/%m/%Y').date())
-					
-					# BooleanField: check if the csv has it saved as true or false (1 or 0) and then set the object field with as a boolean
-					elif (obj_inst._meta.get_field(name).get_internal_type() == 'BooleanField'):
-						if (row[name] == '1'):
-							setattr(obj_inst, name, True)
-						else:
-							setattr(obj_inst, name, False)
-
-					# FileFieldField: just set the object, no conversion required.
-					elif (obj_inst._meta.get_field(name).get_internal_type() == 'FileField'):
-						setattr(obj_inst, name, row[name])
-						# NEEDS WRITING
-
-					# CharField: just set the object, no conversion required.
-					elif (obj_inst._meta.get_field(name).get_internal_type() == 'CharField'):
-						setattr(obj_inst, name, row[name])
-
-					# TextField: just set the object, no conversion required.
-					elif (obj_inst._meta.get_field(name).get_internal_type() == 'TextField'):
-						setattr(obj_inst, name, row[name])
-
-					# If none of those are correct, print them out so I can see what I'm missing
-					else:
-						print "Unknown field type: %s" % obj_inst._meta.get_field(name).get_internal_type()
-
-				# Save the object to the database
-				obj_inst.save()
-
-			else:
-				pass
-
-	csvfile.close()
-
 def dir_not_empty(pathname):
 	if (os.listdir(pathname)):
 		return True
 	else:
 		return False
 
+"""Moves files in a given path into the csvs directory, first deleting any non-csvs and csvs with multiple copies.
+"""
 def move_files(request, pathname):
 	basename = os.path.basename(pathname)
 
@@ -286,7 +249,139 @@ def move_files(request, pathname):
 		os.remove('database/db_merging/csvs/%s' % basename)
 	else:
 		shutil.move(pathname, 'database/db_merging/csvs/%s' % basename)
+
+#######################################################################
+#######################################################################
+#######################################################################
+"""This function opens the passed-in csv file and compares it to the 
+master database, saving the more recent row to the master database.
+"""
+def compare_csv(request, file, model_instance, dependent_csvs_dict):
+	print dependent_csvs_dict
+	# get the headers in the csv file
+
+	# Open the csv file as a dictionary so it's searchable by field 
+	# name
+	csvfile = open(file, 'rb')
+	reader = csv.DictReader(csvfile)
+
+	obj = get_object(model_instance)
+	field_names = [f.name for f in obj._meta.fields]
+
+	# Iterate through the csv file, matching the UUIDs in the file to 
+	# the children in the master database. If they exist, compare the
+	# entire csv row to the Child and update appropriately. If they 
+	# don't exist, create new children in the master.
+
+	for row in reader:
+		uuid_csv = row['uuid']
+		# obj_inst = None # currently for if obj_inst, but hopefully that'll be written out
+		try:
+			# Based on the model_instance string, get the object that
+			# might be edited from the master db.
+			obj_inst = obj.objects.get(uuid=uuid)
 		
+		except:
+			# Create new instance of model who has never been in the 
+			# database before
+			obj_inst = obj.objects.create()
+				
+		# If object exists, compare the object's last_saved field with
+		# the corresponding object in the csv. If the csv object is 
+		# newer, edit the master db.
+		if obj_inst:
+			if (pytz.utc.localize(datetime.datetime.strptime(
+				row['last_saved'], "%Y-%m-%d %H:%M:%S")) > getattr(obj_inst, 'last_saved')):
+				
+				if dependent_csvs_dict:
+					for key, value in dependent_csvs_dict.iteritems():
+						dependent_csvfile = open(value, 'rb') # open dependent object's csv file
+						dependent_reader = csv.DictReader(dependent_csvfile)
+						
+						dependent_id = row[key] # get the id of the dependent object from row
+						
+						# get dependent object's uuid by searching the dict the row matching the dependent id
+						for drow in dependent_reader:
+							if (drow['id'] == dependent_id):
+								dependent_uuid = drow['uuid']
+							
+							# if the dependent id isn't in the object, do something
+							else:
+								messages.add_message(request, messages.ERROR, "There's nothing left to return!")
+								return False # will be rewritten, just here so nothing throws an error
+						dependent_object = get_object(key)
+						# set the id obj_inst's dependent objects 
+						setattr(obj_inst, key, dependent_object.objects.get(uuid=dependent_uuid))
+						dependent_csvfile.close() # close dependent's csv
+							
+
+							# get dependent_id from row and use it to search the pks in dependent
+							# get uuid from dependent
+							# get object with uuid and get it's pk
+							# save pk to dependent_id in obj
+
+				for name in field_names:
+					# if name is not blank
+					if (row[name] != ''):
+					
+						# IntegerField: convert string to integer and save to object
+						if (obj_inst._meta.get_field(name).get_internal_type() == 'IntegerField'):
+								setattr(obj_inst, name, int(row[name]))
+
+						# FloatField: convert string to float and save to object
+						elif (obj_inst._meta.get_field(name).get_internal_type() == 'FloatField'):
+							setattr(obj_inst, name, float(row[name]))
+
+						# DateTimeField: convert string to a utc-aware datetime object and save it to object (should only be applicable to last_saved)
+						elif (obj_inst._meta.get_field(name).get_internal_type() == 'DateTimeField'):
+							setattr(obj_inst, name, pytz.utc.localize(datetime.datetime.strptime(row[name], '%Y-%m-%d %H:%M:%S')))
+
+						# DateField: convert string to datetime object, conert that to a date object and and save it to object
+						elif (obj_inst._meta.get_field(name).get_internal_type() == 'DateField'):
+							setattr(obj_inst, name, datetime.datetime.strptime(row[name], '%d/%m/%Y').date())
+						
+						# BooleanField: check if the csv has it saved as true or false (1 or 0) and then set the object field with as a boolean
+						elif (obj_inst._meta.get_field(name).get_internal_type() == 'BooleanField'):
+							if (row[name] == '1'):
+								setattr(obj_inst, name, True)
+							else:
+								setattr(obj_inst, name, False)
+
+						# FileFieldField: just set the object, no conversion required.
+						elif (obj_inst._meta.get_field(name).get_internal_type() == 'FileField'):
+							setattr(obj_inst, name, row[name])
+							# NEEDS WRITING
+
+						# CharField: just set the object, no conversion required.
+						elif (obj_inst._meta.get_field(name).get_internal_type() == 'CharField'):
+							setattr(obj_inst, name, row[name])
+
+						# TextField: just set the object, no conversion required.
+						elif (obj_inst._meta.get_field(name).get_internal_type() == 'TextField'):
+								setattr(obj_inst, name, row[name])
+
+						# If none of those are correct, print them out so I can see what I'm missing
+						else:
+							print "Unknown field type: %s" % obj_inst._meta.get_field(name).get_internal_type()
+
+					# If the field is left blank, set the default value - usually None or Null but on the few that aren't, this will avoid breaking the db.
+					else:
+						setattr(obj_instance, name, obj_inst._meta.get_field(name).default)
+
+				# Save the object to the database
+				obj_inst.save()
+
+			else:
+				pass
+
+	csvfile.close()
+#######################################################################
+#######################################################################
+#######################################################################
+
+#######################################################################
+#######################################################################
+#######################################################################		
 """This function exports the database using the import-export django 
 app, and imports csvs to be read into the database.
 """
@@ -489,23 +584,22 @@ def import_export_db(request):
 				path = 'database/db_merging/csvs/*.csv'
 
 				# Loop through the csvs directory five times:
-				# First, check that all the csvs correspond to a model.
+				# First, check that all the csvs and their dependencies correspond to a model.
 				# Second, check that all fields are present in each 
 				# csv.
 				# Third, make sure all files are populated. This won't break anything, but might be useful information for the user.
-				# Fourth, identify and locate dependent objects and their csvs.
-				# Fifh, compare the csv to the database and save the 
+				# Fourth, indentify and delete all files with repeated identifiers
+				# Fifth, identify and locate dependent objects and their csvs, check that the ids and uuids in both the csv and the dependent csvs are unique, and then check that all csvs are there again.
+				# Sixth, compare the csv to the database and save the 
 				# more recent data
-				for i in range(5):
+				for i in range(6):
 					# before each iteration, check that file isn't empty
 					if (dir_not_empty('database/db_merging/csvs')): 
-					
 						for pname in glob.glob(path):
 							# get the table name by parsing the path name
 							bname = os.path.basename(pname)
 							tname, extension = bname.split('.')
-							
-							# FIRST LOOP: Identify and Remove CSVS that Don't Match Database Headers
+							# FIRST LOOP: Identify and Remove CSVS and Their Dependencies that Don't Match Database Headers
 							if (i == 0):
 								# Check that each csv corresponds to a table in the database. If a table that does not exist appears, render the import_export template with an error message saying which csv doesn't correspond.
 								if (not get_object(tname)):
@@ -514,6 +608,16 @@ def import_export_db(request):
 										'database. Please re-upload with the correct '
 										'file name.' % bname))
 									os.remove(pname) # remove defective csv
+								
+								# # if the main csv corresponds to a model, check for dependents and make sure those correspond to a model.
+								if (is_dependent(tname)):
+									dependents_list = get_dependents_list(tname)
+									for dependent in dependents_list:
+										if (not get_object(dependent)):
+											messages.add_message(request, messages.ERROR, 
+											('%s is dependent on the %s model, which does not exist in our database. Please re-upload with the correct dependencies.' % bname, dependent))
+											os.remove(pname) # remove defective csv											
+
 							
 							# SECOND LOOP: Identify and Remove CSVs with Missing or Extra Fields
 							elif (i == 1):
@@ -545,57 +649,60 @@ def import_export_db(request):
 							
 							# THIRD LOOP: Identify and Remove Empty CSVs (except header)
 							elif (i == 2):
+								
 								if (file_empty(pname)):
 									messages.add_message(request, messages.ERROR, 
 										('%s is empty. If that is correct, please ignore this message.' % bname))
 									os.remove(pname) # remove empty csv
 
-							# FOURTH LOOP: Indentify dependent objects and locate their csvs
+							# FOURTH LOOP: Look for repeating ids and uuids in csv
 							elif (i == 3):
-								# If the current object is dependent on other objects, search the csvs directory for csvs that match the dependent objects and add those csvs to a dependents_csvs dict
-								dependents_objects = get_dependent_objects(tname)
-								if (dependents_objects is not None):
-									dependents_csvs = {}
-
-									# check each key against the csvs directory
-									for key in dependents_objects:
-										for pathname in glob.glob(path):
-											basename = os.path.basename(pathname)
-											tablename, extension = basename.split('.')
-
-											# if a csv matching the dependent_object exists, add the csv to dependents_csv
-											if (key == tablename):
-												dependents_csvs[key]=pathname
-									# If there not the same number of dependents in the objects dict and the csvs dict, create list of missing csvs, add a message, and remove the csv with dependents that don't exist.
-									if (len(dependents_objects) != len(dependents_csvs)):
-										missing_dependents_list = []
-										for key in dependents_objects:
-											if key not in dependents_csvs:
-												missing_dependents_list.append(key) # stitch list together to add to message
-										missing_dependents = (', ').join(missing_dependents_list)
-										messages.add_message(request, messages.ERROR,
-											('%s needs the following csv files to upload correctly'
-											': %s. Please add those files to your zip and '
-											're-upload.' % (bname, missing_dependents)))
-										os.remove(pname) # remove empty csv
-
-
-							# FIFTH LOOP: Finally, Compare CSV to Database
-							# Currently not a part of the loop for sake of testing without breaking anything
+							
+								repeating_identifiers = ids_uuids_unique(pname)
+								if (repeating_identifiers is not None):
+								
+									repeating_id_list = (', ').join(repeating_identifiers)
+									messages.add_message(request, messages.ERROR,
+									('The following fields have repeating values that should be unique in %s: %s. Please resolve these repetitions and re-upload.' % (bname, repeating_id_list)))
+									os.remove(pname) # remove csv with repeating ids/uuids
+							
+							# FIFTH LOOP: Indentify dependent objects and locate their csvs
 							elif (i == 4):
+								# If the current object is dependent on other objects, search the csvs directory for csvs that match the dependent objects and add those csvs to a dependents_csvs dict
+								if (is_dependent(tname)):
+
+									dependents_csvs = get_dependents_csvs(tname, path)
+									dependents_list = get_dependents_list(tname)
+
+									# If there not the same number of dependents in the objects dict and the csvs dict, create list of missing csvs, add a message, and remove the csv with dependents that don't exist.
+									if (len(dependents_list) != len(dependents_csvs)):
+										missing_dependents_list = []
+										for dependent in dependents_list:
+											if dependent not in dependents_csvs:
+												missing_dependents_list.append(dependent) # stitch list together to add to message
+
+										#first, check that there are no missing dependents that the main csv might need
+										if (missing_dependents_list):
+											missing_dependents_str = (', ').join(missing_dependents_list)
+											messages.add_message(request, messages.ERROR,
+												('%s needs the following csv files to upload correctly'
+												': %s. Please add those files to your zip and '
+												're-upload.' % (bname, missing_dependents_str)))
+											os.remove(pname) # remove empty csv
+
+							# SIXTH LOOP: Finally, Compare CSV to Database
+							# Currently not a part of the loop for sake of testing without breaking anything
+							elif (i == 5):
+								print tname
 								# If there are dependent objects (that exist in the csvs directory)
-								if (dependents_objects is not None):
-									compare_csv(pname, tname, dependents_objects, dependents_csvs)
+								if (is_dependent(tname)):
+									dependents_csvs = get_dependents_csvs(tname, path)
+									compare_csv(request, pname, tname, dependents_csvs)
 
 								# If no dependents, just pass in the csv and the table name
 								else:
-									compare_csv(pname, tname)
+									compare_csv(request, pname, tname, None)
 
-							# compare_csv(
-							# 	'database/db_merging/csvs/residence.csv', 'residence')
-
-								# compare_csv(
-								# 	'database/db_merging/csvs/child.csv', 'child', 'database/db_merging/csvs/child.csv')
 					else:
 						messages.add_message(request, messages.ERROR, "There's nothing left to return!")
 						return HttpResponseRedirect(reverse('tracker:import_export'))
@@ -618,6 +725,9 @@ def import_export_db(request):
 		}
 		return render(request, 'tracker/import_export.html', context)
 
+#######################################################################
+#######################################################################
+#######################################################################
 
 
 class ChildResource(resources.ModelResource):
