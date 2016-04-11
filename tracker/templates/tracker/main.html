@@ -17,6 +17,7 @@
 		<ul>
 		{% if residences %}
 			{% for residence in residences %}
+				{% if perms.tracker.not_restricted_to_home %}
 			<li>
 				<a href="{% url 'tracker:residence' residence.id %}"><div class="thumbnail gray">{% load staticfiles %}<img src="{% static "tracker/house-icon.svg" %}"></div>
 					{% if residence.residence_name == '' %}
@@ -24,12 +25,24 @@
 					{% else %}
 						{{ residence.residence_name }}
 					{% endif %}
-
 				</a>
 			</li>
+				{% else %}
+					{% if user.home == residence %}
+			<li>
+				<a href="{% url 'tracker:residence' residence.id %}"><div class="thumbnail gray">{% load staticfiles %}<img src="{% static "tracker/house-icon.svg" %}"></div>
+					{% if residence.residence_name == '' %}
+						Unknown Name
+					{% else %}
+						{{ residence.residence_name }}
+					{% endif %}
+				</a>
+			</li>
+					{% endif %}
+				{% endif %}
 			{% endfor %}
 		{% endif %}
-		{% if perms.tracker.add_edit_forms %}
+		{% if perms.tracker.add_edit_forms and perms.tracker.not_restricted_to_home %}
 		<li><a href="{% url 'tracker:add_residence' %}"><div class="thumbnail gray">{% load staticfiles %}<img src="{% static "tracker/add-new.svg" %}"></div>Añadir Nueva Casa</a></li>
 		{% endif %}
 		</ul>

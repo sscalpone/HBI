@@ -1,0 +1,36 @@
+{% extends 'two-column.html' %}
+
+{% block title %}Plan de Alta{% endblock %}
+
+{% block h2 %}Plan de Alta, {{exam.date}}{% endblock %}
+
+{% block sidebar %}
+    {% include 'tracker/sidebar.html' %}
+{% endblock %}
+
+{% block content %}
+
+    {% include 'tracker/basic-info.html' %}
+    <div>
+    	<ul id="form-info">
+            <li><span>Resumen del Niño(a):</span> {{ exam.summary }}</li>
+            <li><span>Fuerzas, Desafios, Consideraciones Especiales, etc.:</span> {{ exam.strengths_challenges}}</li>
+            <li><span>Relaciones Familiares o Comunitarias:</span> {{ exam.family }}</li>
+            <li><span>Enfoque de formación profesional:</span> {{ exam.training }}</li>
+            <li><span>Futuras posibilidades de alojamiento:</span> {{ exam.future_housing }}</li>
+        </ul>
+        <ul id="signature">
+            <li><h3>Los Datos del Profesíonal</h3></li>
+            <li><span>Nombre:</span> {{ signature.name }} {{ signature.surname }}</li>
+            <li><span>EMP:</span> {{ signature.emp }}</li>
+            <li><span>Direccion:</span> {{ signature.direction }}</li>
+            <li><span>Celular:</span> {{ signature.cell }}</li>
+        </ul>
+
+        {% if perms.tracker.add_edit_forms %}
+        <a href="{% url 'tracker:edit_discharge_plan' child_id exam.id %}">Edita Detalles</a>
+        {% endif %}
+
+    </div>
+    
+{% endblock %}

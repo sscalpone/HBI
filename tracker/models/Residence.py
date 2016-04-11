@@ -27,6 +27,9 @@ class Residence(models.Model):
 	def __unicode__(self):
 		return self.residence_name
 
+	def get_name(self):
+		return self.residence_name
+
 	# Meta class defines database table and labels, and clears any 
 	# default permissions.
 	class Meta:

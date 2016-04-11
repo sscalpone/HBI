@@ -5,6 +5,7 @@ from tracker.views import residence
 from tracker.views import child
 from tracker.views import documents
 from tracker.views import dental_exam
+from tracker.views import discharge_plan
 from tracker.views import disease_history
 from tracker.views import medical_exam_part1
 from tracker.views import medical_exam_part2
@@ -53,6 +54,13 @@ urlpatterns = patterns('',
         dental_exam.edit, name='edit_dental_exam'),
     url(r'^dental_exam/new/(?P<child_id>\d+)', dental_exam.new, 
         name='new_dental_exam'),
+
+    url(r'^discharge_plan/(?P<child_id>\d+)/(?P<exam_id>\d+)', discharge_plan.view, 
+        name='discharge_plan'),
+    url(r'^discharge_plan/edit/(?P<child_id>\d+)/(?P<exam_id>\d+)', 
+        discharge_plan.edit, name='edit_discharge_plan'),
+    url(r'^discharge_plan/new/(?P<child_id>\d+)', discharge_plan.new, 
+        name='new_discharge_plan'),
 
     url(r'^disease_history/(?P<child_id>\d+)/(?P<exam_id>\d+)', 
         disease_history.view, name='disease_history'),

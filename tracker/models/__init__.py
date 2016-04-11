@@ -4,6 +4,7 @@
 """
 from Child import Child, ChildForm
 from DentalExam import DentalExam, DentalExamForm
+from DischargePlan import DischargePlan, DischargePlanForm
 from Documents import Documents, DocumentsForm
 from DiseaseHistory import DiseaseHistory, DiseaseHistoryForm
 from ImportDB import ImportDBForm
@@ -15,9 +16,10 @@ from Photograph import Photograph, PhotographForm
 from Residence import Residence, ResidenceForm
 from Signature import Signature, SignatureForm
 from SocialExam import SocialExam, SocialExamForm
-from Profile import ProfileForm, UserUUID
+from Profile import ProfileForm
 from Profile import EditNameForm, EditPasswordForm, EditIsStaffForm
 from Profile import EditIsActiveForm, EditAddUsersForm, EditEmailForm
 from Profile import EditDeleteInfoForm, EditAddEditFormsForm
-from Profile import EditShowOnlyForm, EditRestrictToHomeForm
+from Profile import EditRestrictToHomeForm
 from HelpEmail import HelpEmailForm
+from CustomUser import CustomUser

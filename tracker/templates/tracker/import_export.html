@@ -21,7 +21,8 @@
     </ul>
    {% endif %}
 
-   <!-- {% load staticfiles %} -->
+{% if user.is_superuser %}
+
     {% if zip_file %}
     <a href="../../media/hbi-db-export.zip">Click here to download the database zip!</a>
     {% endif %}
@@ -40,5 +41,8 @@
         </ul>
             <input type="submit" name="submit_import" value="Importar la Base de Datos">
     </form>
+{% else %}
+    <p>Usted no tiene permiso para importar o exportar la base de datos.</p>
+{% endif %}
 
 {% endblock %}

@@ -8,7 +8,7 @@ import pytz
 import shutil
 import zipfile
 
-from django.contrib.auth.models import User
+from tracker.models import CustomUser as User
 from django.contrib.auth.models import Permission
 from django.contrib.contenttypes.models import ContentType
 
@@ -23,6 +23,7 @@ from import_export import resources
 
 from tracker.models import Child
 from tracker.models import DentalExam
+from tracker.models import DischargePlan
 from tracker.models import DiseaseHistory
 from tracker.models import Documents
 from tracker.models import Growth
@@ -30,7 +31,6 @@ from tracker.models import MedicalExamPart1
 from tracker.models import MedicalExamPart2
 from tracker.models import OperationHistory
 from tracker.models import Photograph
-from tracker.models import UserUUID
 from tracker.models import PsychologicalExam
 from tracker.models import Residence
 from tracker.models import Signature
@@ -63,14 +63,18 @@ def get_object(object_name):
 		return Photograph
 	elif (object_name == 'operation_history'):
 		return OperationHistory
-	elif (object_name == 'user_uuid'):
-		return UserUUID
+	elif (object_name == 'user'):
+		return User
 	elif (object_name == 'psychological_exam'):
 		return PsychologicalExam
 	elif (object_name == 'signature'):
 		return Signature
 	elif (object_name == 'social_exam'):
 		return SocialExam
+	elif (object_name == 'permission'):
+		return Permission
+	elif (object_name == 'content_type'):
+		return ContentType
 	else:
 		return False
 
@@ -81,6 +85,7 @@ def get_object(object_name):
 dependencies = {
 	'child': ['residence'],
 	'dental_exam': ['child', 'signature'],
+	'discharge_plan': ['child', 'signature'],
 	'disease_history': ['child', 'signature'],
 	'medical_exam_part1': ['child', 'signature'],
 	'medical_exam_part2': ['child', 'signature'],
@@ -89,11 +94,14 @@ dependencies = {
 	'social_exam': ['child', 'signature'],
 	'documents': ['child', 'signature'],
 	'photograph': ['child'],
-	'user_uuid': ['user'],
 	'growth': ['child', 'medical_exam_part1'],
+	'permission': ['content_type'],
+	'user': ['permission'],
 }
 
-"""Returns true if a given object's name can be found in the dependencies function, meaning that the object is dependent on other objects.
+"""Returns true if a given object's name can be found in the 
+dependencies function, meaning that the object is dependent on other 
+objects.
 """
 def is_dependent(object_name):
 	for key in dependencies:
@@ -101,7 +109,8 @@ def is_dependent(object_name):
 			return True
 	return False
 
-"""If a given object is dependent on other objects, this function will return a list of those dependencies. Otherwise, it returns None.
+"""If a given object is dependent on other objects, this function will
+return a list of those dependencies. Otherwise, it returns None.
 """
 def get_dependents_list(object_name):
 	if (is_dependent(object_name)):
@@ -111,7 +120,8 @@ def get_dependents_list(object_name):
 	else:
 		return None
 
-"""Gets all the csvs that match the names in the dependents list and returns the csvs dict.
+"""Gets all the csvs that match the names in the dependents list and
+returns the csvs dict.
 """
 def get_dependents_csvs(object_name, path):
 	dependents_list = get_dependents_list(object_name)
@@ -138,7 +148,6 @@ because there's nothing to compare. Returns false is the file is empty,
 returns true if it's not.
 """
 def file_empty(csv_file):
-	# get the headers in the csv file
 	csvfile = open(csv_file, 'rb')
 	reader = csv.DictReader(csvfile)
 	has_rows = False
@@ -150,9 +159,43 @@ def file_empty(csv_file):
 	else:
 		return False
 
-"""Function that checks for repeated ids and uuids in a passed-in csv. It returns a list of which fields have repetitions (list is empty if there are no repetitions). This could be DRYer but it can easily cause an infinite loop so it's being left alone for now.
+"""Function to check that the csv's id field and dependent reference
+ids field are populated. If not, return a list of which fields have 
+blank values. If they are, return None.
+"""
+def ids_not_empty(file):
+	csvfile = open(file, 'rb')
+	reader = csv.DictReader(csvfile)
+	dependents_names = get_dependents_list(file)
+	blank_fields = []
+	for row in reader:
+		if (not row['id']):
+			if ('id' not in blank_fields):
+				blank_fields.append('id')
+		if dependents_names:
+			for name in dependents_namess:
+				if (not row[name]):
+					if (name not in blank_fields):				
+						blank_fields.append('id')
+	csvfile.close()
+	if (blank_fields):
+		return blank_fields
+	else:
+		return None
+
+
+"""Function that checks for repeated ids and uuids in a passed-in csv. 
+It returns a list of which fields have repetitions (list is empty if 
+there are no repetitions). This could be DRYer but it can easily cause 
+an infinite loop so it's being left alone for now.
 """
 def ids_uuids_unique(file):
+	# get the headers in the csv file
+	csvfile = open(file, 'rb')
+	reader = csv.reader(csvfile)
+	headers = reader.next()
+	csvfile.close()
+
 	csvfile = open(file, 'rb')
 	reader = csv.DictReader(csvfile)
 	count = 0
@@ -162,7 +205,8 @@ def ids_uuids_unique(file):
 	uuids_list = []
 	for row in reader:
 		ids_list.append(row['id'])
-		uuids_list.append(row['uuid'])
+		if ('uuid' in headers):
+			uuids_list.append(row['uuid'])
 	csvfile.close()
 	ids_set = set(ids_list)
 	uuids_set = set(uuids_list)
@@ -175,14 +219,16 @@ def ids_uuids_unique(file):
 					count +=1
 				if (count > 1):
 					duplicate_in_field.append('id')
-	if (len(uuids_set) < len(uuids_list)):
-		for element in uuids_set:
-			count = 0
-			for item in uuids_list:
-				if (element == item):
-					count +=1
-				if (count > 1):
-					duplicate_in_field.append('uuid')
+	if ('uuid' in headers):
+		if (len(uuids_set) < len(uuids_list)):
+			for element in uuids_set:
+				count = 0
+				for item in uuids_list:
+					if (element == item):
+						count +=1
+					if (count > 1):
+						duplicate_in_field.append('uuid')
+	csvfile.close()
 	if duplicate_in_field:
 		return duplicate_in_field
 	else:
@@ -224,7 +270,8 @@ def missing_or_extra_fields(file, obj):
 	else:
 		return {'missing_headers': missing_headers, 'extra_headers': extra_headers,}
 
-"""Function that returns true if a passed_in path is an empty directory. Otherwise it returns false.
+"""Function that returns true if a passed_in path is an empty 
+directory. Otherwise it returns false.
 """
 def dir_not_empty(pathname):
 	if (os.listdir(pathname)):
@@ -232,7 +279,8 @@ def dir_not_empty(pathname):
 	else:
 		return False
 
-"""Moves files in a given path into the csvs directory, first deleting any non-csvs and csvs with multiple copies.
+"""Moves files in a given path into the csvs directory, first deleting 
+any non-csvs and csvs with multiple copies.
 """
 def move_files(request, pathname):
 	basename = os.path.basename(pathname)
@@ -250,16 +298,19 @@ def move_files(request, pathname):
 	else:
 		shutil.move(pathname, 'database/db_merging/csvs/%s' % basename)
 
-#######################################################################
-#######################################################################
-#######################################################################
+"""Special case for user because its UUID is stored in a different table (user_uuid), which requires an extra step.
+"""
+def user_dependents(request, file, model_instance, dependent_csvs_dict):
+	pass	
+
 """This function opens the passed-in csv file and compares it to the 
-master database, saving the more recent row to the master database.
+master database, saving the more recent row to the master database. If 
+the master database doesn't have a record of the object instance being 
+read in, it creates a new instance and saves it to the database. It 
+populates blank fields with the default value (usually None but for 
+some cases, such as uuids, default must be specified).
 """
 def compare_csv(request, file, model_instance, dependent_csvs_dict):
-	print dependent_csvs_dict
-	# get the headers in the csv file
-
 	# Open the csv file as a dictionary so it's searchable by field 
 	# name
 	csvfile = open(file, 'rb')
@@ -274,12 +325,13 @@ def compare_csv(request, file, model_instance, dependent_csvs_dict):
 	# don't exist, create new children in the master.
 
 	for row in reader:
+
 		uuid_csv = row['uuid']
 		# obj_inst = None # currently for if obj_inst, but hopefully that'll be written out
 		try:
 			# Based on the model_instance string, get the object that
 			# might be edited from the master db.
-			obj_inst = obj.objects.get(uuid=uuid)
+			obj_inst = obj.objects.get_or_create(uuid=uuid)
 		
 		except:
 			# Create new instance of model who has never been in the 
@@ -289,102 +341,103 @@ def compare_csv(request, file, model_instance, dependent_csvs_dict):
 		# If object exists, compare the object's last_saved field with
 		# the corresponding object in the csv. If the csv object is 
 		# newer, edit the master db.
-		if obj_inst:
+		if ('last_saved' in field_names):
 			if (pytz.utc.localize(datetime.datetime.strptime(
-				row['last_saved'], "%Y-%m-%d %H:%M:%S")) > getattr(obj_inst, 'last_saved')):
+				row['last_saved'], "%Y-%m-%d %H:%M:%S")) <= getattr(obj_inst, 'last_saved')):
+				return False
+			
+		if dependent_csvs_dict:
+			# get id
+			# match id to reference in user_uuid
+			# get uuid and get UUID object
+			# get reference id from UUID object
+			# use that to get the User object
+			# edit user
+			
+			for key, value in dependent_csvs_dict.iteritems():
+				dependent_csvfile = open(value, 'rb') # open dependent object's csv file
+				dependent_reader = csv.DictReader(dependent_csvfile)
 				
-				if dependent_csvs_dict:
-					for key, value in dependent_csvs_dict.iteritems():
-						dependent_csvfile = open(value, 'rb') # open dependent object's csv file
-						dependent_reader = csv.DictReader(dependent_csvfile)
-						
-						dependent_id = row[key] # get the id of the dependent object from row
-						
-						# get dependent object's uuid by searching the dict the row matching the dependent id
-						for drow in dependent_reader:
-							if (drow['id'] == dependent_id):
-								dependent_uuid = drow['uuid']
-							
-							# if the dependent id isn't in the object, do something
-							else:
-								messages.add_message(request, messages.ERROR, "There's nothing left to return!")
-								return False # will be rewritten, just here so nothing throws an error
-						dependent_object = get_object(key)
-						# set the id obj_inst's dependent objects 
-						setattr(obj_inst, key, dependent_object.objects.get(uuid=dependent_uuid))
-						dependent_csvfile.close() # close dependent's csv
-							
-
-							# get dependent_id from row and use it to search the pks in dependent
-							# get uuid from dependent
-							# get object with uuid and get it's pk
-							# save pk to dependent_id in obj
-
-				for name in field_names:
-					# if name is not blank
-					if (row[name] != ''):
+				dependent_id = row[key] # get the id of the dependent object from row
+				
+				# get dependent object's uuid by searching the dict the row matching the dependent id
+				for drow in dependent_reader:
+					if (drow['id'] == dependent_id):
+						dependent_uuid = drow['uuid']
 					
-						# IntegerField: convert string to integer and save to object
-						if (obj_inst._meta.get_field(name).get_internal_type() == 'IntegerField'):
-								setattr(obj_inst, name, int(row[name]))
-
-						# FloatField: convert string to float and save to object
-						elif (obj_inst._meta.get_field(name).get_internal_type() == 'FloatField'):
-							setattr(obj_inst, name, float(row[name]))
-
-						# DateTimeField: convert string to a utc-aware datetime object and save it to object (should only be applicable to last_saved)
-						elif (obj_inst._meta.get_field(name).get_internal_type() == 'DateTimeField'):
-							setattr(obj_inst, name, pytz.utc.localize(datetime.datetime.strptime(row[name], '%Y-%m-%d %H:%M:%S')))
-
-						# DateField: convert string to datetime object, conert that to a date object and and save it to object
-						elif (obj_inst._meta.get_field(name).get_internal_type() == 'DateField'):
-							setattr(obj_inst, name, datetime.datetime.strptime(row[name], '%d/%m/%Y').date())
-						
-						# BooleanField: check if the csv has it saved as true or false (1 or 0) and then set the object field with as a boolean
-						elif (obj_inst._meta.get_field(name).get_internal_type() == 'BooleanField'):
-							if (row[name] == '1'):
-								setattr(obj_inst, name, True)
-							else:
-								setattr(obj_inst, name, False)
-
-						# FileFieldField: just set the object, no conversion required.
-						elif (obj_inst._meta.get_field(name).get_internal_type() == 'FileField'):
-							setattr(obj_inst, name, row[name])
-							# NEEDS WRITING
-
-						# CharField: just set the object, no conversion required.
-						elif (obj_inst._meta.get_field(name).get_internal_type() == 'CharField'):
-							setattr(obj_inst, name, row[name])
-
-						# TextField: just set the object, no conversion required.
-						elif (obj_inst._meta.get_field(name).get_internal_type() == 'TextField'):
-								setattr(obj_inst, name, row[name])
-
-						# If none of those are correct, print them out so I can see what I'm missing
-						else:
-							print "Unknown field type: %s" % obj_inst._meta.get_field(name).get_internal_type()
-
-					# If the field is left blank, set the default value - usually None or Null but on the few that aren't, this will avoid breaking the db.
+					# if the dependent id isn't in the object, do something
 					else:
-						setattr(obj_instance, name, obj_inst._meta.get_field(name).default)
+						messages.add_message(request, messages.ERROR, "There's nothing left to return!")
+						return False # will be rewritten, just here so nothing throws an error
+				dependent_object = get_object(key)
+				# set the id obj_inst's dependent objects 
+				setattr(obj_inst, key, dependent_object.objects.get(uuid=dependent_uuid))
+				dependent_csvfile.close() # close dependent's csv
+					
 
-				# Save the object to the database
-				obj_inst.save()
+					# get dependent_id from row and use it to search the pks in dependent
+					# get uuid from dependent
+					# get object with uuid and get it's pk
+					# save pk to dependent_id in obj
 
+		for name in field_names:
+			# if name is not blank
+			if (row[name]):
+			
+				# IntegerField: convert string to integer and save to object
+				if (obj_inst._meta.get_field(name).get_internal_type() == 'IntegerField'):
+						setattr(obj_inst, name, int(row[name]))
+
+				# FloatField: convert string to float and save to object
+				elif (obj_inst._meta.get_field(name).get_internal_type() == 'FloatField'):
+					setattr(obj_inst, name, float(row[name]))
+
+				# DateTimeField: convert string to a utc-aware datetime object and save it to object (should only be applicable to last_saved)
+				elif (obj_inst._meta.get_field(name).get_internal_type() == 'DateTimeField'):
+					setattr(obj_inst, name, pytz.utc.localize(datetime.datetime.strptime(row[name], '%Y-%m-%d %H:%M:%S')))
+
+				# DateField: convert string to datetime object, conert that to a date object and and save it to object
+				elif (obj_inst._meta.get_field(name).get_internal_type() == 'DateField'):
+					setattr(obj_inst, name, datetime.datetime.strptime(row[name], '%d/%m/%Y').date())
+				
+				# BooleanField: check if the csv has it saved as true or false (1 or 0) and then set the object field with as a boolean
+				elif (obj_inst._meta.get_field(name).get_internal_type() == 'BooleanField'):
+					if (row[name] == '1'):
+						setattr(obj_inst, name, True)
+					else:
+						setattr(obj_inst, name, False)
+
+				# FileFieldField: just set the object, no conversion required.
+				elif (obj_inst._meta.get_field(name).get_internal_type() == 'FileField'):
+					setattr(obj_inst, name, row[name])
+					# NEEDS WRITING
+
+				# CharField: just set the object, no conversion required.
+				elif (obj_inst._meta.get_field(name).get_internal_type() == 'CharField'):
+					setattr(obj_inst, name, row[name])
+
+				# TextField: just set the object, no conversion required.
+				elif (obj_inst._meta.get_field(name).get_internal_type() == 'TextField'):
+						setattr(obj_inst, name, row[name])
+
+				# If none of those are correct, print them out so I can see what I'm missing
+				else:
+					print "Unknown field type: %s" % obj_inst._meta.get_field(name).get_internal_type()
+
+			# If the field is left blank, set the default value - usually None or Null but on the few that aren't, this will avoid breaking the db.
 			else:
-				pass
+				setattr(obj_instance, name, obj_inst._meta.get_field(name).default)
+
+		# Save the object to the database
+		obj_inst.save()
 
 	csvfile.close()
-#######################################################################
-#######################################################################
-#######################################################################
 
-#######################################################################
-#######################################################################
-#######################################################################		
+	
 """This function exports the database using the import-export django 
-app, and imports csvs to be read into the database.
+app, and imports CSVs to be read into the database. During import, it checks for errors and deletes files that fail with an error message. CSVs that pass are sent to compare_csvs to be 
 """
+@login_required
 def import_export_db(request):
 	if (request.POST):
 
@@ -410,6 +463,11 @@ def import_export_db(request):
 			with open('csvs/dental_exam.csv', 'w') as dental_exam_csv:
 				dental_exam_csv.write(dental_exam.csv)
 			tables.append('csvs/dental_exam.csv')
+
+			discharge_plan = DischargePlanResource().export()
+			with open('csvs/discharge_plan.csv', 'w') as discharge_plan_csv:
+				discharge_plan_csv.write(discharge_plan.csv)
+			tables.append('csvs/discharge_plan.csv')
 
 			documents = DocumentsResource().export()
 			with open('csvs/documents.csv', 'w') as documents_csv:
@@ -446,11 +504,6 @@ def import_export_db(request):
 				photograph_csv.write(photograph.csv)
 			tables.append('csvs/photograph.csv')
 
-			user_uuid = UserUUIDResource().export()
-			with open('csvs/user_uuid.csv', 'w') as user_uuid_csv:
-				user_uuid_csv.write(user_uuid.csv)
-			tables.append('csvs/user_uuid.csv')
-
 			psychological_exam = PsychologicalExamResource().export()
 			with open('csvs/psychological_exam.csv', 'w') as psychological_exam_csv:
 				psychological_exam_csv.write(psychological_exam.csv)
@@ -470,6 +523,22 @@ def import_export_db(request):
 			with open('csvs/social_exam.csv', 'w') as social_exam_csv:
 				social_exam_csv.write(social_exam.csv)
 			tables.append('csvs/social_exam.csv')
+
+			# auth
+			user = UserResource().export()
+			with open('csvs/user.csv', 'w') as user_csv:
+				user_csv.write(user.csv)
+			tables.append('csvs/user.csv')
+
+			permission = PermissionResource().export()
+			with open('csvs/permission.csv', 'w') as permission_csv:
+				permission_csv.write(permission.csv)
+			tables.append('csvs/permission.csv')
+
+			content_type = ContentTypeResource().export()
+			with open('csvs/content_type.csv', 'w') as content_type_csv:
+				content_type_csv.write(content_type.csv)
+			tables.append('csvs/content_type.csv')
 
 			# Before zipping file, remove any previously zipped 
 			# database file.
@@ -604,9 +673,7 @@ def import_export_db(request):
 								# Check that each csv corresponds to a table in the database. If a table that does not exist appears, render the import_export template with an error message saying which csv doesn't correspond.
 								if (not get_object(tname)):
 									messages.add_message(request, messages.ERROR, 
-										('%s does not correspond to any table in the '
-										'database. Please re-upload with the correct '
-										'file name.' % bname))
+										('%s does not correspond to any table in the database. Please re-upload with the correct file name.' % bname))
 									os.remove(pname) # remove defective csv
 								
 								# # if the main csv corresponds to a model, check for dependents and make sure those correspond to a model.
@@ -614,8 +681,9 @@ def import_export_db(request):
 									dependents_list = get_dependents_list(tname)
 									for dependent in dependents_list:
 										if (not get_object(dependent)):
-											messages.add_message(request, messages.ERROR, 
-											('%s is dependent on the %s model, which does not exist in our database. Please re-upload with the correct dependencies.' % bname, dependent))
+											print 'dependent %s' % dependent
+											print bname
+											messages.add_message(request, messages.ERROR, ('%s is dependent on the %s model, which does not exist in our database. Please re-upload with the correct dependencies.' % (bname, dependent)))
 											os.remove(pname) # remove defective csv											
 
 							
@@ -631,19 +699,15 @@ def import_export_db(request):
 										missing_headers = ', '.join(
 											mef_check['missing_headers'])
 										messages.add_message(request, messages.ERROR,
-											('The following fields are missing from %s'
-											': %s. Please add those fields and '
-											're-upload' % (bname, missing_headers)))
+											('The following fields are missing from %s: %s. Please add those fields and re-upload' % (bname, missing_headers)
+											))
 
 									# If there are extra headers, add a error message to be displayed on render of all the extra fields in that csv file.
 									if (mef_check['extra_headers']):
 										extra_headers = ', '.join(
 											mef_check['extra_headers'])
 										messages.add_message(request, messages.ERROR,
-											('The following fields from %s do not '
-											'exist in the database: %s. Please either'
-											' rename or remove these fields before '
-											're-uploading.' % (bname, extra_headers)
+											('The following fields from %s do not exist in the database: %s. Please either rename or remove these fields before re-uploading.' % (bname, extra_headers)
 											))
 									os.remove(pname) # remove broken csv
 							
@@ -657,14 +721,21 @@ def import_export_db(request):
 
 							# FOURTH LOOP: Look for repeating ids and uuids in csv
 							elif (i == 3):
-							
-								repeating_identifiers = ids_uuids_unique(pname)
-								if (repeating_identifiers is not None):
 								
-									repeating_id_list = (', ').join(repeating_identifiers)
+								empty_identifiers = ids_not_empty(pname)
+								if (empty_identifiers is not None):
+									empty_ids_str = (', ').join(empty_identifiers)
 									messages.add_message(request, messages.ERROR,
-									('The following fields have repeating values that should be unique in %s: %s. Please resolve these repetitions and re-upload.' % (bname, repeating_id_list)))
-									os.remove(pname) # remove csv with repeating ids/uuids
+									('The following required fields have blank values in %s: %s. Please resolve these repetitions and re-upload.' % (bname, empty_ids_str)))
+									os.remove(pname) # remove csv with repeating ids/uuids									
+								else:
+									repeating_identifiers = ids_uuids_unique(pname)
+									if (repeating_identifiers is not None):
+									
+										repeating_id_str = (', ').join(repeating_identifiers)
+										messages.add_message(request, messages.ERROR,
+										('The following fields have repeating values that should be unique in %s: %s. Please resolve these repetitions and re-upload.' % (bname, repeating_id_str)))
+										os.remove(pname) # remove csv with repeating ids/uuids
 							
 							# FIFTH LOOP: Indentify dependent objects and locate their csvs
 							elif (i == 4):
@@ -729,6 +800,7 @@ def import_export_db(request):
 #######################################################################
 #######################################################################
 
+# app tables
 
 class ChildResource(resources.ModelResource):
 
@@ -740,6 +812,11 @@ class DentalExamResource(resources.ModelResource):
 
     class Meta:
         model = DentalExam
+
+class DischargePlanResource(resources.ModelResource):
+
+    class Meta:
+        model = DischargePlan
 
 
 class DocumentsResource(resources.ModelResource):
@@ -782,12 +859,6 @@ class PhotographResource(resources.ModelResource):
         model = Photograph
 
 
-class UserUUIDResource(resources.ModelResource):
-
-    class Meta:
-        model = UserUUID
-
-
 class PsychologicalExamResource(resources.ModelResource):
 
     class Meta:
@@ -810,3 +881,43 @@ class SocialExamResource(resources.ModelResource):
 
     class Meta:
         model = SocialExam
+
+# auth tables
+
+class UserResource(resources.ModelResource):
+
+    class Meta:
+        model = User
+
+
+class PermissionResource(resources.ModelResource):
+
+	class Meta:
+		model = Permission
+
+
+class ContentTypeResource(resources.ModelResource):
+
+	class Meta:
+		model = ContentType
+
+# dictionary of all resource classes
+resource_classes = {
+	'child': ChildResource(),
+	'dental_exam': DentalExamResource(),
+	'discharge_plan': DischargePlanResource(),
+	'documents': DocumentsResource(),
+	'disease_history': DiseaseHistoryResource(),
+	'growth': GrowthResource(),
+	'medical_exam_part1': MedicalExamPart1Resource(),
+		'medical_exam_part2': MedicalExamPart2Resource(),
+		'operation_history': OperationHistoryResource(),
+	'photograph': PhotographResource(),
+	'psychological_exam': PsychologicalExamResource(),
+	'residence': ResidenceResource(),
+	'signature': SignatureResource(),
+	'social_exam': SocialExamResource(),
+	'user': UserResource(),
+	'permission': PermissionResource(),
+	'content_type': ContentTypeResource(),
+}

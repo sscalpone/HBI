@@ -131,12 +131,12 @@ class SocialExamForm(ModelForm):
         msg = "Este campo es obligatorio."
         cleaned_data = super(SocialExamForm, self).clean()
         
-        if self.request.POST:
+        if (self.request.POST):
             
             # On validation ('submit' in request), checks if signature 
             # forms fields are filled out and raises exceptions on any 
             # fields left blank.
-            if 'submit' in self.request.POST:
+            if ('submit' in self.request.POST):
                 
                 antecedents = cleaned_data.get('antecedents')
                 if (antecedents == ''):

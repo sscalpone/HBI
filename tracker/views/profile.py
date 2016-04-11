@@ -4,7 +4,7 @@ import datetime
 
 from django.contrib.auth import authenticate
 
-from django.contrib.auth.models import User
+from tracker.models import CustomUser as User
 from django.contrib.auth.models import Permission
 from django.contrib.contenttypes.models import ContentType
 
@@ -15,12 +15,12 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
 from django.template import loader
 
-from tracker.models import ProfileForm, UserUUID
+from tracker.models import ProfileForm
 
 from tracker.models import EditNameForm, EditPasswordForm
 from tracker.models import EditIsStaffForm, EditIsActiveForm
 from tracker.models import EditAddUsersForm, EditDeleteInfoForm
-from tracker.models import EditAddEditFormsForm, EditShowOnlyForm
+from tracker.models import EditAddEditFormsForm
 from tracker.models import EditRestrictToHomeForm, EditEmailForm
 
 
@@ -46,8 +46,8 @@ def add_edit_forms_check(user):
 and returns the home if True, and returns a None if false.
 """
 def restrict_to_home_check(user):
-    if (user.has_perm('tracker.restrict_to_home')):
-        return user.useruuid.home
+    if (not user.has_perm('tracker.not_restricted_to_home')):
+        return user.home
     else:
         return None
 
@@ -128,11 +128,14 @@ def new(request):
                         user.first_name = saved_user['first_name']
                         user.last_name = saved_user['last_name']
                         user.is_staff = saved_user['is_staff']
+                        user.home = saved_user['home']
+                        user.last_saved = datetime.datetime.utcnow()
                         content_type = ContentType.objects.get_for_model(
-                            UserUUID)
+                            User)
 
                         # Add permissions
                         if (saved_user['add_users'] is True):
+                            user.add_users = True
                             permission = Permission.objects.get(
                                 codename='add_users', 
                                 content_type=content_type
@@ -140,6 +143,7 @@ def new(request):
                             user.user_permissions.add(permission)
                         
                         if (saved_user['delete_info'] is True):
+                            user.delete_info = True
                             permission = Permission.objects.get(
                                 codename='delete_info', 
                                 content_type=content_type
@@ -147,6 +151,7 @@ def new(request):
                             user.user_permissions.add(permission)
                         
                         if (saved_user['add_edit_forms'] is True):
+                            user.add_edit_forms = True
                             permission = Permission.objects.get(
                                 codename='add_edit_forms', 
                                 content_type=content_type
@@ -154,22 +159,17 @@ def new(request):
                             user.user_permissions.add(permission)
                         
                         if (saved_user['view'] is True):
+                            user.add_edit_forms = True
                             permission = Permission.objects.get(
                                 codename='view', 
                                 content_type=content_type
                             )
                             user.user_permissions.add(permission)
                         
-                        if (saved_user['restrict_to_home'] is True):
+                        if (saved_user['restrict_to_home'] is False):
+                            user.not_restricted_to_home = True
                             permission = Permission.objects.get(
-                                codename='restrict_to_home', 
-                                content_type=content_type
-                            )
-                            user.user_permissions.add(permission)
-                        
-                        if (saved_user['show_only'] is True):
-                            permission = Permission.objects.get(
-                                codename='show_only', 
+                                codename='not_restricted_to_home', 
                                 content_type=content_type
                             )
                             user.user_permissions.add(permission)
@@ -178,37 +178,17 @@ def new(request):
 
                         # Check that user object saved
                         if (user):
-                            uuid = UserUUID(user=user, 
-                                home=saved_user['home'], 
-                                last_saved=datetime.datetime.utcnow())
-                            uuid.save()
-
-                            #check that uuid object saved
-                            if (uuid):
-                                context = {
-                                    'profile_list': User.objects.all(),
-                                }
-                                return render(request, 
-                                    'tracker/profiles.html', 
-                                    context)
+                            context = {
+                                'profile_list': User.objects.all(),
+                            }
+                            return render(request, 
+                                'tracker/profiles.html', 
+                                context)
                             
-                            # if validation passed but the uuid object 
-                            # still didn't save, return to 
-                            # add_profile template with 
-                            # "Sorry, please try again" error message
-                            else:
-                                return render(request, 
-                                    'tracker/add_profile.html', 
-                                    {
-                                     'error_message': 'Lo sentimos, el '
-                                     'formulario no se puede guardar en este '
-                                     'momento. Por favor, vuelva a '
-                                     'intentarlo.',
-                                    })
 
                         # if validation passed but the user object 
                         # still didn't save, return to 
-                        # add_disease_history template with "Sorry, 
+                        # add_profile template with "Sorry, 
                         # please try again" error message
                         else:
                             return render(request, 
@@ -274,7 +254,7 @@ def view(request, profile_id):
 
         # If POST request, edit the User 
         if (request.POST):
-            content_type = ContentType.objects.get_for_model(UserUUID)
+            content_type = ContentType.objects.get_for_model(User)
             
             # Each form has different name so that posted forms
             # can be differentiated and processed correctly
@@ -296,6 +276,7 @@ def view(request, profile_id):
                     profile = get_object_or_404(User, pk=profile_id)
                     profile.first_name = saved_form['first_name']
                     profile.last_name = saved_form['last_name']
+                    profile.last_saved = datetime.datetime.utcnow()
                     profile.save()
                 # Render the profile.html template
                 return HttpResponseRedirect(reverse('tracker:profile', 
@@ -317,6 +298,7 @@ def view(request, profile_id):
                             kwargs={'profile_id': profile_id}))
                     profile = get_object_or_404(User, pk=profile_id)
                     profile.email = saved_form['email']
+                    profile.last_saved = datetime.datetime.utcnow()
                     profile.save()
                 # Render the profile.html template
                 return HttpResponseRedirect(reverse('tracker:profile', 
@@ -331,6 +313,7 @@ def view(request, profile_id):
                     saved_form = form.cleaned_data
                     profile = get_object_or_404(User, pk=profile_id)
                     profile.password = saved_form['password']
+                    profile.last_saved = datetime.datetime.utcnow()
                     profile.save()
                 # Render the profile template
                 return render(request, 'tracker/profile.html', context)
@@ -348,11 +331,13 @@ def view(request, profile_id):
                         content_type=content_type
                     )
                     if (saved_form['add_users'] is True):
+                        profile.add_users = True
                         profile.user_permissions.add(permission)
-                        profile.save()
                     else:
+                        profile.add_users = False
                         profile.user_permissions.remove(permission)
-                        profile.save()
+                    profile.last_saved = datetime.datetime.utcnow()
+                    profile.save()
                 # Render the profile template
                 return HttpResponseRedirect(reverse('tracker:profile', 
                     kwargs={'profile_id': profile_id}))
@@ -370,11 +355,13 @@ def view(request, profile_id):
                         content_type=content_type
                     )
                     if (saved_form['delete_info'] is True):
+                        profile.delete_info = True
                         profile.user_permissions.add(permission)
-                        profile.save()
                     else:
+                        profile.delete_info = False
                         profile.user_permissions.remove(permission)
-                        profile.save()
+                    profile.last_saved = datetime.datetime.utcnow()
+                    profile.save()
                 return HttpResponseRedirect(reverse('tracker:profile', 
                     kwargs={'profile_id': profile_id}))
 
@@ -392,13 +379,42 @@ def view(request, profile_id):
                         content_type=content_type
                     )
                     if (saved_form['add_edit_forms'] is True):
+                        profile.add_edit_forms = True
                         profile.user_permissions.add(permission)
-                        profile.save()
                     else:
+                        profile.add_edit_forms = False
                         profile.user_permissions.remove(permission)
-                        profile.save()
+                    profile.last_saved = datetime.datetime.utcnow()
+                    profile.save()
                 return HttpResponseRedirect(reverse('tracker:profile', 
                     kwargs={'profile_id': profile_id}))
+
+            # If the user is editing the add_edit_forms 
+            # permission, process the form and edit the user's 
+            # permission
+            elif 'restrict_to_home' in request.POST:
+                form = EditRestrictToHomeForm(request.POST, request.FILES, 
+                    request=request)
+                if (form.is_valid()):
+                    saved_form = form.cleaned_data
+                    profile = get_object_or_404(User, pk=profile_id)
+                    permission = Permission.objects.get(
+                        codename='not_restricted_to_home', 
+                        content_type=content_type
+                    )
+                    if (saved_form['restrict_to_home'] is False):
+                        profile.not_restricted_to_home = True
+                        profile.home = None
+                        profile.user_permissions.add(permission)
+                    else:
+                        profile.add_edit_forms = True
+                        profile.home = saved_form['home']
+                        profile.user_permissions.remove(permission)
+                    profile.last_saved = datetime.datetime.utcnow()
+                    profile.save()
+                return HttpResponseRedirect(reverse('tracker:profile', 
+                    kwargs={'profile_id': profile_id}))
+
 
             # If the user is editing the staff status, 
             # process the form and edit the user's staff status
@@ -412,6 +428,7 @@ def view(request, profile_id):
                         profile.is_staff = True
                     else:
                         profile.is_staff = False
+                    profile.last_saved = datetime.datetime.utcnow()
                     profile.save()
                 return HttpResponseRedirect(reverse('tracker:profile', 
                     kwargs={'profile_id': profile_id}))
@@ -428,6 +445,7 @@ def view(request, profile_id):
                         profile.is_active = True
                     else:
                         profile.is_active = False
+                    profile.last_saved = datetime.datetime.utcnow()
                     profile.save()
                 return HttpResponseRedirect(reverse('tracker:profile', 
                     kwargs={'profile_id': profile_id}))
@@ -469,16 +487,12 @@ def view(request, profile_id):
                     ),
                 })
             
-            show_only_form = EditShowOnlyForm(initial={
-                   'show_only': profile.has_perm('tracker.show_only'),
-                })
-            
             restrict_to_home_form = EditRestrictToHomeForm(
                 initial={
-                   'restrict_to_home': profile.has_perm(
-                        'tracker.restrict_to_home'
+                   'restrict_to_home': not profile.has_perm(
+                        'tracker.not_restricted_to_home'
                     ),
-                   'home': profile.useruuid.home,
+                   'home': profile.home,
                 })
 
         # Render the profile template
@@ -496,7 +510,6 @@ def view(request, profile_id):
             'add_users_form': add_users_form.as_ul,
             'delete_info_form': delete_info_form.as_ul,
             'add_edit_forms_form': add_edit_forms_form.as_ul,
-            'show_only_form': show_only_form.as_ul,
             'restrict_to_home_form': restrict_to_home_form.as_ul,
             'email_form': email_form.as_ul,
         }

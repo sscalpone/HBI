@@ -3,8 +3,8 @@
 import datetime
 import uuid
 
-from django.contrib.auth.models import User
 from django.db import models
+from django.conf import settings
 
 from django import forms
 
@@ -13,6 +13,7 @@ from django.forms import PasswordInput
 from django.forms import EmailInput
 from django.forms import CheckboxInput
 
+from CustomUser import CustomUser as User
 from Residence import Residence
 
 
@@ -61,10 +62,6 @@ class ProfileForm(forms.Form):
 							  required=False, 
 							  label='Ver', 
 							  widget=forms.CheckboxInput)
-	show_only = forms.BooleanField(initial=False, 
-								   required=False, 
-								   label='Monstrar Solo', 
-								   widget=forms.CheckboxInput)
 
 	# Override __init__ so 'request' can be accessed in the clean() 
 	# function.
@@ -105,13 +102,10 @@ class ProfileForm(forms.Form):
 					self.add_error('email', 'Este correo electrónico ya ' 
 						'tiene una cuenta.')
 
-
+				# Set 
 				view = cleaned_data.get('view')
 				if view is not True:
 					view = False
-				show_only = cleaned_data.get('show_only')
-				if show_only is not True:
-					show_only = False
 				add_edit_forms= cleaned_data.get('add_edit_forms')
 				if add_edit_forms is not True:
 					add_edit_forms = False
@@ -124,24 +118,6 @@ class ProfileForm(forms.Form):
 				restrict_to_home = cleaned_data.get('restrict_to_home')
 				if restrict_to_home is not True:
 					restrict_to_home = False
-
-				# Checks that view is selected for all non-show-only 
-				# users.
-				view = cleaned_data.get('view')
-				show_only = cleaned_data.get('show_only')
-				if (view is False and show_only is False):
-					self.add_error('view', 'El usuario debe ser capaz de ver '
-						'la información.')
-
-				# Checks that no other permissions have been selected 
-				# for show-only users.
-				add_users = cleaned_data.get('add_users')
-				delete_info = cleaned_data.get('delete_info')
-				add_edit_forms = cleaned_data.get('add_edit_forms')
-				if (show_only is True):
-					if (view or add_users or delete_info or add_edit_forms or restrict_to_home):
-						self.add_error('show_only', 'No hay otros permisos ' 
-							'se pueden añadir en presentas solamente.')
 
 				# Checks that a home is selected for any user 
 				# restricted to a home.
@@ -423,36 +399,6 @@ class EditAddEditFormsForm(forms.Form):
 
 
 """Form to edit the permissions of a user in the User model. This form 
-edits whether the user is show only (removes identifying material). 
-The clean() method checks the password for security.
-"""
-class EditShowOnlyForm(forms.Form):
-	show_only = forms.BooleanField(required=False, label='Añadir Otros Usuarios', widget=forms.CheckboxInput)
-	password = forms.CharField(max_length=200, label='Contraseña', widget=forms.PasswordInput)
-
-	# Override __init__ so 'request' can be accessed in the clean() 
-	# function.
-	def __init__(self, *args, **kwargs):
-		self.request = kwargs.pop('request', None)
-		super(EditShowOnlyForm, self).__init__(*args, **kwargs)
-
-	# Override clean so forms can be saved without validating (so data
-	# isn't lost if the form can't be completed), but still raises 
-	# exceptions when form is done incorrectly.
-	def clean(self):
-		msg = "Este campo es obligatorio." #Validation exception message
-		cleaned_data = super(EditShowOnlyForm, self).clean()
-
-		# On validation ('submit' in request), checks if signature 
-		# forms fields are filled out and raises exceptions on any 
-		# fields left blank.
-		if (self.request.POST):
-			password = cleaned_data.get('password')
-			if (not self.request.user.check_password(password)):
-				self.add_error('password', 'Tu contraseña es incorrecta.')
-
-
-"""Form to edit the permissions of a user in the User model. This form 
 edits whether they're restricted to their home and, if so, which home. 
 The clean() method checks the password for security.
 """
@@ -494,35 +440,4 @@ class EditRestrictToHomeForm(forms.Form):
 						'usuario no se limita a casa.')
 			else:
 				self.add_error('password', 'Tu contraseña es incorrecta.')
-
-
-"""Extra information to be saved for the user, including UUID and home-
-restriction, if applicable. All fields will be populated by the 
-ProfileForm, after the User has been created.
-"""
-class UserUUID(models.Model):
-	user = models.OneToOneField(User)
-	uuid = models.CharField(max_length=200, unique=True, default=uuid.uuid4)
-	home = models.ForeignKey(Residence, blank=True, null=True)
-	# For de-duping forms that have been edited.
-	last_saved = models.DateTimeField()
-
-	# Meta class defines database table and labels, and clears any 
-	# default permissions.
-	class Meta:
-		app_label = 'tracker'
-		db_table = 'tracker_useruuid'
-		default_permissions = ()
-
-		# Permissions used by users in this app
-		permissions = (
-			('add_users', 'Add Users'),
-			('delete_info', 'Delete Info'),
-			('add_edit_forms', 'Add and Edit Forms'),
-			('view', 'View'),
-			('restrict_to_home', 'Restrict to Home'),
-			('show-only', 'Show Only'),
-		)
-
-
 
