@@ -71,10 +71,6 @@ def get_object(object_name):
 		return Signature
 	elif (object_name == 'social_exam'):
 		return SocialExam
-	elif (object_name == 'permission'):
-		return Permission
-	elif (object_name == 'content_type'):
-		return ContentType
 	else:
 		return False
 
@@ -95,8 +91,7 @@ dependencies = {
 	'documents': ['child', 'signature'],
 	'photograph': ['child'],
 	'growth': ['child', 'medical_exam_part1'],
-	'permission': ['content_type'],
-	'user': ['permission'],
+	'user': ['residence'],
 }
 
 """Returns true if a given object's name can be found in the 
@@ -298,10 +293,6 @@ def move_files(request, pathname):
 	else:
 		shutil.move(pathname, 'database/db_merging/csvs/%s' % basename)
 
-"""Special case for user because its UUID is stored in a different table (user_uuid), which requires an extra step.
-"""
-def user_dependents(request, file, model_instance, dependent_csvs_dict):
-	pass	
 
 """This function opens the passed-in csv file and compares it to the 
 master database, saving the more recent row to the master database. If 
@@ -319,40 +310,29 @@ def compare_csv(request, file, model_instance, dependent_csvs_dict):
 	obj = get_object(model_instance)
 	field_names = [f.name for f in obj._meta.fields]
 
-	# Iterate through the csv file, matching the UUIDs in the file to 
-	# the children in the master database. If they exist, compare the
-	# entire csv row to the Child and update appropriately. If they 
-	# don't exist, create new children in the master.
-
 	for row in reader:
-
-		uuid_csv = row['uuid']
-		# obj_inst = None # currently for if obj_inst, but hopefully that'll be written out
+		uuid_csv = row['uuid']	
 		try:
 			# Based on the model_instance string, get the object that
 			# might be edited from the master db.
-			obj_inst = obj.objects.get_or_create(uuid=uuid)
-		
+			obj_inst = obj.objects.get(uuid=uuid_csv)
 		except:
 			# Create new instance of model who has never been in the 
 			# database before
-			obj_inst = obj.objects.create()
-				
+			if (model_instance == 'user'):
+				obj_inst = obj.objects.create_user(row['username'], row['email'], row['password'])
+			else:
+				obj_inst = obj.objects.create()
+
 		# If object exists, compare the object's last_saved field with
 		# the corresponding object in the csv. If the csv object is 
 		# newer, edit the master db.
-		if ('last_saved' in field_names):
-			if (pytz.utc.localize(datetime.datetime.strptime(
-				row['last_saved'], "%Y-%m-%d %H:%M:%S")) <= getattr(obj_inst, 'last_saved')):
-				return False
+		if (pytz.utc.localize(datetime.datetime.strptime(
+			row['last_saved'], "%Y-%m-%d %H:%M:%S")) <= getattr(obj_inst, 'last_saved')):
+				messages.add_message(request, messages.ERROR, "%s is already up to date in the database, no need to update" % model_instance)
+				return None # will be rewritten, just here so nothing throws an error
 			
 		if dependent_csvs_dict:
-			# get id
-			# match id to reference in user_uuid
-			# get uuid and get UUID object
-			# get reference id from UUID object
-			# use that to get the User object
-			# edit user
 			
 			for key, value in dependent_csvs_dict.iteritems():
 				dependent_csvfile = open(value, 'rb') # open dependent object's csv file
@@ -426,7 +406,7 @@ def compare_csv(request, file, model_instance, dependent_csvs_dict):
 
 			# If the field is left blank, set the default value - usually None or Null but on the few that aren't, this will avoid breaking the db.
 			else:
-				setattr(obj_instance, name, obj_inst._meta.get_field(name).default)
+				setattr(obj_inst, name, obj_inst._meta.get_field(name).default)
 
 		# Save the object to the database
 		obj_inst.save()
@@ -530,15 +510,6 @@ def import_export_db(request):
 				user_csv.write(user.csv)
 			tables.append('csvs/user.csv')
 
-			permission = PermissionResource().export()
-			with open('csvs/permission.csv', 'w') as permission_csv:
-				permission_csv.write(permission.csv)
-			tables.append('csvs/permission.csv')
-
-			content_type = ContentTypeResource().export()
-			with open('csvs/content_type.csv', 'w') as content_type_csv:
-				content_type_csv.write(content_type.csv)
-			tables.append('csvs/content_type.csv')
 
 			# Before zipping file, remove any previously zipped 
 			# database file.
@@ -681,8 +652,6 @@ def import_export_db(request):
 									dependents_list = get_dependents_list(tname)
 									for dependent in dependents_list:
 										if (not get_object(dependent)):
-											print 'dependent %s' % dependent
-											print bname
 											messages.add_message(request, messages.ERROR, ('%s is dependent on the %s model, which does not exist in our database. Please re-upload with the correct dependencies.' % (bname, dependent)))
 											os.remove(pname) # remove defective csv											
 
@@ -764,7 +733,6 @@ def import_export_db(request):
 							# SIXTH LOOP: Finally, Compare CSV to Database
 							# Currently not a part of the loop for sake of testing without breaking anything
 							elif (i == 5):
-								print tname
 								# If there are dependent objects (that exist in the csvs directory)
 								if (is_dependent(tname)):
 									dependents_csvs = get_dependents_csvs(tname, path)
@@ -890,17 +858,6 @@ class UserResource(resources.ModelResource):
         model = User
 
 
-class PermissionResource(resources.ModelResource):
-
-	class Meta:
-		model = Permission
-
-
-class ContentTypeResource(resources.ModelResource):
-
-	class Meta:
-		model = ContentType
-
 # dictionary of all resource classes
 resource_classes = {
 	'child': ChildResource(),
@@ -918,6 +875,4 @@ resource_classes = {
 	'signature': SignatureResource(),
 	'social_exam': SocialExamResource(),
 	'user': UserResource(),
-	'permission': PermissionResource(),
-	'content_type': ContentTypeResource(),
 }

@@ -392,7 +392,7 @@ def view(request, profile_id):
             # If the user is editing the add_edit_forms 
             # permission, process the form and edit the user's 
             # permission
-            elif 'restrict_to_home' in request.POST:
+            elif 'restrict_to_home_form' in request.POST:
                 form = EditRestrictToHomeForm(request.POST, request.FILES, 
                     request=request)
                 if (form.is_valid()):
@@ -450,50 +450,49 @@ def view(request, profile_id):
                 return HttpResponseRedirect(reverse('tracker:profile', 
                     kwargs={'profile_id': profile_id}))
             
-        # If not POST request, create new forms
-        else:
-            profile = get_object_or_404(User, pk=profile_id)
-            name_form = EditNameForm(initial={
-                    'first_name': profile.first_name,
-                    'last_name': profile.last_name,
-                })
-            
-            email_form = EditEmailForm(initial={
-                    'email': profile.email,
-                })
-            
-            password_form = EditPasswordForm()
-            
-            is_active_form = EditIsActiveForm(initial={
-                    'is_active': profile.is_active,
-                })
-            
-            is_staff_form = EditIsStaffForm(initial={
-                    'is_staff': profile.is_staff,
-                })
-            
-            add_users_form = EditAddUsersForm(initial={
-                    'add_users': profile.has_perm('tracker.add_users'),
-                })
-            
-            delete_info_form = EditDeleteInfoForm(initial={
-                    'delete_info': profile.has_perm('tracker.delete_info'),
-                })
-            
-            add_edit_forms_form = EditAddEditFormsForm(
-                initial={
-                    'add_edit_forms': profile.has_perm(
-                        'tracker.add_edit_forms'
-                    ),
-                })
-            
-            restrict_to_home_form = EditRestrictToHomeForm(
-                initial={
-                   'restrict_to_home': not profile.has_perm(
-                        'tracker.not_restricted_to_home'
-                    ),
-                   'home': profile.home,
-                })
+
+        profile = get_object_or_404(User, pk=profile_id)
+        name_form = EditNameForm(initial={
+                'first_name': profile.first_name,
+                'last_name': profile.last_name,
+            })
+        
+        email_form = EditEmailForm(initial={
+                'email': profile.email,
+            })
+        
+        password_form = EditPasswordForm()
+        
+        is_active_form = EditIsActiveForm(initial={
+                'is_active': profile.is_active,
+            })
+        
+        is_staff_form = EditIsStaffForm(initial={
+                'is_staff': profile.is_staff,
+            })
+        
+        add_users_form = EditAddUsersForm(initial={
+                'add_users': profile.has_perm('tracker.add_users'),
+            })
+        
+        delete_info_form = EditDeleteInfoForm(initial={
+                'delete_info': profile.has_perm('tracker.delete_info'),
+            })
+        
+        add_edit_forms_form = EditAddEditFormsForm(
+            initial={
+                'add_edit_forms': profile.has_perm(
+                    'tracker.add_edit_forms'
+                ),
+            })
+        
+        restrict_to_home_form = EditRestrictToHomeForm(
+            initial={
+               'restrict_to_home': not profile.has_perm(
+                    'tracker.not_restricted_to_home'
+                ),
+               'home': profile.home,
+            })
 
         # Render the profile template
         context = {

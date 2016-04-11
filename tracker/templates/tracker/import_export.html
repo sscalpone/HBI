@@ -29,12 +29,12 @@
 
 	{% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
 
-	<form action="{% url 'tracker:import_export' %}" enctype="multipart/form-data" method="post">
+	<form action="{% url 'tracker:import_export' %}" enctype="multipart/form-data" method="POST">
         {% csrf_token %}
             <input type="submit" name="submit_export" value="Exportar la Base de Datos">
     </form>
 
-    <form action="{% url 'tracker:import_export' %}" enctype="multipart/form-data" method="post">
+    <form action="{% url 'tracker:import_export' %}" enctype="multipart/form-data" method="POST">
         {% csrf_token %}
         <ul>
             {{ form }}

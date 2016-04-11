@@ -3,8 +3,9 @@
 import datetime
 import uuid
 
-from django.contrib.auth.models import User
+from CustomUser import CustomUser as User
 from django import forms
+from django.forms import CheckboxInput
 
 class ImportDBForm(forms.Form):
-    upload = forms.FileField()
+	upload = forms.FileField()

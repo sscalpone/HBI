@@ -68,6 +68,19 @@
         {% endif %}
         </li>
         <li>
+            <span>¿Restringido a casa?</span>
+            <span>
+            {% if 'tracker.not_restricted_to_home' in permissions %}
+                No
+            {% else %}
+                Sí, {{ profile.home }}
+            {% endif %}
+            </span>
+        {% if perms.tracker.add_users %}
+            <a href="" class="restrict_to_home change">Cambiar</a>
+        {% endif %}
+        </li>
+        <li>
             <span>¿Puede añadir y editar formas?</span>
             <span>{% if 'tracker.add_edit_forms' in permissions %}Sí{% else %}No{% endif %}{% if perms.tracker.add_users %}</span> <a href="" class="add_edit_forms change">Cambiar</a>{% endif %}
         </li>
@@ -137,6 +150,16 @@
                 {{ add_edit_forms_form }}
                 <li>
                     <input type="submit" name="add_edit_forms_form" value="Enviar">
+                </li>
+            </ul>
+        </form>
+
+        <form action ="" method="post" class="restrict_to_home no-display">
+            {% csrf_token %}
+            <ul>
+                {{ restrict_to_home_form }}
+                <li>
+                    <input type="submit" name="restrict_to_home_form" value="Enviar">
                 </li>
             </ul>
         </form>
