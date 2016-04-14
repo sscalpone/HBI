@@ -11,6 +11,16 @@
     }
   },
   {
+    "model": "tracker.residence",
+    "pk": 2,
+    "fields": {
+      "residence_name": "Beta",
+      "administrator": "Barbara Beaker",
+      "location": "Brooklyn",
+      "last_saved": "2006-10-25 14:30:59"
+    }
+  },
+  {
     "model": "tracker.child",
     "pk": 1,
     "fields": {
@@ -135,7 +145,7 @@
     "fields": {
       "first_name": "Henry",
       "last_name": "Higgins",
-      "residence": 1,
+      "residence": 2,
       "gender": "m",
       "intake_date": "2011-01-26",
       "birthplace": "Home",
@@ -152,7 +162,7 @@
     "fields": {
       "first_name": "Ingrid",
       "last_name": "Immel",
-      "residence": 1,
+      "residence": 2,
       "gender": "f",
       "intake_date": "2014-01-26",
       "birthplace": "Indio",
@@ -169,7 +179,7 @@
     "fields": {
       "first_name": "Jerry",
       "last_name": "Jones",
-      "residence": 1,
+      "residence": 2,
       "gender": "m",
       "intake_date": "2014-01-26",
       "birthplace": "Jersey",
@@ -186,7 +196,7 @@
     "fields": {
       "first_name": "Kevin",
       "last_name": "Kurry",
-      "residence": 1,
+      "residence": 2,
       "gender": "m",
       "intake_date": "2014-01-26",
       "birthplace": "Home",

@@ -22,6 +22,9 @@ sudo pip install matplotlib
 Install Django Import Export:
 sudo pip install import-export
 
+Install Python Dateutil
+sudo pip install python-dateutil
+
 First you'll want a fresh database:
 rm -f database/mysite.db
 python manage.py syncdb

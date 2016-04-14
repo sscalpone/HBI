@@ -8,7 +8,7 @@ from DischargePlan import DischargePlan, DischargePlanForm
 from Documents import Documents, DocumentsForm
 from DiseaseHistory import DiseaseHistory, DiseaseHistoryForm
 from ImportDB import ImportDBForm
-from MedicalExamPart1 import MedicalExamPart1, MedicalExamPart1Form, Growth
+from MedicalExamPart1 import MedicalExamPart1, MedicalExamPart1Form
 from MedicalExamPart2 import MedicalExamPart2, MedicalExamPart2Form
 from OperationHistory import OperationHistoryForm, OperationHistory
 from PsychologicalExam import PsychologicalExam, PsychologicalExamForm

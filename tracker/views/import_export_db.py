@@ -8,25 +8,22 @@ import pytz
 import shutil
 import zipfile
 
-from tracker.models import CustomUser as User
-from django.contrib.auth.models import Permission
-from django.contrib.contenttypes.models import ContentType
+from import_export import resources
+import dateutil.parser
 
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required, user_passes_test
+from django.contrib.auth.models import Permission
+from django.contrib.contenttypes.models import ContentType
 from django.core.urlresolvers import reverse
-from django.http import response, StreamingHttpResponse, HttpResponse, HttpResponseRedirect
-from django.shortcuts import render, get_object_or_404
-from django.core.mail import send_mail
-
-from import_export import resources
+from django.http import HttpResponseRedirect
+from django.shortcuts import render
 
 from tracker.models import Child
 from tracker.models import DentalExam
 from tracker.models import DischargePlan
 from tracker.models import DiseaseHistory
 from tracker.models import Documents
-from tracker.models import Growth
 from tracker.models import MedicalExamPart1
 from tracker.models import MedicalExamPart2
 from tracker.models import OperationHistory
@@ -35,6 +32,7 @@ from tracker.models import PsychologicalExam
 from tracker.models import Residence
 from tracker.models import Signature
 from tracker.models import SocialExam
+from tracker.models import CustomUser as User
 
 from tracker.models import ImportDBForm
 
@@ -51,10 +49,10 @@ def get_object(object_name):
 		return DentalExam
 	elif (object_name == 'documents'):
 		return Documents
+	elif (object_name == 'discharge_plan'):
+		return DischargePlan
 	elif (object_name == 'disease_history'):
 		return DiseaseHistory
-	elif (object_name == 'growth'):
-		return Growth
 	elif (object_name == 'medical_exam_part1'):
 		return MedicalExamPart1
 	elif (object_name == 'medical_exam_part2'):
@@ -83,6 +81,7 @@ dependencies = {
 	'dental_exam': ['child', 'signature'],
 	'discharge_plan': ['child', 'signature'],
 	'disease_history': ['child', 'signature'],
+	'documents': ['child', 'signature'],
 	'medical_exam_part1': ['child', 'signature'],
 	'medical_exam_part2': ['child', 'signature'],
 	'operation_history': ['child', 'signature'],
@@ -90,7 +89,6 @@ dependencies = {
 	'social_exam': ['child', 'signature'],
 	'documents': ['child', 'signature'],
 	'photograph': ['child'],
-	'growth': ['child', 'medical_exam_part1'],
 	'user': ['residence'],
 }
 
@@ -158,20 +156,21 @@ def file_empty(csv_file):
 ids field are populated. If not, return a list of which fields have 
 blank values. If they are, return None.
 """
-def ids_not_empty(file):
+def ids_not_empty(file, model_instance):
 	csvfile = open(file, 'rb')
 	reader = csv.DictReader(csvfile)
-	dependents_names = get_dependents_list(file)
+	dependents_names = get_dependents_list(model_instance)
 	blank_fields = []
 	for row in reader:
-		if (not row['id']):
+		if (row['id'] == ''):
 			if ('id' not in blank_fields):
 				blank_fields.append('id')
-		if dependents_names:
-			for name in dependents_namess:
-				if (not row[name]):
-					if (name not in blank_fields):				
-						blank_fields.append('id')
+		if (model_instance != 'user'):
+			if dependents_names:
+				for name in dependents_names:
+					if (name != 'signature' and row[name] == ''):
+						if (name not in blank_fields):				
+							blank_fields.append(name)
 	csvfile.close()
 	if (blank_fields):
 		return blank_fields
@@ -186,43 +185,35 @@ an infinite loop so it's being left alone for now.
 """
 def ids_uuids_unique(file):
 	# get the headers in the csv file
-	csvfile = open(file, 'rb')
-	reader = csv.reader(csvfile)
-	headers = reader.next()
-	csvfile.close()
+	# csvfile = open(file, 'rb')
+	# reader = csv.reader(csvfile)
+	# headers = reader.next()
+	# csvfile.close()
 
 	csvfile = open(file, 'rb')
 	reader = csv.DictReader(csvfile)
-	count = 0
 	duplicate_in_field = []
 
-	ids_list = []
-	uuids_list = []
-	for row in reader:
-		ids_list.append(row['id'])
-		if ('uuid' in headers):
-			uuids_list.append(row['uuid'])
-	csvfile.close()
-	ids_set = set(ids_list)
-	uuids_set = set(uuids_list)
+	ids_count = 0
+	uuids_count = 0
+	unique_ids = []
+	unique_uuids = []
 
-	if (len(ids_set) < len(ids_list)):
-		for element in ids_set:
-			count = 0
-			for item in ids_list:
-				if (element == item):
-					count +=1
-				if (count > 1):
-					duplicate_in_field.append('id')
-	if ('uuid' in headers):
-		if (len(uuids_set) < len(uuids_list)):
-			for element in uuids_set:
-				count = 0
-				for item in uuids_list:
-					if (element == item):
-						count +=1
-					if (count > 1):
-						duplicate_in_field.append('uuid')
+	for row in reader:
+		if (row['id'] not in unique_ids):
+			unique_ids.append(row['id'])
+		ids_count +=1
+		if row['uuid'] != '':
+			if (row['uuid'] not in unique_uuids):
+				unique_uuids.append(row['uuid'])
+			# counting the nonempty uuids
+			uuids_count += 1
+	if len(unique_ids) < ids_count:
+		duplicate_in_field.append('id')
+
+	if len(unique_uuids) < uuids_count:
+		duplicate_in_field.append('uuid')
+
 	csvfile.close()
 	if duplicate_in_field:
 		return duplicate_in_field
@@ -282,8 +273,17 @@ def move_files(request, pathname):
 
 	# If the file isn't a csv, add a not a csv message and delete file.
 	if not (basename.endswith('.csv')):
-		messages.add_message(request, messages.ERROR, '%s is not a csv file. Please only upload csv files.' % basename)
-		os.remove(pathname)
+
+		if (os.path.dirname(pathname).endswith('documents')):
+			shutil.move(pathname, 'media/documents/%s' % basename)
+		elif (os.path.dirname(pathname).endswith('photos')):
+			shutil.move(pathname, 'media/photos/%s' % basename)
+		elif (os.path.isdir(pathname)):
+			messages.add_message(request, messages.ERROR, 'Unable to read %s subfolder. Please add all csvfiles to main folder and re-upload.' % d2)
+			shutil.rmtree(pathname)
+		else:
+			messages.add_message(request, messages.ERROR, '%s is not a csv file. Please only upload csv files.' % basename)
+			os.remove(pathname)
 
 	# else if the file being moved to csvs is already there, add a conflicting copies message and delete both files
 	elif (os.path.isfile('database/db_merging/csvs/%s' % basename)):
@@ -301,7 +301,7 @@ read in, it creates a new instance and saves it to the database. It
 populates blank fields with the default value (usually None but for 
 some cases, such as uuids, default must be specified).
 """
-def compare_csv(request, file, model_instance, dependent_csvs_dict):
+def compare_csv(request, file, model_instance, fix, dependent_csvs_dict):
 	# Open the csv file as a dictionary so it's searchable by field 
 	# name
 	csvfile = open(file, 'rb')
@@ -316,6 +316,11 @@ def compare_csv(request, file, model_instance, dependent_csvs_dict):
 			# Based on the model_instance string, get the object that
 			# might be edited from the master db.
 			obj_inst = obj.objects.get(uuid=uuid_csv)
+
+			if (fix is False):
+				if (pytz.utc.localize(datetime.datetime.strptime(row['last_saved'], "%Y-%m-%d %H:%M:%S")) <= getattr(obj_inst, 'last_saved')):
+					messages.add_message(request, messages.ERROR, "%s is already up to date in the database, no need to update" % model_instance)
+					return None # will be rewritten, just here so nothing throws an error
 		except:
 			# Create new instance of model who has never been in the 
 			# database before
@@ -327,32 +332,35 @@ def compare_csv(request, file, model_instance, dependent_csvs_dict):
 		# If object exists, compare the object's last_saved field with
 		# the corresponding object in the csv. If the csv object is 
 		# newer, edit the master db.
-		if (pytz.utc.localize(datetime.datetime.strptime(
-			row['last_saved'], "%Y-%m-%d %H:%M:%S")) <= getattr(obj_inst, 'last_saved')):
-				messages.add_message(request, messages.ERROR, "%s is already up to date in the database, no need to update" % model_instance)
-				return None # will be rewritten, just here so nothing throws an error
 			
 		if dependent_csvs_dict:
 			
 			for key, value in dependent_csvs_dict.iteritems():
-				dependent_csvfile = open(value, 'rb') # open dependent object's csv file
-				dependent_reader = csv.DictReader(dependent_csvfile)
-				
-				dependent_id = row[key] # get the id of the dependent object from row
-				
-				# get dependent object's uuid by searching the dict the row matching the dependent id
-				for drow in dependent_reader:
-					if (drow['id'] == dependent_id):
-						dependent_uuid = drow['uuid']
+				# if there is a dependent object for this row, get the dependent object and save it
+				# applies only to user, which doesn't necessarily have a dependent object
+				# all other objects had the dependent object column checked already
+				if (row[key] != ''):
+					dependent_csvfile = open(value, 'rb') # open dependent object's csv file
+					dependent_reader = csv.DictReader(dependent_csvfile)
 					
-					# if the dependent id isn't in the object, do something
-					else:
-						messages.add_message(request, messages.ERROR, "There's nothing left to return!")
+					dependent_id = row[key] # get the id of the dependent object from row
+					# get dependent object's uuid by searching the dict the row matching the dependent id
+
+					dependent_csvfile.seek(0)
+					dependent_uuid = ''
+					for drow in dependent_reader:
+						if (drow['id'] == dependent_id):
+							dependent_uuid = drow['uuid']
+							break
+						# if the dependent id isn't in the object, do something
+					if (dependent_uuid == ''):
+						messages.add_message(request, messages.ERROR, "There is no %s with the id %s in %s.csv" % (key, dependent_id, model_instance))
 						return False # will be rewritten, just here so nothing throws an error
-				dependent_object = get_object(key)
-				# set the id obj_inst's dependent objects 
-				setattr(obj_inst, key, dependent_object.objects.get(uuid=dependent_uuid))
-				dependent_csvfile.close() # close dependent's csv
+
+					dependent_object = get_object(key)
+					# set the id obj_inst's dependent objects 
+					setattr(obj_inst, key, dependent_object.objects.get(uuid=dependent_uuid))
+					dependent_csvfile.close() # close dependent's csv
 					
 
 					# get dependent_id from row and use it to search the pks in dependent
@@ -362,55 +370,126 @@ def compare_csv(request, file, model_instance, dependent_csvs_dict):
 
 		for name in field_names:
 			# if name is not blank
-			if (row[name]):
 			
-				# IntegerField: convert string to integer and save to object
-				if (obj_inst._meta.get_field(name).get_internal_type() == 'IntegerField'):
-						setattr(obj_inst, name, int(row[name]))
-
-				# FloatField: convert string to float and save to object
-				elif (obj_inst._meta.get_field(name).get_internal_type() == 'FloatField'):
-					setattr(obj_inst, name, float(row[name]))
-
-				# DateTimeField: convert string to a utc-aware datetime object and save it to object (should only be applicable to last_saved)
-				elif (obj_inst._meta.get_field(name).get_internal_type() == 'DateTimeField'):
-					setattr(obj_inst, name, pytz.utc.localize(datetime.datetime.strptime(row[name], '%Y-%m-%d %H:%M:%S')))
-
-				# DateField: convert string to datetime object, conert that to a date object and and save it to object
-				elif (obj_inst._meta.get_field(name).get_internal_type() == 'DateField'):
-					setattr(obj_inst, name, datetime.datetime.strptime(row[name], '%d/%m/%Y').date())
-				
-				# BooleanField: check if the csv has it saved as true or false (1 or 0) and then set the object field with as a boolean
-				elif (obj_inst._meta.get_field(name).get_internal_type() == 'BooleanField'):
-					if (row[name] == '1'):
-						setattr(obj_inst, name, True)
-					else:
-						setattr(obj_inst, name, False)
-
-				# FileFieldField: just set the object, no conversion required.
-				elif (obj_inst._meta.get_field(name).get_internal_type() == 'FileField'):
-					setattr(obj_inst, name, row[name])
-					# NEEDS WRITING
-
-				# CharField: just set the object, no conversion required.
-				elif (obj_inst._meta.get_field(name).get_internal_type() == 'CharField'):
-					setattr(obj_inst, name, row[name])
-
-				# TextField: just set the object, no conversion required.
-				elif (obj_inst._meta.get_field(name).get_internal_type() == 'TextField'):
-						setattr(obj_inst, name, row[name])
-
-				# If none of those are correct, print them out so I can see what I'm missing
-				else:
-					print "Unknown field type: %s" % obj_inst._meta.get_field(name).get_internal_type()
-
-			# If the field is left blank, set the default value - usually None or Null but on the few that aren't, this will avoid breaking the db.
+			# if the current cell in the csv is empty and the corresponding field has a default, use the default value
+			if (row[name]=='' and obj_inst._meta.get_field(name).get_default()):
+				value = obj_inst._meta.get_field(name).get_default()
+			# if there's no default value or the current cell is not empty, use the current cell
 			else:
-				setattr(obj_inst, name, obj_inst._meta.get_field(name).default)
+				value = row[name]
+
+			# IntegerField: convert string to integer and save to object
+			if (obj_inst._meta.get_field(name).get_internal_type() == 'IntegerField'):
+					setattr(obj_inst, name, int(value))
+
+			# FloatField: convert string to float and save to object
+			elif (obj_inst._meta.get_field(name).get_internal_type() == 'FloatField'):
+				setattr(obj_inst, name, float(value))
+
+			# DateTimeField: convert string to a utc-aware datetime object and save it to object
+			elif (obj_inst._meta.get_field(name).get_internal_type() == 'DateTimeField'):
+				if (value != ''):
+					try: 
+						datetime_obj = dateutil.parser.parse(value, dayfirst=True)
+					except:
+						messages.add_message(request, messages.ERROR, "The %s datetime for the %s with the id %s cannot be parsed." % (name, model_instance, row['id']))
+						break
+					setattr(obj_inst, name, pytz.utc.localize(datetime_obj))
+					
+				else:
+					setattr(obj_inst, name, None)
+
+			# DateField: convert string to datetime object, conert that to a date object and and save it to object
+			elif (obj_inst._meta.get_field(name).get_internal_type() == 'DateField'):
+				if (value != ''):
+					try: 
+						datetime_obj = dateutil.parser.parse(value, dayfirst=True)
+						date_obj = datetime_obj.date()
+					except:
+						messages.add_message(request, messages.ERROR, "The %s date for the %s with the id %s cannot be parsed." % (name, model_instance, row['id']))
+					 	break
+					setattr(obj_inst, name, date_obj)
+
+				else:
+					setattr(obj_inst, name, None)
+			
+			# BooleanField: check if the csv has it saved as true or false (1 or 0) and then set the object field with as a boolean
+			elif (obj_inst._meta.get_field(name).get_internal_type() == 'BooleanField'):
+				# For user permissions, which are saved as booleans in the user model
+				content_type = ContentType.objects.get_for_model(User)
+				if (name == 'add_users'):
+					permission = Permission.objects.get(
+						codename='add_users', 
+						content_type=content_type
+					)
+					if (value == '1'):
+						obj_inst.user_permissions.add(permission)
+					else:
+						obj_inst.user_permissions.remove(permission)
+				if (name == 'delete_info'):
+					permission = Permission.objects.get(
+						codename='delete_info', 
+						content_type=content_type
+					)
+					if (value == '1'):
+						obj_inst.user_permissions.add(permission)
+					else:
+						obj_inst.user_permissions.remove(permission)
+
+				if (name == 'add_edit_forms'):
+					permission = Permission.objects.get(
+						codename='add_edit_forms',
+						content_type=content_type
+					)
+					if (value == '1'):
+						obj_inst.user_permissions.add(permission)
+					else:
+						obj_inst.user_permissions.remove(permission)
+				if (name == 'not_restricted_to_home'):
+					permission = Permission.objects.get(
+						codename='not_restricted_to_home',
+						content_type=content_type
+					)
+					if (value == '1'):
+						obj_inst.user_permissions.add(permission)
+					else:
+						obj_inst.user_permissions.remove(permission)
+				if (name == 'view'):
+					permission = Permission.objects.get(
+						codename='view',
+						content_type=content_type
+					)
+					if (value == '1'):
+						obj_inst.user_permissions.add(permission)
+					else:
+						obj_inst.user_permissions.remove(permission)
+
+				if (value == '1'):
+					setattr(obj_inst, name, True)
+				else:
+					setattr(obj_inst, name, False)
+
+			# FileFieldField: just set the object, no conversion required.
+			elif (obj_inst._meta.get_field(name).get_internal_type() == 'FileField'):
+				setattr(obj_inst, name, value)
+				# NEEDS WRITING
+
+			# CharField: just set the object, no conversion required.
+			elif (obj_inst._meta.get_field(name).get_internal_type() == 'CharField'):
+				setattr(obj_inst, name, value)
+
+			# TextField: just set the object, no conversion required.
+			elif (obj_inst._meta.get_field(name).get_internal_type() == 'TextField'):
+					setattr(obj_inst, name, value)
+
+			# If none of those are correct, print them out so I can see what I'm missing
+			else:
+				pass
+				# print "Unknown field type: %s" % obj_inst._meta.get_field(name).get_internal_type()
 
 		# Save the object to the database
 		obj_inst.save()
-
+		messages.add_message(request, messages.SUCCESS, 'Database Imported!')
 	csvfile.close()
 
 	
@@ -458,11 +537,6 @@ def import_export_db(request):
 			with open('csvs/disease_history.csv', 'w') as disease_history_csv:
 				disease_history_csv.write(disease_history.csv)
 			tables.append('csvs/disease_history.csv')
-
-			growth = GrowthResource().export()
-			with open('csvs/growth.csv', 'w') as growth_csv:
-				growth_csv.write(growth.csv)
-			tables.append('csvs/growth.csv')
 
 			medical_exam_part1 = MedicalExamPart1Resource().export()
 			with open('csvs/medical_exam_part1.csv', 'w') as medical_exam_part1_csv:
@@ -520,6 +594,14 @@ def import_export_db(request):
 			zippy = zipfile.ZipFile('media/hbi-db-export.zip', 'a')
 			for item in tables:
 				zippy.write(item)
+
+			path = "media/documents/*"
+			for p in glob.glob(path):
+				zippy.write(p)
+
+			path = "media/photos/*"
+			for p in glob.glob(path):
+				zippy.write(p)
 
 			# Since serving the zipped file as an attachment corrupted
 			#  the file (most likely because django isn't equipped to 
@@ -599,14 +681,22 @@ def import_export_db(request):
 						for d in directories:
 							# loop through files and make sure they aren't directories before evaluating and moving
 							for pathname in glob.glob('database/db_merging/%s/*' % d):
-								if (not os.path.isdir(pathname)):
+								if (os.path.exists(pathname) and not os.path.isdir(pathname)):
 									move_files(request, pathname)
 
 								# If there's a directory within a directory, return a too many levels error and delete directory
 								else:
-									basename = os.path.basename(pathname)
-									messages.add_message(request, messages.ERROR, 'Unable to read %s subfolder. Please add all csvfiles to main folder and re-upload.' % basename)
-									shutil.rmtree(pathname)
+									d2 = os.path.basename(pathname)
+									for p in glob.glob(
+										'database/db_merging/%s/%s/*' % 
+										(d, d2)):
+										if (os.path.exists(p) and not os.path.isdir(p)):
+											move_files(request, p)
+
+										else:
+											messages.add_message(request, messages.ERROR, 'Unable to read %s subfolder. Please add all csvfiles to main folder and re-upload.' % d2)
+											if (os.path.exists(p)):
+												shutil.rmtree(pathname)
 						
 							# after moving all readable files to csvs directory, delete empty directory
 							shutil.rmtree('database/db_merging/%s' % d)
@@ -632,7 +722,7 @@ def import_export_db(request):
 				# Fifth, identify and locate dependent objects and their csvs, check that the ids and uuids in both the csv and the dependent csvs are unique, and then check that all csvs are there again.
 				# Sixth, compare the csv to the database and save the 
 				# more recent data
-				for i in range(6):
+				for i in range(5):
 					# before each iteration, check that file isn't empty
 					if (dir_not_empty('database/db_merging/csvs')): 
 						for pname in glob.glob(path):
@@ -691,7 +781,7 @@ def import_export_db(request):
 							# FOURTH LOOP: Look for repeating ids and uuids in csv
 							elif (i == 3):
 								
-								empty_identifiers = ids_not_empty(pname)
+								empty_identifiers = ids_not_empty(pname, tname)
 								if (empty_identifiers is not None):
 									empty_ids_str = (', ').join(empty_identifiers)
 									messages.add_message(request, messages.ERROR,
@@ -730,25 +820,33 @@ def import_export_db(request):
 												're-upload.' % (bname, missing_dependents_str)))
 											os.remove(pname) # remove empty csv
 
-							# SIXTH LOOP: Finally, Compare CSV to Database
-							# Currently not a part of the loop for sake of testing without breaking anything
-							elif (i == 5):
-								# If there are dependent objects (that exist in the csvs directory)
-								if (is_dependent(tname)):
-									dependents_csvs = get_dependents_csvs(tname, path)
-									compare_csv(request, pname, tname, dependents_csvs)
-
-								# If no dependents, just pass in the csv and the table name
-								else:
-									compare_csv(request, pname, tname, None)
-
 					else:
 						messages.add_message(request, messages.ERROR, "There's nothing left to return!")
 						return HttpResponseRedirect(reverse('tracker:import_export'))
 				
-				messages.add_message(request, messages.SUCCESS, 'Database Imported!')
-				return HttpResponseRedirect(
-					reverse('tracker:import_export'))
+				if dir_not_empty('database/db_merging/csvs'):
+					# Must be on own loop with a specific list to loop over
+					# To make sure the dependent objects are read in first
+					read_order = ['residence', 'signature', 'child', 'dental_exam', 'discharge_plan', 'disease_history', 'documents', 'medical_exam_part1', 'medical_exam_part2', 'operation_history', 'psychological_exam', 'social_exam', 'documents', 'photograph', 'user']
+					for item in read_order:
+						for pname in glob.glob(path):
+							# get the table name by parsing the path name
+							bname = os.path.basename(pname)
+							tname, extension = bname.split('.')
+							if (tname == item):
+								if (is_dependent(tname)):
+									dependents_csvs = get_dependents_csvs(tname, path)
+									compare_csv(request, pname, tname, request.FILES['upload'], dependents_csvs)
+
+								# If no dependents, just pass in the csv and the table name
+								else:
+									compare_csv(request, pname, tname, request.FILES['upload'], None)
+				else:
+					messages.add_message(request, messages.ERROR, "There's nothing left to return!")
+					return HttpResponseRedirect(reverse('tracker:import_export'))
+
+				return HttpResponseRedirect(reverse('tracker:import_export'))
+
 
 			else:
 				messages.add_message(request, messages.SUCCESS, 'Please add a file to be imported!')
@@ -774,81 +872,127 @@ class ChildResource(resources.ModelResource):
 
     class Meta:
         model = Child
+        widgets = {
+        	'intake_date': {'format': '%d/%m/%Y'},
+        	'discharge_date': {'format': '%d/%m/%Y'},
+        	'birthdate': {'format': '%d/%m/%Y'},
+        }
 
 
 class DentalExamResource(resources.ModelResource):
 
     class Meta:
         model = DentalExam
+        widgets = {
+        	'date': {'format': '%d/%m/%Y'},
+        }
+
 
 class DischargePlanResource(resources.ModelResource):
 
     class Meta:
         model = DischargePlan
+        widgets = {
+        	'date': {'format': '%d/%m/%Y'},
+        }
 
 
 class DocumentsResource(resources.ModelResource):
 
     class Meta:
         model = Documents
+        widgets = {
+        	'date': {'format': '%d/%m/%Y'},
+        }
 
 class DiseaseHistoryResource(resources.ModelResource):
 
     class Meta:
         model = DiseaseHistory
-
-class GrowthResource(resources.ModelResource):
-
-    class Meta:
-        model = Growth
+        widgets = {
+        	'date': {'format': '%d/%m/%Y'},
+        }
 
 
 class MedicalExamPart1Resource(resources.ModelResource):
 
     class Meta:
         model = MedicalExamPart1
+        widgets = {
+        	'date': {'format': '%d/%m/%Y'},
+        	'bcg_vaccine_date': {'format': '%d/%m/%Y'},
+            'polio_vaccine_date': {'format': '%d/%m/%Y'},
+            'dpt_vaccine_date': {'format': '%d/%m/%Y'},
+            'hepatitis_b_vaccine_date': {'format': '%d/%m/%Y'},
+            'flu_vaccine_date': {'format': '%d/%m/%Y'},
+            'yellow_fever_vaccine_date': {'format': '%d/%m/%Y'},
+            'spr_vaccine_date': {'format': '%d/%m/%Y'},
+            'hpv_vaccine_date': {'format': '%d/%m/%Y'},
+            'pneumococcal_vaccine_date': {'format': '%d/%m/%Y'},
+        }
 
 
 class MedicalExamPart2Resource(resources.ModelResource):
 
     class Meta:
         model = MedicalExamPart2
+        widgets = {
+        	'date': {'format': '%d/%m/%Y'},
+        }
 
 
 class OperationHistoryResource(resources.ModelResource):
 
     class Meta:
         model = OperationHistory
+        widgets = {
+        	'date': {'format': '%d/%m/%Y'},
+        }
 
 
 class PhotographResource(resources.ModelResource):
 
     class Meta:
         model = Photograph
+        widgets = {
+        	'date': {'format': '%d/%m/%Y'},
+        }
 
 
 class PsychologicalExamResource(resources.ModelResource):
 
     class Meta:
         model = PsychologicalExam
+        widgets = {
+        	'date': {'format': '%d/%m/%Y'},
+        }
 
 
 class ResidenceResource(resources.ModelResource):
 
     class Meta:
         model = Residence
+        widgets = {
+        	'date': {'format': '%d/%m/%Y'},
+        }
 
 
 class SignatureResource(resources.ModelResource):
 
     class Meta:
         model = Signature
+        widgets = {
+        	'date': {'format': '%d/%m/%Y'},
+        }
 
 
 class SocialExamResource(resources.ModelResource):
 
     class Meta:
         model = SocialExam
+        widgets = {
+        	'date': {'format': '%d/%m/%Y'},
+        }
 
 # auth tables
 
@@ -856,6 +1000,10 @@ class UserResource(resources.ModelResource):
 
     class Meta:
         model = User
+        exclude = ('groups', 'user_permissions',)
+        widgets = {
+        	'date': {'format': '%d/%m/%Y'},
+        }
 
 
 # dictionary of all resource classes
@@ -865,10 +1013,9 @@ resource_classes = {
 	'discharge_plan': DischargePlanResource(),
 	'documents': DocumentsResource(),
 	'disease_history': DiseaseHistoryResource(),
-	'growth': GrowthResource(),
 	'medical_exam_part1': MedicalExamPart1Resource(),
-		'medical_exam_part2': MedicalExamPart2Resource(),
-		'operation_history': OperationHistoryResource(),
+	'medical_exam_part2': MedicalExamPart2Resource(),
+	'operation_history': OperationHistoryResource(),
 	'photograph': PhotographResource(),
 	'psychological_exam': PsychologicalExamResource(),
 	'residence': ResidenceResource(),

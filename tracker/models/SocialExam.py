@@ -7,6 +7,7 @@ from django.contrib.auth.models import User
 from django.db import models
 from django.forms import ModelForm
 from django.forms import CheckboxInput
+from django.forms import DateInput
 
 from Child import Child
 from Signature import Signature
@@ -33,7 +34,7 @@ class SocialExam(models.Model):
 
     uuid = models.CharField(max_length=200, unique=True, default=uuid.uuid4)
     child = models.ForeignKey(Child)
-    date = models.DateField()
+    date = models.DateField(default=datetime.date.today)
     has_birth_certificate = models.BooleanField(default=False)
     original_birth_certificate = models.BooleanField(default=False)
     dni = models.BooleanField(default=False)
@@ -52,7 +53,7 @@ class SocialExam(models.Model):
                                    default=HIGH)
     signature = models.ForeignKey(Signature, blank=True, null=True)
     # For de-duping forms that have been edited.
-    last_saved = models.DateTimeField(blank=True, null=True)
+    last_saved = models.DateTimeField(default=datetime.datetime.utcnow)
 
     # Meta class defines database table and labels, and clears any 
     # default permissions.
@@ -116,6 +117,7 @@ class SocialExamForm(ModelForm):
             'sis': CheckboxInput(),
             'sis_in_process': CheckboxInput(),
             'visitors_allowed': CheckboxInput(),
+            'date': DateInput(format='%d/%m/%Y'),
         }
 
     # Override __init__ so 'request' can be accessed in the clean() 

@@ -83,9 +83,9 @@ urlpatterns = patterns('',
     url(r'^medical_exam_part2/new/(?P<child_id>\d+)', medical_exam_part2.new, 
         name='new_medical_exam_part2'),
 
-    url(r'^graph/height/(?P<child_id>\d+)/growth.png', 
+    url(r'^graph/(?P<child_id>\d+)/growth.png', 
         medical_exam_part1.growth_png, name='growth_png'),
-    url(r'^graph/height/(?P<child_id>\d+)', medical_exam_part1.graph_growth, 
+    url(r'^graph/(?P<child_id>\d+)', medical_exam_part1.graph_growth, 
         name='growth_graph'),
 
     url(r'^operation_history/(?P<child_id>\d+)/(?P<exam_id>\d+)', 

@@ -2,7 +2,7 @@
 	<div class="exam-list">
 		<h3>Planes de Alta</h3>
 		<ol>
-		{% if DishcargePlans %}
+		{% if DischargePlans %}
 			{% for exam in DischargePlans reversed %}
 				<li><a href="{% url 'tracker:discharge_plan' child_id exam.id %}">{{ exam.date }}</a></li>
 			{% endfor%}

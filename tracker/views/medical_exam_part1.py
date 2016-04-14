@@ -1,6 +1,8 @@
 # coding=utf-8
 
 import datetime
+import numpy as np
+from dateutil.relativedelta import relativedelta
 
 from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
@@ -15,9 +17,10 @@ import matplotlib.patches as mpatches
 import matplotlib.pyplot as plt
 
 from tracker.models import Child
-from tracker.models import Growth
 from tracker.models import MedicalExamPart1, MedicalExamPart1Form
 from tracker.models import Signature, SignatureForm
+
+import who_stats
 
 
 """The new() function creates and processes a new MedicalExamPart2 
@@ -65,19 +68,6 @@ def new(request, child_id):
                     saved_exam.last_saved = datetime.datetime.utcnow()
                     saved_exam.save()
                     exam_form.save_m2m()
-
-                    # Create and populate Growth object
-                    growth = Growth.objects.create(
-                        child=child, 
-                        exam=saved_exam, 
-                        date=saved_exam.date, 
-                        height=saved_exam.height, 
-                        weight=saved_exam.weight, 
-                        age=child.age_in_years(
-                            child.birthdate, 
-                            saved_exam.date), 
-                        gender=child.gender
-                        )
 
                     # Check that exam object saved
                     if (saved_exam):
@@ -182,7 +172,6 @@ edit_medical_exam_part2 template.
 def edit(request, child_id, exam_id):
     child = get_object_or_404(Child, pk=child_id)
     exam = get_object_or_404(MedicalExamPart1, pk=exam_id)
-    growth = get_object_or_404(Growth, exam_id=exam_id)
     signature = get_object_or_404(Signature, pk=exam.signature_id)
 
     # If POST request, get posted exam and signature form.
@@ -214,17 +203,6 @@ def edit(request, child_id, exam_id):
                     saved_exam.last_saved = datetime.datetime.utcnow()
                     saved_exam.save()
                     exam_form.save_m2m()
-                    
-                    # Edit growth object
-                    growth.child = child
-                    growth.exam = saved_exam
-                    growth.date = saved_exam.date
-                    height=saved_exam.height
-                    weight = saved_exam.weight
-                    growth.age=child.age_in_years(child.birthdate, 
-                        saved_exam.date)
-                    growth.gender = child.gender
-                    growth.save()
 
                     # Check that exam object saved
                     if (saved_exam):
@@ -290,54 +268,110 @@ def edit(request, child_id, exam_id):
     }
     return render(request, 'tracker/edit_medical_exam_part1.html', context)
 
+def age_at_exam(f_date, t_date, leap_day_anniversary_Feb28=True):
+    computed_age = t_date.year - f_date.year
+    try:
+        anniversary = f_date.replace(year=t_date.year)
+    except ValueError:
+        assert f_date.day == 29 and f_date.month == 2
+        if (leap_day_anniversary_Feb28):
+            anniversary = datetime.date(t_date.year, 2, 28)
+        else:
+            anniversary = datetime.date(t_date.year, 3, 1)
+        if (t_date < anniversary):
+            computed_age -= 1
+    return computed_age
+
+def age_in_months(f_date, t_date):
+    r = relativedelta(t_date, f_date)
+    months = r.years * 12 + r.months + r.days/30.
+    return int(months)
+
 """growth_png() creates a graph of the children's height and weight 
 and compares it to the average heights and weights of children around 
 the world. It uses the matplotlib library to create a png image.
 """
 def growth_png(request, child_id):
     child = get_object_or_404(Child, pk=child_id)
-    growth = Growth.objects.filter(child_id=child_id)
-    child_age = child.age()
-    age=list()
-    weight=list()
-    height=list()
+    exams = MedicalExamPart1.objects.filter(child_id=child_id)
+    age=[]
+    weight=[]
+    height=[]
+    bmi = []
     
-    avg_age=list()
-    avg_weight=list()
-    avg_height=list()
+    avg_weight_age = []
+    avg_weight = []
+    avg_height_age = []
+    avg_height = []
+    avg_bmi_age = []
+    avg_bmi = []
     if (child.gender == 'm'):
-        avg_height_list = ([0, 50.0],[1, 76.1],[2, 86.5],[3, 95.3],[4, 102.5],[5, 109.7],[6, 115.7],[7, 122.0],[8, 128.1],[9, 133.7],[10, 138.8],[11, 143.7],[12, 149.3],[13, 156.4],[14, 164.1],[15, 170.1],[16, 173.6],[17, 175.3],[18, 176.2],[19, 176.6],[20, 176.8])
-        avg_weight_list = ([0, 3.5],[1, 10.5],[2, 12.7],[3, 14.4],[4, 16.3],[5, 18.5],[6, 20.8],[7, 23.2],[8, 25.8],[9, 28.7],[10, 32.1],[11, 36.1],[12, 40.7],[13, 45.6],[14, 51.2],[15, 56.5],[16, 61.1],[17, 64.7],[18, 67.3],[19, 69.2],[20, 70.6])
-    if (child.gender == 'f'):
-        avg_weight_list = ([0, 3.4],[1, 9.7],[2, 12.1],[3, 13.9],[4, 15.9],[5, 18.0],[6, 20.3],[7, 22.9],[8, 25.8],[9, 29.1],[10, 33.1],[11, 37.8],[12, 41.8],[13, 46.0],[14, 49.5],[15, 52.1],[16, 53.9],[17, 55.2],[18, 56.2],[19, 57.4],[20, 58.2])
-        avg_height_list = ([0, 49.2],[1, 74.4],[2, 85.0],[3, 94.2],[4, 101.0],[5, 108.0],[6, 115.0],[7, 121.8],[8, 127.8],[9, 133.1],[10, 138.2],[11, 144.3],[12, 151.3],[13, 157.3],[14, 160.5],[15, 161.9],[16, 162.6],[17, 162.9],[18, 163.1],[19, 163.2],[20, 163.3])
-    
-    for instance in growth:
-        age.append(instance.age)
-        height.append(instance.height)
-        weight.append(instance.weight)
+        avg_bmi_list = who_stats.boys_bmi
+        avg_height_list = who_stats.boys_height
+        avg_weight_list = who_stats.boys_weight
 
+    if (child.gender == 'f'):
+        avg_bmi_list = who_stats.girls_bmi
+        avg_height_list = who_stats.girls_height
+        avg_weight_list = who_stats.girls_weight
+    
+    for exam in exams:
+        age.append(age_in_months(child.birthdate, exam.date))
+        height.append(exam.height)
+        weight.append(exam.weight)
+        bmi_calc = (exam.weight / (exam.height * exam.height))* 10000
+        bmi.append(bmi_calc)
+    print age
+    np_age = np.array(age)
+    np_height = np.array(height)
+    np_weight = np.array(weight)
+    np_bmi = np.array(bmi)
+
+    age_length = len(age)
+    
     for item in avg_height_list:
-        if item[0] in age:
+        if item[0] > age[0] and item[0] < age[age_length-1]:
+            avg_height_age.append(item[0])
             avg_height.append(item[1])
     for item in avg_weight_list:
-        if item[0] in age:
+        if item[0] > age[0] and item[0] < age[age_length-1]:
+            avg_weight_age.append(item[0])
             avg_weight.append(item[1])
+    for item in avg_bmi_list:
+        if item[0] > age[0] and item[0] < age[age_length-1]:
+            avg_bmi_age.append(item[0])
+            avg_bmi.append(item[1])
+    
+    np_avg_height_age = np.array(avg_height_age)
+    np_avg_height = np.array(avg_height)
+    np_avg_weight_age = np.array(avg_weight_age)
+    np_avg_weight = np.array(avg_weight)
+    np_avg_bmi_age = np.array(avg_bmi_age)
+    np_avg_bmi = np.array(avg_bmi)
 
     child_arc = mpatches.Patch(color='#95bcf2', label='Arco Nino')
     expected_arc = mpatches.Patch(color='#666666', label='Arco Esperado')
-    plt.subplot(211)
-    plt.plot(age, height, color='#95bcf2', marker='.')
-    plt.plot(age, avg_height, color='#666666', marker='.')
-    plt.xlabel('Anos')
+    
+    plt.figure(figsize=(7,10))
+    plt.subplot(311)
+    plt.plot(np_age, np_height, color='#95bcf2', marker='.')
+    plt.plot(np_avg_height_age, np_avg_height, color='#666666', marker='')
+    plt.xlabel('Edad en Meses')
     plt.ylabel('Estatura (cm)')
     plt.legend(handles=[child_arc, expected_arc], loc=4)
     
-    plt.subplot(212)
-    plt.plot(age, weight, color='#95bcf2', marker='.')
-    plt.plot(age, avg_weight, color='#666666', marker='.')
-    plt.xlabel('Anos')
+    plt.subplot(312)
+    plt.plot(np_age, np_weight, color='#95bcf2', marker='.')
+    plt.plot(np_avg_weight_age, np_avg_weight, color='#666666', marker='')
+    plt.xlabel('Edad en Meses')
     plt.ylabel('Peso (kg)')
+    plt.legend(handles=[child_arc, expected_arc], loc=4)
+
+    plt.subplot(313)
+    plt.plot(np_age, np_bmi, color='#95bcf2', marker='.')
+    plt.plot(np_avg_bmi_age, np_avg_bmi, color='#666666', marker='')
+    plt.xlabel('Edad en Meses')
+    plt.ylabel('IMC')
     plt.legend(handles=[child_arc, expected_arc], loc=4)
 
     canvas = FigureCanvas(plt.figure(1))

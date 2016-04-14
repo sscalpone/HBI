@@ -7,6 +7,8 @@ from django.contrib.auth.models import User
 from django.db import models
 from django.forms import ModelForm
 from django.forms import RadioSelect
+from django.forms import TextInput
+from django.forms import DateInput
 
 from Child import Child
 from Signature import Signature
@@ -33,7 +35,7 @@ class MedicalExamPart1(models.Model):
 
     uuid = models.CharField(max_length=200, unique=True, default=uuid.uuid4)
     child = models.ForeignKey(Child)
-    date = models.DateField()
+    date = models.DateField(default=datetime.date.today)
     height = models.FloatField(blank=True, null=True)
     weight = models.FloatField(blank=True, null=True)
     hemoglobin_abnormal = models.BooleanField(default=False)
@@ -55,35 +57,13 @@ class MedicalExamPart1(models.Model):
                                    default=HIGH)
     signature = models.ForeignKey(Signature, blank=True, null=True)
     # For de-duping forms that have been edited.
-    last_saved = models.DateTimeField(blank=True, null=True) 
+    last_saved = models.DateTimeField(default=datetime.datetime.utcnow) 
 
     # Meta class defines database table and labels, and clears any 
     # default permissions.
     class Meta:
         app_label = 'tracker'
         db_table = 'tracker_medicalexampart1'
-        default_permissions = ()
-
-
-"""Growth model stores information from the Medical Exam Part 1 and 
-Child models to generate the growth graph displayed on the medical 
-exam part 1 page.
-"""
-class Growth(models.Model):
-    child = models.ForeignKey(Child)
-    uuid = models.CharField(max_length=200, unique=True, default=uuid.uuid4)
-    exam = models.ForeignKey(MedicalExamPart1)
-    date = models.DateField()
-    height = models.FloatField(blank=True, null=True)
-    weight = models.FloatField(blank=True, null=True)
-    age = models.FloatField(blank=True, null=True)
-    gender = models.CharField(max_length=6, blank=True, null=True)
-
-    # Meta class defines database table and labels, and clears any 
-    # default permissions.
-    class Meta:
-        app_label = 'tracker'
-        db_table = 'tracker_growth'
         default_permissions = ()
 
 
@@ -138,6 +118,19 @@ class MedicalExamPart1Form(ModelForm):
             'diagnosis': 'Diagnóstico',
             'recommendation': 'Recomendaciones',
             'priority': 'Prioridad',
+        }
+
+        widgets = {
+            'date': DateInput(format='%d/%m/%Y'),
+            'bcg_vaccine_date': TextInput(attrs={'placeholder': 'DD/MM/AAAA'}),
+            'polio_vaccine_date': TextInput(attrs={'placeholder': 'DD/MM/AAAA'}),
+            'dpt_vaccine_date': TextInput(attrs={'placeholder': 'DD/MM/AAAA'}),
+            'hepatitis_b_vaccine_date': TextInput(attrs={'placeholder': 'DD/MM/AAAA'}),
+            'flu_vaccine_date': TextInput(attrs={'placeholder': 'DD/MM/AAAA'}),
+            'yellow_fever_vaccine_date': TextInput(attrs={'placeholder': 'DD/MM/AAAA'}),
+            'spr_vaccine_date': TextInput(attrs={'placeholder': 'DD/MM/AAAA'}),
+            'hpv_vaccine_date': TextInput(attrs={'placeholder': 'DD/MM/AAAA'}),
+            'pneumococcal_vaccine_date': TextInput(attrs={'placeholder': 'DD/MM/AAAA'}),
         }
 
     # Override __init__ so 'request' can be accessed in the clean() 

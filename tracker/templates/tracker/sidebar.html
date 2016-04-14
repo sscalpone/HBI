@@ -1,7 +1,7 @@
     <ul>
         <li><a href="{% url 'tracker:logout' %}" class="delete">Cerrar sesión</a></li>
         <li><a href="{% url 'tracker:residences' %}" class="delete">Residencias</a></li>
-        <li><a href="{% url 'tracker:residence' residence_id %}" class="delete">Detalle Orfanato</a></li>
+        <li><a href="{% url 'tracker:residence' residence_id %}" class="delete">Niños de Inicio</a></li>
         <li {% if page == 'child' %} class="selected" {% endif %}><a href="{% url 'tracker:child' child_id %}" class="delete">Resumen Niño</a></li>
         <li id="evals" {% if exam %}class="selected" {% endif %}>Evaluaciones</li>
         <span id="secondary">

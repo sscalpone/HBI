@@ -5,6 +5,7 @@ import uuid
 
 from django.db import models
 from django.forms import ModelForm
+from django.forms import DateInput
 
 from Child import Child
 from Signature import Signature
@@ -31,7 +32,7 @@ class PsychologicalExam(models.Model):
     # Fields
     uuid = models.CharField(max_length=200, unique=True, default=uuid.uuid4)
     child = models.ForeignKey(Child)
-    date = models.DateField()
+    date = models.DateField(default=datetime.date.today)
     family_notes = models.TextField(blank=True, null=True)
     physical_description = models.TextField(blank=True, null=True)
     intellectual_notes = models.TextField(blank=True, null=True)
@@ -44,7 +45,7 @@ class PsychologicalExam(models.Model):
                                    default=HIGH)
     signature = models.ForeignKey(Signature, blank=True, null=True)
     # For de-duping forms that have been edited.
-    last_saved = models.DateTimeField(blank=True, null=True)
+    last_saved = models.DateTimeField(default=datetime.datetime.utcnow)
 
     # Meta class defines database table and labels, and clears any 
     # default permissions.
@@ -84,6 +85,9 @@ class PsychologicalExamForm(ModelForm):
             'diagnosis': 'Diagnóstico',
             'recommendation': 'Recomendaciones',
             'priority': 'Prioridad',
+        }
+        widgets = {
+            'date': DateInput(format='%d/%m/%Y'),
         }
 
     # Override __init__ so 'request' can be accessed in the clean() 

@@ -20,7 +20,7 @@
     <form action="{% url 'tracker:new_discharge_plan' child_id %}" enctype="multipart/form-data" method="post" class="exam">
         {% csrf_token %}
         <ul>
-            {{ dishcharge_plan_form }}
+            {{ discharge_plan_form }}
         
             <li><h3>Los Datos del Profesíonal</h3></li>
 

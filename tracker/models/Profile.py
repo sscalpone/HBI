@@ -12,6 +12,7 @@ from django.forms import ModelForm
 from django.forms import PasswordInput
 from django.forms import EmailInput
 from django.forms import CheckboxInput
+from django.forms import DateInput
 
 from CustomUser import CustomUser as User
 from Residence import Residence
@@ -51,7 +52,7 @@ class ProfileForm(forms.Form):
 										  required=False, 
 										  label='Restringir a Casa', 
 										  widget=forms.CheckboxInput)
-	home = forms.ModelChoiceField(queryset=Residence.objects.all(), 
+	residence = forms.ModelChoiceField(queryset=Residence.objects.all(), 
 								  required=False, 
 								  label='Casa')
 	add_edit_forms = forms.BooleanField(initial=False, 
@@ -122,8 +123,8 @@ class ProfileForm(forms.Form):
 				# Checks that a home is selected for any user 
 				# restricted to a home.
 				restrict_to_home = cleaned_data.get('restrict_to_home')
-				home = cleaned_data.get('home')
-				if (restrict_to_home and home is None):
+				residence = cleaned_data.get('residence')
+				if (restrict_to_home and residence is None):
 					self.add_error('restrict_to_home', 'Se ha seleccionado ningún '
 						'hogar.')
 
@@ -406,7 +407,7 @@ class EditRestrictToHomeForm(forms.Form):
 	restrict_to_home = forms.BooleanField(required=False, 
 										  label='Añadir Otros Usuarios', 
 										  widget=forms.CheckboxInput)
-	home = forms.ModelChoiceField(queryset=Residence.objects.all(), 
+	residence = forms.ModelChoiceField(queryset=Residence.objects.all(), 
 								  required=False, 
 								  label='Casa')
 	password = forms.CharField(max_length=200, label='Contraseña', 
@@ -432,11 +433,11 @@ class EditRestrictToHomeForm(forms.Form):
 			password = cleaned_data.get('password')
 			if (self.request.user.check_password(password)):
 				restrict_to_home = cleaned_data.get('restrict_to_home')
-				home = cleaned_data.get('home')
-				if (restrict_to_home and home is None):
-					self.add_error('home', 'Por favor elige una casa.')
-				elif (not restrict_to_home and home is not None):
-					self.add_error('home', 'No seleccione un hogar como '
+				residence = cleaned_data.get('residence')
+				if (restrict_to_home and residence is None):
+					self.add_error('residence', 'Por favor elige una casa.')
+				elif (not restrict_to_home and residence is not None):
+					self.add_error('residence', 'No seleccione un hogar como '
 						'usuario no se limita a casa.')
 			else:
 				self.add_error('password', 'Tu contraseña es incorrecta.')

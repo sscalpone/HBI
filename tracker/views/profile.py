@@ -47,7 +47,7 @@ and returns the home if True, and returns a None if false.
 """
 def restrict_to_home_check(user):
     if (not user.has_perm('tracker.not_restricted_to_home')):
-        return user.home
+        return user.residence
     else:
         return None
 
@@ -128,7 +128,7 @@ def new(request):
                         user.first_name = saved_user['first_name']
                         user.last_name = saved_user['last_name']
                         user.is_staff = saved_user['is_staff']
-                        user.home = saved_user['home']
+                        user.residence = saved_user['residence']
                         user.last_saved = datetime.datetime.utcnow()
                         content_type = ContentType.objects.get_for_model(
                             User)
@@ -404,11 +404,11 @@ def view(request, profile_id):
                     )
                     if (saved_form['restrict_to_home'] is False):
                         profile.not_restricted_to_home = True
-                        profile.home = None
+                        profile.residence = None
                         profile.user_permissions.add(permission)
                     else:
                         profile.add_edit_forms = True
-                        profile.home = saved_form['home']
+                        profile.residence = saved_form['residence']
                         profile.user_permissions.remove(permission)
                     profile.last_saved = datetime.datetime.utcnow()
                     profile.save()
@@ -491,7 +491,7 @@ def view(request, profile_id):
                'restrict_to_home': not profile.has_perm(
                     'tracker.not_restricted_to_home'
                 ),
-               'home': profile.home,
+               'residence': profile.residence,
             })
 
         # Render the profile template

@@ -1,8 +1,8 @@
 {% extends 'two-column.html' %}
 
-{% block title %}Altura Gráfico{% endblock %}
+{% block title %}Gráfico de Crecimiento{% endblock %}
 
-{% block h2 %}Altura Gráfico{% endblock %}
+{% block h2 %}Gráfico de Crecimiento{% endblock %}
 
 {% block sidebar %}
     {% include 'tracker/sidebar.html' %}
@@ -14,7 +14,7 @@
 
     <img src="{% url 'tracker:growth_png' child_id %}" id="graph">
 
-    <p>Patrones de crecimiento esperado en base a mediciones percentil 50 de los CDC . Para más información visite <a href="http://www.cdc.gov/growthcharts/clinical_charts.htm">el sitio web de los CDC</a>.</p>
+    <p>los patrones de crecimiento esperados basados ​​en estándar de la OMS . Para obtener más información, visite <a href="http://www.who.int/childgrowth/es/">el sitio web de la OMS</a>.</p>
     
 
 {% endblock %}

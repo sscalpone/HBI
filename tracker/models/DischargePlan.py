@@ -6,6 +6,7 @@ import uuid
 from django.contrib.auth.models import User
 from django.db import models
 from django.forms import ModelForm
+from django.forms import DateInput
 
 from Child import Child
 from Signature import Signature
@@ -21,7 +22,7 @@ class DischargePlan(models.Model):
 
     uuid = models.CharField(max_length=200, unique=True, default=uuid.uuid4)
     child = models.ForeignKey(Child)
-    date = models.DateField()
+    date = models.DateField(default=datetime.date.today)
     summary = models.TextField(blank=True, null=True)
     strengths_challenges = models.TextField(blank=True, null=True)
     family = models.TextField(blank=True, null=True)
@@ -29,7 +30,7 @@ class DischargePlan(models.Model):
     future_housing = models.TextField(blank=True, null=True)
     signature = models.ForeignKey(Signature, blank=True, null=True)
     # For de-duping forms that have been edited.
-    last_saved = models.DateTimeField(blank=True, null=True)
+    last_saved = models.DateTimeField(default=datetime.datetime.utcnow)
 
     # Meta class defines database table and labels, and clears any 
     # default permissions.
@@ -62,6 +63,9 @@ class DischargePlanForm(ModelForm):
             'family': 'Relaciones Familiares o Comunitarias',
             'training': 'Enfoque de formación profesional (es decir, educación superior, militar, manual laboral, gastronomía, etc.)',
             'future_housing': 'Futuras posibilidades de alojamiento', 
+        }
+        widgets = {
+            'date': DateInput(format='%d/%m/%Y')
         }
 
 

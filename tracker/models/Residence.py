@@ -6,6 +6,7 @@ import uuid
 from django.contrib.auth.models import User
 from django.db import models
 from django.forms import ModelForm
+from django.forms import DateInput
 
 
 """The Residence model saves information about each of the homes the 
@@ -21,7 +22,7 @@ class Residence(models.Model):
 	location = models.CharField(max_length=200, blank=True, null=True)
 	photo = models.ImageField(upload_to='photos', blank=True, null=True)
 	# For de-duping forms that have been edited.
-	last_saved = models.DateTimeField(blank=True, null=True)
+	last_saved = models.DateTimeField(default=datetime.datetime.utcnow)
 
 	# The human-readable version of the model - the residence name.
 	def __unicode__(self):
@@ -50,14 +51,14 @@ class ResidenceForm(ModelForm):
 			'administrator',
 			'location',
 			'photo',
-			)
+		)
 		
 		labels = {
 			'residence_name': 'Casa Girasoles',
 			'administrator': 'Administrador',
 			'location': 'Localización',
 			'photo': 'Fotografía',
-			}
+		}
 
 	# Override __init__ so 'request' can be accessed in the clean() 
 	# function.

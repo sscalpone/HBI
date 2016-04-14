@@ -14,15 +14,15 @@ from tracker.models import Signature, SignatureForm
 from tracker.models import Child
 
 
-"""The new() function creates and processes a new DentalExam form. It 
-then creates a new DentalExam object from the DentalExam model, 
+"""The new() function creates and processes a new DischargePlan form. It 
+then creates a new DischargePlan object from the DischargePlan model, 
 populates it with the form info, and saves it to the database. It does 
-the same with a Signature form, which is indexed in the DentalExam 
+the same with a Signature form, which is indexed in the DischargePlan
 object, along with the Child object. It also generates a list of past 
 dental exam forms filled out for this child, which can be viewed from 
 this template. It is protected with the login_required decorator, so 
 that no one who isn't logged in can add a form. The new() function 
-renders the add_dental_exam template.
+renders the add_discharge_plan template.
 """
 @login_required
 def new(request, child_id):
@@ -46,7 +46,7 @@ def new(request, child_id):
         # If user clicked 'save' or 'submit', process and save form 
         # (form will validate no matter what in 'save', will be 
         # validated in custom clean() in 'submit'), and create 
-        # DentalExam and Signature objects, populate them with said 
+        # DischargePlan and Signature objects, populate them with said 
         # forms, and save them.
         else:
             if (signature_form.is_valid() and exam_form.is_valid()):
@@ -60,15 +60,16 @@ def new(request, child_id):
                     saved_exam.last_saved = datetime.datetime.utcnow()
                     saved_exam.save()
                     exam_form.save_m2m()
-                    child.active = False
-                    child.discharge_date = saved_exam.date
-                    child.save()
+                    if (saved_exam.date):
+                        child.is_active = False
+                        child.discharge_date = saved_exam.date
+                        child.save()
 
                     # Check that exam object saved
                     if (saved_exam):
 
                         # If user clicked 'save', render 
-                        # edit_dental_exam template.
+                        # edit_discharge_plan template.
                         if ('save' in request.POST):
                             return HttpResponseRedirect(
                                 reverse('tracker:edit_discharge_plan', 
@@ -78,14 +79,14 @@ def new(request, child_id):
                                     }))
                         
                         # If user clicked 'submit', render 
-                        # add_dental_exam template.
+                        # add_discharge_plan template.
                         else:
                             return HttpResponseRedirect(
                                 reverse('tracker:new_discharge_plan', 
                                     kwargs={'child_id': child_id}))
                     
                     # If validation passed but exam still didn't save, 
-                    # return to add_dental_exam template with "Sorry, 
+                    # return to add_discharge_plan template with "Sorry, 
                     # please try again" error message
                     else:
                         return render(request, 
@@ -97,7 +98,7 @@ def new(request, child_id):
                             })
 
                 # If validation passed but signature still didn't 
-                # save,return to add_dental_exam template with "Sorry, 
+                # save,return to add_discharge_plan template with "Sorry, 
                 # please try again" error message
                 else:
                     return render(request, 'tracker/add_discharge_plan.html', 
@@ -107,7 +108,7 @@ def new(request, child_id):
                          'intentarlo.',
                         })
 
-    # If not POST request, create new DentalExam form and Signature 
+    # If not POST request, create new DischargePlan form and Signature 
     # form.
     else:
         exam_form = DischargePlanForm(
@@ -118,7 +119,7 @@ def new(request, child_id):
             })
         signature_form = SignatureForm()
     
-    # Render add_dental_exam template
+    # Render add_discharge_plan template
     discharge_plan_list = DischargePlan.objects.filter(child_id=child_id)
     context = {
         'child': child,
@@ -133,8 +134,8 @@ def new(request, child_id):
     return render(request, 'tracker/add_discharge_plan.html', context)
 
 
-"""The view() function renders the dental_exam template, populated 
-with information from the DentalExam model. It is protected with the 
+"""The view() function renders the discharge_plan template, populated 
+with information from the DischargePlan model. It is protected with the 
 login_required decorator, so that no one who isn't logged in can add a 
 form.
 """
@@ -156,18 +157,18 @@ def view(request, child_id, exam_id):
 
 
 
-"""The edit() function creates and processes a DentalExam form 
-populated with an existing DentalExam object information. It then adds 
-the edits to the DentalExam object and saves it to the database. It 
+"""The edit() function creates and processes a DischargePlan form 
+populated with an existing DischargePlan object information. It then adds 
+the edits to the DischargePlan object and saves it to the database. It 
 does the same with a Signature form, which is indexed in the 
-DentalExam object, along with the Child object. It is protected with 
+DischargePlan object, along with the Child object. It is protected with 
 the login_required decorator, so that no one who isn't logged in can 
-add a form. The edit() function renders the edit_dental_exam template.
+add a form. The edit() function renders the edit_discharge_plan template.
 """
 @login_required
 def edit(request, child_id, exam_id):
     child = get_object_or_404(Child, pk=child_id)
-    exam = get_object_or_404(DentalExam, pk=exam_id)
+    exam = get_object_or_404(DischargePlan, pk=exam_id)
     signature = get_object_or_404(Signature, pk=exam.signature_id)
     
     # If POST request, get posted exam and signature form.
@@ -186,7 +187,7 @@ def edit(request, child_id, exam_id):
         # If user clicked 'save' or 'submit', process and save forms 
         # (form will validate no matter what in 'save', will be 
         # validated in custom clean() in 'submit'), and edit and save 
-        # DentalExam and Signature object.
+        # DischargePlan and Signature object.
         else:
             if (signature_form.is_valid() and exam_form.is_valid()):
                 saved_signature = signature_form.save()
@@ -199,15 +200,16 @@ def edit(request, child_id, exam_id):
                     saved_exam.last_saved = datetime.datetime.utcnow()
                     saved_exam.save()
                     exam_form.save_m2m()
-                    child.active = False
-                    child.discharge_date = saved_exam.date
-                    child.save()
+                    if (exam_form.date):
+                        child.is_active = False
+                        child.discharge_date = saved_exam.date
+                        child.save()
 
                     # Check that exam object saved
                     if (saved_exam):
 
                         # If user clicked 'save', render 
-                        # edit_dental_exam template.
+                        # edit_discharge_plan template.
                         if ('save' in request.POST):
                             return HttpResponseRedirect(
                                 reverse('tracker:edit_discharge_plan', 
@@ -217,14 +219,14 @@ def edit(request, child_id, exam_id):
                                 }))
                         
                         # If user clicked 'submit', render 
-                        # add_dental_exam template.
+                        # add_discharge_plan template.
                         else:
                             return HttpResponseRedirect(
                                 reverse('tracker:new_discharge_plan', 
                                     kwargs={'child_id': child_id}))  
                     
                     # if validation passed but exam still didn't save, 
-                    # return to edit_dental_exam template with "Sorry, 
+                    # return to edit_discharge_plan template with "Sorry, 
                     # please try again" error message
                     else:
                         return render(request, 
@@ -236,7 +238,7 @@ def edit(request, child_id, exam_id):
                             })
 
                 # if validation passed but signature still didn't 
-                # save, return to edit_dental_exam template with 
+                # save, return to edit_discharge_plan template with 
                 # "Sorry, please try again" error message
                 else:
                     return render(request, 'tracker/edit_discharge_plan.html', 
@@ -246,13 +248,13 @@ def edit(request, child_id, exam_id):
                          'intentarlo.',
                         })
     
-    # If not POST request, create new DentalExam form and Signature 
-    # form, populated with the DentalExam and Signature objects. 
+    # If not POST request, create new DischargePlan form and Signature 
+    # form, populated with the DischargePlan and Signature objects. 
     else:
         exam_form = DischargePlanForm(instance=exam)
         signature_form = SignatureForm(instance=signature)
 
-    # Render edit_dental_exam template
+    # Render edit_discharge_plan template
     exam_list = DischargePlan.objects.filter(child_id=child_id)
     context = {
         'child': child,

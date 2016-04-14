@@ -8,7 +8,7 @@
                     </li>
                     {% if user.is_superuser %}
                     <li {% if page == 'import_export' %} class="selected" {% endif %}>
-                        <a href="{% url 'tracker:import_export' %}">Exportar la base de datos</a>
+                        <a href="{% url 'tracker:import_export' %}">Base de Datos Exportar/Importar</a>
                     {% endif %}
                     </li>
                 </ul>

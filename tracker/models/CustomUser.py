@@ -7,8 +7,8 @@ from django.db import models
 from django.contrib.auth.models import AbstractBaseUser
 from django.contrib.auth.models import UserManager
 from django.contrib.auth.models import PermissionsMixin
+from django.forms import DateInput
 from django import forms
-from django.utils import timezone
 
 from Residence import Residence
 
@@ -20,9 +20,9 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 	email = models.EmailField(max_length=200, unique=True, blank=True)
 	is_staff = models.BooleanField(default=True)
 	is_active = models.BooleanField(default=True)
-	last_saved = models.DateTimeField(default=timezone.now)
-	date_joined = models.DateTimeField(default=timezone.now)
-	home = models.ForeignKey(Residence, blank=True, null=True, default=None)
+	last_saved = models.DateTimeField(default=datetime.datetime.utcnow)
+	date_joined = models.DateTimeField(default=datetime.datetime.utcnow)
+	residence = models.ForeignKey(Residence, blank=True, null=True, default=None)
 	
 	add_users = models.BooleanField(default=False)
 	delete_info = models.BooleanField(default=False)

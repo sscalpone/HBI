@@ -5,6 +5,7 @@ import uuid
 
 from django.db import models
 from django.forms import ModelForm
+from django.forms import DateInput
 
 
 """Model for the record of who is filling out each form. Each form has 
@@ -21,7 +22,7 @@ class Signature(models.Model):
     direction = models.CharField(max_length=200, blank=True, null=True)
     cell = models.CharField(max_length=200, blank=True, null=True)
     # For de-duping forms that have been edited.
-    last_saved = models.DateTimeField(blank=True, null=True)
+    last_saved = models.DateTimeField(default=datetime.datetime.utcnow)
 
     # Meta class defines database table and labels, and clears any 
     # default permissions.
