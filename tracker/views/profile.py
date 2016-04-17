@@ -24,6 +24,9 @@ from tracker.models import EditAddEditFormsForm
 from tracker.models import EditRestrictToHomeForm, EditEmailForm
 
 
+def is_superuser_check(user):
+    return user.is_superuser
+
 """add_users_check() checks if a user can add_users and returns a 
 boolean.
 """

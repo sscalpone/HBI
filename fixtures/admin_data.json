@@ -21,30 +21,6 @@
       "add_edit_forms": true,
       "not_restricted_to_home": true
     }
-  },
-
-    {
-    "pk" : 2,
-    "model": "tracker.customuser",
-    "fields": {
-      "uuid": "a832defb-bd3f-44d8-aad9-97c5d3afb239",
-      "is_superuser": true,
-      "is_active": true,
-      "last_login" : "2016-04-16 17:26:00",
-      "residence": null,
-      "password": "pbkdf2_sha256$15000$OcclcNUDO3DO$aqx77JDyFK7yvbFheEN5G/lNAqB8SjEZMaN+xHZe1Co=",
-      "first_name": "",
-      "date_joined": "2016-04-16 17:26:00",
-      "username": "bgrass",
-      "last_name": "",
-      "last_saved": "2016-04-16 17:26:00",
-      "email": "",
-      "is_staff": true,
-      "add_users": true,
-      "delete_info": true,
-      "add_edit_forms": true,
-      "not_restricted_to_home": true
-    }
   }
 
 ]

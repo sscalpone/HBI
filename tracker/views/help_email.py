@@ -55,15 +55,21 @@ def send_email(request):
 			message = saved_email['explanation']
 			from_email = user.email
 			to_email = ['info@hbint.org']
-
-			# Send email, populated with variables created above.
-			send_mail(subject, message, from_email, to_email)
-			form = HelpEmailForm()
+			if subject and message and from_email:
+				# Send email, populated with variables created above.
+				try:
+					send_mail(subject, message, from_email, to_email)
+					messages.add_message(request, messages.SUCCESS, 
+					('Tu correo ha sido enviado. Nos pondremos en contacto '
+						'con usted tan pronto como sea posible.'))
+					return HttpResponseRedirect(reverse('tracker:help'))
+				except BadHeaderError:
+					messages.add_message(request, messages.ERROR,
+						'Cabecera no válida.')
+					return HttpResponseRedirect(reverse('tracker:help'))
 
 			# render the help.html template with a success message
-			messages.add_message(request, messages.SUCCESS, 
-				'Tu correo ha sido enviado. Nos pondremos en contacto con '
-				'usted tan pronto como sea posible.')
+			messages.add_message(request, messages.ERROR, '')
 			return HttpResponseRedirect(reverse('tracker:help'))
 
 	# If the user doesn't have an email, prompt them to add an email 

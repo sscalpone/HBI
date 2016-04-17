@@ -37,6 +37,8 @@ from tracker.models import CustomUser as User
 
 from tracker.models import ImportDBForm
 
+from tracker.views.profile import is_superuser_check
+
 
 """Function returns an object based on the string that matches it's 
 name, and returns False if that string doesn't match one of the models
@@ -332,7 +334,6 @@ some cases, such as uuids, default must be specified).
 def compare_csv(request, file, model_instance, fix, dependent_csvs_dict):
 	# Open the csv file as a dictionary so it's searchable by field 
 	# name
-	print fix
 	csvfile = open(file, 'rb')
 	reader = csv.DictReader(csvfile)
 
@@ -365,12 +366,9 @@ def compare_csv(request, file, model_instance, fix, dependent_csvs_dict):
 				else:
 					obj_inst = obj.objects.create(uuid=uuid_csv)
 			else:
-				if (model_instance == 'user'):
-					obj_inst = obj.objects.create_user(row['username'], 
-						row['email'], row['password'])
-				else:
-					obj_inst = obj.objects.create()
-				writer = csv.DictWriter(csvfile)
+				messages.add_message(request, messages.ERROR, 
+				('Hay un UUID que falta en el %s csv.' % model_instance))
+				return None # will be rewritten, just here so nothing throws an error
 
 
 
@@ -424,8 +422,10 @@ def compare_csv(request, file, model_instance, fix, dependent_csvs_dict):
 				value = obj_inst._meta.get_field(name).get_default()
 			# if there's no default value or the current cell is not 
 			# empty, use the current cell
-			else:
+			elif (row[name] != ''):
 				value = row[name]
+			else:
+				continue
 			print "This is the %s field and my value is %s" % (name, value)
 			# IntegerField: convert string to integer and save to 
 			# object
@@ -579,6 +579,7 @@ checks for errors and deletes files that fail with an error message.
 CSVs that pass are sent to compare_csvs to be 
 """
 @login_required
+@user_passes_test(is_superuser_check)
 def import_export_db(request):
 	if (request.POST):
 
@@ -1178,21 +1179,3 @@ class UserResource(resources.ModelResource):
         widgets = {
         	'date': {'format': '%d/%m/%Y'},
         }
-
-
-# dictionary of all resource classes
-resource_classes = {
-	'child': ChildResource(),
-	'dental_exam': DentalExamResource(),
-	'discharge_plan': DischargePlanResource(),
-	'documents': DocumentsResource(),
-	'disease_history': DiseaseHistoryResource(),
-	'medical_exam_part1': MedicalExamPart1Resource(),
-	'medical_exam_part2': MedicalExamPart2Resource(),
-	'operation_history': OperationHistoryResource(),
-	'photograph': PhotographResource(),
-	'psychological_exam': PsychologicalExamResource(),
-	'residence': ResidenceResource(),
-	'social_exam': SocialExamResource(),
-	'user': UserResource(),
-}
