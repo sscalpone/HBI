@@ -18,7 +18,7 @@ import matplotlib.pyplot as plt
 
 from tracker.models import Child
 from tracker.models import MedicalExamPart1, MedicalExamPart1Form
-from tracker.models import Signature, SignatureForm
+from tracker.models import SignatureForm
 
 import who_stats
 
@@ -58,12 +58,16 @@ def new(request, child_id):
         # said forms, and save them.
         else:
             if (signature_form.is_valid() and exam_form.is_valid()):
-                saved_signature = signature_form.save()
+                saved_signature = signature_form.cleaned_data
                 
                 # Check that exam object saved
                 if (saved_signature):
                     saved_exam = exam_form.save(commit=False)
-                    saved_exam.signature = saved_signature
+                    saved_exam.signature_name = saved_signature['signature_name']
+                    saved_exam.signature_surname = saved_signature['signature_surname']
+                    saved_exam.signature_emp = saved_signature['signature_emp']
+                    saved_exam.signature_direction = saved_signature['signature_direction']
+                    saved_exam.signature_cell = saved_signature['signature_cell']
                     saved_exam.child = child
                     saved_exam.last_saved = datetime.datetime.utcnow()
                     saved_exam.save()
@@ -144,15 +148,22 @@ logged in can add a form.
 """
 @login_required
 def view(request, child_id, exam_id):
-    p = get_object_or_404(MedicalExamPart1, pk=exam_id)
+    exam = get_object_or_404(MedicalExamPart1, pk=exam_id)
     child = get_object_or_404(Child, pk=child_id)
-    signature = get_object_or_404(Signature, pk=p.signature_id)
+    if (request.POST):
+        # After confirmation, delete photo and render the 
+        # add_photograph template
+        if ('discard' in request.POST):
+            exam.delete()
+            return HttpResponseRedirect(
+                reverse('tracker:new_medical_exam_part1', 
+                kwargs={'child_id': child_id}))  
+
     context = {
-        'exam': p,
+        'exam': exam,
         'child': child,
         'child_id': child.id,
         'residence_id': child.residence_id,
-        'signature': signature,
         'page': 'medical_exam_part1',
         # 'exam': True,
     }
@@ -172,12 +183,11 @@ edit_medical_exam_part2 template.
 def edit(request, child_id, exam_id):
     child = get_object_or_404(Child, pk=child_id)
     exam = get_object_or_404(MedicalExamPart1, pk=exam_id)
-    signature = get_object_or_404(Signature, pk=exam.signature_id)
 
     # If POST request, get posted exam and signature form.
     if (request.POST):
         signature_form = SignatureForm(request.POST, request.FILES, 
-            instance=signature, request=request)
+            request=request)
         exam_form = MedicalExamPart1Form(request.POST, request.FILES, 
             instance=exam, request=request)
         
@@ -193,12 +203,16 @@ def edit(request, child_id, exam_id):
         # MedicalExamPart2 and Signature object.
         else:
             if (signature_form.is_valid() and exam_form.is_valid()):
-                saved_signature = signature_form.save()
+                saved_signature = signature_form.cleaned_data
                 
                 # Check that signature object saved
                 if (saved_signature):
                     saved_exam = exam_form.save(commit=False)
-                    saved_exam.signature = saved_signature
+                    saved_exam.signature_name = saved_signature['signature_name']
+                    saved_exam.signature_surname = saved_signature['signature_surname']
+                    saved_exam.signature_emp = saved_signature['signature_emp']
+                    saved_exam.signature_direction = saved_signature['signature_direction']
+                    saved_exam.signature_cell = saved_signature['signature_cell']
                     saved_exam.child = child
                     saved_exam.last_saved = datetime.datetime.utcnow()
                     saved_exam.save()
@@ -251,7 +265,13 @@ def edit(request, child_id, exam_id):
     # Signature objects. 
     else:
         exam_form = MedicalExamPart1Form(instance=exam)
-        signature_form = SignatureForm(instance=signature)
+        signature_form = SignatureForm(initial={
+            'signature_name': exam.signature_name,
+            'signature_surname': exam.signature_surname,
+            'signature_emp': exam.signature_emp,
+            'signature_direction': exam.signature_direction,
+            'signature_cell': exam.signature_cell,
+            })
 
     # Render edit_medical_exam_part2 template
     exam_list = MedicalExamPart1.objects.filter(child_id=child_id)
@@ -268,19 +288,6 @@ def edit(request, child_id, exam_id):
     }
     return render(request, 'tracker/edit_medical_exam_part1.html', context)
 
-def age_at_exam(f_date, t_date, leap_day_anniversary_Feb28=True):
-    computed_age = t_date.year - f_date.year
-    try:
-        anniversary = f_date.replace(year=t_date.year)
-    except ValueError:
-        assert f_date.day == 29 and f_date.month == 2
-        if (leap_day_anniversary_Feb28):
-            anniversary = datetime.date(t_date.year, 2, 28)
-        else:
-            anniversary = datetime.date(t_date.year, 3, 1)
-        if (t_date < anniversary):
-            computed_age -= 1
-    return computed_age
 
 def age_in_months(f_date, t_date):
     r = relativedelta(t_date, f_date)
@@ -321,7 +328,7 @@ def growth_png(request, child_id):
         weight.append(exam.weight)
         bmi_calc = (exam.weight / (exam.height * exam.height))* 10000
         bmi.append(bmi_calc)
-    print age
+
     np_age = np.array(age)
     np_height = np.array(height)
     np_weight = np.array(weight)
@@ -329,18 +336,19 @@ def growth_png(request, child_id):
 
     age_length = len(age)
     
-    for item in avg_height_list:
-        if item[0] > age[0] and item[0] < age[age_length-1]:
-            avg_height_age.append(item[0])
-            avg_height.append(item[1])
-    for item in avg_weight_list:
-        if item[0] > age[0] and item[0] < age[age_length-1]:
-            avg_weight_age.append(item[0])
-            avg_weight.append(item[1])
-    for item in avg_bmi_list:
-        if item[0] > age[0] and item[0] < age[age_length-1]:
-            avg_bmi_age.append(item[0])
-            avg_bmi.append(item[1])
+    if exams:
+        for item in avg_height_list:
+            if item[0] > age[0] and item[0] < age[age_length-1]:
+                avg_height_age.append(item[0])
+                avg_height.append(item[1])
+        for item in avg_weight_list:
+            if item[0] > age[0] and item[0] < age[age_length-1]:
+                avg_weight_age.append(item[0])
+                avg_weight.append(item[1])
+        for item in avg_bmi_list:
+            if item[0] > age[0] and item[0] < age[age_length-1]:
+                avg_bmi_age.append(item[0])
+                avg_bmi.append(item[1])
     
     np_avg_height_age = np.array(avg_height_age)
     np_avg_height = np.array(avg_height)
@@ -393,3 +401,36 @@ def graph_growth(request, child_id):
     }
     return render(request, 'tracker/growth_graph.html', context)
 
+"""The delete() function confirms with the user that a photograph 
+should be deleted, and then deletes the objects from the database. 
+This function is unused as long as javascript is enabled, as the 
+deletion process is done in the view() function, and the form is 
+rendered in a jQueryUI dialog box. This function is kept merely as a 
+precaution/so that it can be rebuilt for other objects without needing 
+to parse the view() object too carefully.
+"""
+def delete(request, child_id, exam_id):
+    # If POST request, get Photograph object, confirm deletion with 
+    # user, and delete object
+    if (request.POST):
+        exam = get_object_or_404(MedicalExamPart1, pk=exam_id)
+        child = get_object_or_404(Child, pk=child_id)
+        
+        # On confirmation, delete object and load the add_photograph 
+        # template
+        if ('discard' in request.POST):
+            exam.delete()
+            return HttpResponseRedirect(
+                reverse('tracker:new_medical_exam_part1', 
+                kwargs={'child_id': child_id}))  
+        
+        # If no confirmation, return to photograph template
+        elif ('no' in request.POST):
+            context = {
+                'exam': exam,
+                'child': child,
+                'child_id': child.id,
+                'residence_id': child.residence_id,
+                'page': 'medical_exam_part1',
+            }
+            return render(request, 'tracker/medical_exam_part1.html', context)

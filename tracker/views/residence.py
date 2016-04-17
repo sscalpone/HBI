@@ -108,7 +108,7 @@ that no one who isn't logged in can add a form.
 """
 @login_required()
 def view(request, residence_id):
-    p = get_object_or_404(Residence, pk=residence_id)
+    residence = get_object_or_404(Residence, pk=residence_id)
     # All the children in chosen residence
     children = Child.objects.filter(residence_id=residence_id)
     # All the children in that residence that are active
@@ -127,12 +127,20 @@ def view(request, residence_id):
     at_risk = len(Child.objects.filter(residence_id=residence_id).filter(
         priority='1'))
 
+    if (request.POST):
+        # After confirmation, delete photo and render the 
+        # add_photograph template
+        if ('discard' in request.POST):
+            residence.delete()
+            return HttpResponseRedirect(reverse('tracker:new_residence'))  
+
+
     context = {
-        'residence': p,
+        'residence': residence,
         'children': children,
         'active': active,
         'inactive': inactive,
-        'residence_id': p.id,
+        'residence_id': residence.id,
         'boys': boys,
         'girls': girls,
         'at_risk': at_risk,
@@ -209,7 +217,36 @@ def edit(request, residence_id):
     }
     return render(request, 'tracker/edit_residence.html', context)
 
-
+"""The delete() function confirms with the user that a photograph 
+should be deleted, and then deletes the objects from the database. 
+This function is unused as long as javascript is enabled, as the 
+deletion process is done in the view() function, and the form is 
+rendered in a jQueryUI dialog box. This function is kept merely as a 
+precaution/so that it can be rebuilt for other objects without needing 
+to parse the view() object too carefully.
+"""
+def delete(request, child_id, exam_id):
+    # If POST request, get Photograph object, confirm deletion with 
+    # user, and delete object
+    if (request.POST):
+        residence = get_object_or_404(Residence, pk=exam_id)
+        child = get_object_or_404(Child, pk=child_id)
+        
+        # On confirmation, delete object and load the add_photograph 
+        # template
+        if ('discard' in request.POST):
+            exam.delete()
+            return HttpResponseRedirect(
+                reverse('tracker:new_residence'))  
+        
+        # If no confirmation, return to photograph template
+        elif ('no' in request.POST):
+            context = {
+                'residence': residence,
+                'residence_id': residence.id,
+                'page': 'residence',
+            }
+            return render(request, 'tracker/residence.html', context)
 
 
 

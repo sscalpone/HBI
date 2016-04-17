@@ -10,7 +10,6 @@ from django.forms import CheckboxInput
 from django.forms import DateInput
 
 from Child import Child
-from Signature import Signature
 
 
 """Model for the Social Exam, which keeps track of the children's 
@@ -33,7 +32,7 @@ class SocialExam(models.Model):
     )
 
     uuid = models.CharField(max_length=200, unique=True, default=uuid.uuid4)
-    child = models.ForeignKey(Child)
+    child = models.ForeignKey(Child, blank=True, null=True)
     date = models.DateField(default=datetime.date.today)
     has_birth_certificate = models.BooleanField(default=False)
     original_birth_certificate = models.BooleanField(default=False)
@@ -51,7 +50,11 @@ class SocialExam(models.Model):
     recommendation = models.TextField(blank=True, null=True)
     priority = models.IntegerField(choices=PRIORITY_CHOICES, 
                                    default=HIGH)
-    signature = models.ForeignKey(Signature, blank=True, null=True)
+    signature_name = models.CharField(max_length=200, blank=True, null=True)
+    signature_surname = models.CharField(max_length=200, blank=True, null=True)
+    signature_emp = models.CharField(max_length=200, blank=True, null=True)
+    signature_direction = models.CharField(max_length=200, blank=True, null=True)
+    signature_cell = models.CharField(max_length=200, blank=True, null=True)
     # For de-duping forms that have been edited.
     last_saved = models.DateTimeField(default=datetime.datetime.utcnow)
 
@@ -170,9 +173,6 @@ class SocialExamForm(ModelForm):
                 sis_in_process = cleaned_data.get('sis_in_process')
                 dni_sis_no_comments = cleaned_data.get('dni_sis_no_comments')
                 priority = cleaned_data.get('priority')
-                if (not sis and not sis_in_process and 
-                    dni_sis_no_comments == ''):
-                        self.add_error('dni_sis_no_comments', msg)
                 if (not dni and not sis_in_process and 
                     dni_sis_no_comments == ''):
                     self.add_error('dni_sis_no_comments', msg)

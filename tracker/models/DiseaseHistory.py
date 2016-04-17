@@ -9,7 +9,6 @@ from django.forms import ModelForm
 from django.forms import DateInput
 
 from Child import Child
-from Signature import Signature
 
 
 """Model for Disease History, which records a child's disease history. 
@@ -20,13 +19,19 @@ completed. This is overriden in the clean() method.
 """
 class DiseaseHistory(models.Model):
 	uuid = models.CharField(max_length=200, unique=True, default=uuid.uuid4)
-	child = models.ForeignKey(Child)
+	child = models.ForeignKey(Child, blank=True, null=True)
 	date = models.DateField(default=datetime.date.today)
 	institution = models.CharField(max_length=200, null=True, blank=True)
 	diagnosis = models.TextField(null=True, blank=True)
 	studies = models.TextField(null=True, blank=True)
 	treatment = models.TextField(null=True, blank=True)
-	signature = models.ForeignKey(Signature, blank=True, null=True)
+	signature_name = models.CharField(max_length=200, blank=True, null=True)
+	signature_surname = models.CharField(max_length=200, blank=True, 
+		null=True)
+	signature_emp = models.CharField(max_length=200, blank=True, null=True)
+	signature_direction = models.CharField(max_length=200, blank=True, 
+		null=True)
+	signature_cell = models.CharField(max_length=200, blank=True, null=True)
 	# For de-duping forms that have been edited.
 	last_saved = models.DateTimeField(default=datetime.datetime.utcnow) 
 

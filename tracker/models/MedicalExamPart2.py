@@ -10,7 +10,6 @@ from django.forms import RadioSelect
 from django.forms import DateInput
 
 from Child import Child
-from Signature import Signature
 
 
 """The model for Medical Exam Part 2 stores the second half the 
@@ -33,7 +32,7 @@ class MedicalExamPart2(models.Model):
     )
     
     uuid = models.CharField(max_length=200, unique=True, default=uuid.uuid4)
-    child = models.ForeignKey(Child)
+    child = models.ForeignKey(Child, blank=True, null=True)
     date = models.DateField(default=datetime.date.today)
     appetite_notes = models.TextField(blank=True, null=True)
     sleep_notes = models.TextField(blank=True, null=True)
@@ -53,7 +52,11 @@ class MedicalExamPart2(models.Model):
     recommendation = models.TextField(blank=True, null=True)
     priority = models.IntegerField(choices=PRIORITY_CHOICES, 
                                    default=HIGH)
-    signature = models.ForeignKey(Signature, blank=True, null=True)
+    signature_name = models.CharField(max_length=200, blank=True, null=True)
+    signature_surname = models.CharField(max_length=200, blank=True, null=True)
+    signature_emp = models.CharField(max_length=200, blank=True, null=True)
+    signature_direction = models.CharField(max_length=200, blank=True, null=True)
+    signature_cell = models.CharField(max_length=200, blank=True, null=True)
     # For de-duping forms that have been edited.
     last_saved = models.DateTimeField(default=datetime.datetime.utcnow) 
 
@@ -155,9 +158,9 @@ class MedicalExamPart2Form(ModelForm):
                 
                 skin_notes = cleaned_data.get('skin_notes')
                 if (skin_notes == ''):
-                    self.add_error('skin_mucosa_notes', msg) 
+                    self.add_error('skin_notes', msg) 
                 
-                lymph_notes = cleaned_data.get('TCSC_lymph_notes')
+                lymph_notes = cleaned_data.get('lymph_notes')
                 if (lymph_notes == ''):
                     self.add_error('lymph_notes', msg) 
 
@@ -197,7 +200,7 @@ class MedicalExamPart2Form(ModelForm):
                 if (recommendation == ''):
                     self.add_error('recommendation', msg)
 
-                diagnosis = cleaned_data('diagnosis')
+                diagnosis = cleaned_data.get('diagnosis')
                 if (diagnosis == ''):
                     self.add_error('diagnosis', msg)
 

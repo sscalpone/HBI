@@ -108,28 +108,17 @@ the photograph. The view() function also processes a discard form to delete phot
 """
 @login_required
 def view(request, child_id, exam_id):
+    exam = get_object_or_404(Photograph, pk=exam_id)
+    child = get_object_or_404(Child, pk=child_id)
     # If POST request, confirm delete and then delete photograph from 
     # database
     if (request.POST):
-        exam = get_object_or_404(Photograph, pk=exam_id)
-        child = get_object_or_404(Child, pk=child_id)
-        
         # After confirmation, delete photo and render the 
         # add_photograph template
         if ('discard' in request.POST):
             exam.delete()
             return HttpResponseRedirect(reverse('tracker:new_photo', 
                 kwargs={'child_id': child_id}))  
-        
-        # If no confirmation, reload photo on the photograph template
-        elif ('no' in request.POST):
-            context = {
-                'exam': exam,
-                'child': child,
-                'child_id': child.id,
-                'residence_id': child.residence_id,
-            }
-            return render(request, 'tracker/photograph.html', context)
 
     # If not POST request, get Photograph object and load the 
     # photograph template

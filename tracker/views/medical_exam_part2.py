@@ -10,7 +10,7 @@ from django.template import loader
 
 from tracker.models import Child
 from tracker.models import MedicalExamPart2, MedicalExamPart2Form
-from tracker.models import Signature, SignatureForm
+from tracker.models import SignatureForm
 
 
 """The new() function creates and processes a new MedicalExamPart2 
@@ -48,12 +48,16 @@ def new(request, child_id):
         # said forms, and save them.
         else:
             if signature_form.is_valid() and exam_form.is_valid():
-                saved_signature = signature_form.save()
+                saved_signature = signature_form.cleaned_data
                 
                 # Check that signature object is saved
                 if saved_signature:
                     saved_exam = exam_form.save(commit=False)
-                    saved_exam.signature = saved_signature
+                    saved_exam.signature_name = saved_signature['signature_name']
+                    saved_exam.signature_surname = saved_signature['signature_surname']
+                    saved_exam.signature_emp = saved_signature['signature_emp']
+                    saved_exam.signature_direction = saved_signature['signature_direction']
+                    saved_exam.signature_cell = saved_signature['signature_cell']
                     saved_exam.child = child
                     saved_exam.last_saved = datetime.datetime.utcnow()
                     saved_exam.save()
@@ -135,15 +139,22 @@ logged in can add a form.
 """
 @login_required
 def view(request, child_id, exam_id):
-    p = get_object_or_404(MedicalExamPart2, pk=exam_id)
+    exam = get_object_or_404(MedicalExamPart2, pk=exam_id)
     child = get_object_or_404(Child, pk=child_id)
-    signature = get_object_or_404(Signature, pk=p.signature_id)
+    if (request.POST):
+        # After confirmation, delete photo and render the 
+        # add_photograph template
+        if ('discard' in request.POST):
+            exam.delete()
+            return HttpResponseRedirect(
+                reverse('tracker:new_medical_exam_part2', 
+                kwargs={'child_id': child_id}))  
+
     context = {
-        'exam': p,
+        'exam': exam,
         'child': child,
         'child_id': child.id,
         'residence_id': child.residence_id,
-        'signature': signature,
         'page': 'medical_exam_part2',
         # 'exam': True,
     }
@@ -163,12 +174,11 @@ edit_medical_exam_part2 template.
 def edit(request, child_id, exam_id):
     child = get_object_or_404(Child, pk=child_id)
     exam = get_object_or_404(MedicalExamPart2, pk=exam_id)
-    signature = get_object_or_404(Signature, pk=exam.signature_id)
     
     # If POST request, get posted exam and signature form.
     if (request.POST):
         signature_form = SignatureForm(request.POST, request.FILES, 
-            instance=signature, request=request)
+            request=request)
         exam_form = MedicalExamPart2Form(request.POST, request.FILES, 
             instance=exam, request=request)
         
@@ -184,12 +194,16 @@ def edit(request, child_id, exam_id):
         # MedicalExamPart2 and Signature object.
         else:
             if (signature_form.is_valid() and exam_form.is_valid()):
-                saved_signature = signature_form.save()
+                saved_signature = signature_form.cleaned_data
                 
                 # Check that signature object saved
                 if (saved_signature):
                     saved_exam = exam_form.save(commit=False)
-                    saved_exam.signature = saved_signature
+                    saved_exam.signature_name = saved_signature['signature_name']
+                    saved_exam.signature_surname = saved_signature['signature_surname']
+                    saved_exam.signature_emp = saved_signature['signature_emp']
+                    saved_exam.signature_direction = saved_signature['signature_direction']
+                    saved_exam.signature_cell = saved_signature['signature_cell']
                     saved_exam.child = child
                     saved_exam.save()
                     exam_form.save_m2m()
@@ -243,7 +257,13 @@ def edit(request, child_id, exam_id):
     # Signature objects. 
     else:
         exam_form = MedicalExamPart2Form(instance=exam)
-        signature_form = SignatureForm(instance=signature)
+        signature_form = SignatureForm(initial={
+            'signature_name': exam.signature_name,
+            'signature_surname': exam.signature_surname,
+            'signature_emp': exam.signature_emp,
+            'signature_direction': exam.signature_direction,
+            'signature_cell': exam.signature_cell,
+            })
 
     # Render edit_medical_exam_part2 template
     exam_list = MedicalExamPart2.objects.filter(child_id=child_id)
@@ -262,4 +282,36 @@ def edit(request, child_id, exam_id):
 
 
 
-
+"""The delete() function confirms with the user that a photograph 
+should be deleted, and then deletes the objects from the database. 
+This function is unused as long as javascript is enabled, as the 
+deletion process is done in the view() function, and the form is 
+rendered in a jQueryUI dialog box. This function is kept merely as a 
+precaution/so that it can be rebuilt for other objects without needing 
+to parse the view() object too carefully.
+"""
+def delete(request, child_id, exam_id):
+    # If POST request, get Photograph object, confirm deletion with 
+    # user, and delete object
+    if (request.POST):
+        exam = get_object_or_404(MedicalExamPart2, pk=exam_id)
+        child = get_object_or_404(Child, pk=child_id)
+        
+        # On confirmation, delete object and load the add_photograph 
+        # template
+        if ('discard' in request.POST):
+            exam.delete()
+            return HttpResponseRedirect(
+                reverse('tracker:new_medical_exam_part2', 
+                kwargs={'child_id': child_id}))  
+        
+        # If no confirmation, return to photograph template
+        elif ('no' in request.POST):
+            context = {
+                'exam': exam,
+                'child': child,
+                'child_id': child.id,
+                'residence_id': child.residence_id,
+                'page': 'medical_exam_part2',
+            }
+            return render(request, 'tracker/medical_exam_part2.html', context)

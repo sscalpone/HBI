@@ -3,62 +3,25 @@
 import datetime
 import uuid
 
+from django import forms
 from django.db import models
 from django.forms import ModelForm
 from django.forms import DateInput
 
 
-"""Model for the record of who is filling out each form. Each form has 
-a signature_id to reference the signature of that form. All fields are 
-allowed to be saved null so that forms can be saved before validation 
-to prevent losing information if the form can't be completed. This is 
-overriden in the clean() method.
-"""
-class Signature(models.Model):
-    uuid = models.CharField(max_length=200, unique=True, default=uuid.uuid4)
-    name = models.CharField(max_length=200, blank=True, null=True)
-    surname = models.CharField(max_length=200, blank=True, null=True)
-    emp = models.CharField(max_length=200, blank=True, null=True)
-    direction = models.CharField(max_length=200, blank=True, null=True)
-    cell = models.CharField(max_length=200, blank=True, null=True)
-    # For de-duping forms that have been edited.
-    last_saved = models.DateTimeField(default=datetime.datetime.utcnow)
-
-    # Meta class defines database table and labels, and clears any 
-    # default permissions.
-    class Meta:
-        app_label = 'tracker'
-        db_table = 'tracker_signature'
-        default_permissions = ()
-
-    # The human-readable version of the signature - the name of the 
-    # person filling out the form.
-    def __unicode__(self):
-        return self.name
-
-
 """The form for the signature. Attached at the end of every exam form.
 """
-class SignatureForm(ModelForm):
-    # Meta class defines the fields and Spanish labels for the form.
-    class Meta:
-        model = Signature
-        
-        fields = (
-            'name',
-            'surname',
-            'emp',
-            'direction',
-            'cell',
-        )
-
-        labels = {
-            'name': 'Nombres',
-            'surname': 'Apellidos',
-            'emp': 'EMP',
-            'direction': 'Direccion',
-            'cell': 'Celular',
-        }
+class SignatureForm(forms.Form):
+    signature_name = forms.CharField(max_length=30, required=False, 
+        label='Nombres')
+    signature_surname = forms.CharField(max_length=30, required=False, 
+        label='Apellidos')
+    signature_emp = forms.CharField(max_length=30, required=False, 
+        label='EMP')
+    signature_direction = forms.CharField(max_length=30, required=False, 
+        label='Direccion')
+    signature_cell = forms.CharField(max_length=30, required=False, 
+        label='Celular')
 
     # Override __init__ so 'request' can be accessed in the clean() 
     # function.
@@ -79,24 +42,24 @@ class SignatureForm(ModelForm):
         if (self.request.POST):
             if ('submit' in self.request.POST):
                 
-                name = cleaned_data.get('name')
-                if (name == ''):
-                    self.add_error('name', msg)
+                signature_name = cleaned_data.get('signature_name')
+                if (signature_name == ''):
+                    self.add_error('signature_name', msg)
                 
-                surname = cleaned_data.get('surname')
-                if (surname == ''):
-                    self.add_error('surname', msg)
+                signature_surname = cleaned_data.get('signature_surname')
+                if (signature_surname == ''):
+                    self.add_error('signature_surname', msg)
                 
-                emp = cleaned_data.get('emp')
-                if (emp == ''):
-                    self.add_error('emp', msg)
+                signature_emp = cleaned_data.get('signature_emp')
+                if (signature_emp == ''):
+                    self.add_error('signature_emp', msg)
                 
-                direction = cleaned_data.get('direction')
-                if (direction == ''):
-                    self.add_error('direction', msg)
+                signature_direction = cleaned_data.get('signature_direction')
+                if (signature_direction == ''):
+                    self.add_error('signature_direction', msg)
 
-                cell = cleaned_data.get('cell')
-                if (cell == ''):
-                    self.add_error('cell', msg)
+                signature_cell = cleaned_data.get('signature_cell')
+                if (signature_cell == ''):
+                    self.add_error('signature_cell', msg)
 
 

@@ -9,7 +9,6 @@ from django.forms import ModelForm
 from django.forms import DateInput
 
 from Child import Child
-from Signature import Signature
 
 
 """Model for the Dicharge Plan, which evaluates the child's plans after
@@ -21,14 +20,18 @@ form can't be completed. This is overriden in the clean() method.
 class DischargePlan(models.Model):
 
     uuid = models.CharField(max_length=200, unique=True, default=uuid.uuid4)
-    child = models.ForeignKey(Child)
+    child = models.ForeignKey(Child, blank=True, null=True)
     date = models.DateField(default=datetime.date.today)
     summary = models.TextField(blank=True, null=True)
     strengths_challenges = models.TextField(blank=True, null=True)
     family = models.TextField(blank=True, null=True)
     training = models.TextField(blank=True, null=True)
     future_housing = models.TextField(blank=True, null=True)
-    signature = models.ForeignKey(Signature, blank=True, null=True)
+    signature_name = models.CharField(max_length=200, blank=True, null=True)
+    signature_surname = models.CharField(max_length=200, blank=True, null=True)
+    signature_emp = models.CharField(max_length=200, blank=True, null=True)
+    signature_direction = models.CharField(max_length=200, blank=True, null=True)
+    signature_cell = models.CharField(max_length=200, blank=True, null=True)
     # For de-duping forms that have been edited.
     last_saved = models.DateTimeField(default=datetime.datetime.utcnow)
 
@@ -58,10 +61,14 @@ class DischargePlanForm(ModelForm):
         
         labels = {
             'date': "Fecha",
-            'summary': 'Resumen del Niño(a) - Salud mental, físico, y emocional.',
-            'strengths_challenges': 'Fuerzas, Desafios, Consideraciones Especiales, etc.',
+            'summary': ('Resumen del Niño(a) - Salud mental, físico, y '
+                'emocional.'),
+            'strengths_challenges': ('Fuerzas, Desafios, Consideraciones '
+                'Especiales, etc.'),
             'family': 'Relaciones Familiares o Comunitarias',
-            'training': 'Enfoque de formación profesional (es decir, educación superior, militar, manual laboral, gastronomía, etc.)',
+            'training': ('Enfoque de formación profesional (es decir, '
+                'educación superior, militar, manual laboral, gastronomía, '
+                'etc.)'),
             'future_housing': 'Futuras posibilidades de alojamiento', 
         }
         widgets = {
@@ -108,6 +115,5 @@ class DischargePlanForm(ModelForm):
                 future_housing = cleaned_data.get('future_housing')
                 if (future_housing == ''):
                     self.add_error('future_housing', msg)
-
 
 

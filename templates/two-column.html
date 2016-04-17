@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="es-PE">
     <head>
         <title>{% block title %}Unión Bíblica Evaluación de Girasoles{% endblock %}</title>
         {% load staticfiles %}<link rel="stylesheet" href="{% static "tracker/jquery-ui.min.css" %}">
@@ -38,18 +38,24 @@
         {% load staticfiles %}<script type="text/javascript" src="{% static "tracker/jquery-1.11.3.min.js" %}"></script>
         {% load staticfiles %}<script type="text/javascript" src="{% static "tracker/jquery-ui.min.js" %}"></script>
         <script type="text/javascript">
+
             var changed=false;
+            var keep_changed = true;
             $("form").on("input", function() {
                 changed=true;
+                console.log('on input')
             });
             $("form :input").change(function() {
                 changed=true;
+                console.log('form :input')
             });
 
             $('.delete').click(function(event) {
-                if ($('.delete').hasClass('delete_photo')) {
+                if ($(this).hasClass('delete_exam')) {
                     changed=true;
                     console.log(changed);
+                    console.log('delete has class')
+                    keep_changed = false ;
                 }
                 if (changed==true) {
                     event.preventDefault();
@@ -59,10 +65,16 @@
                     $('#no').click(function(e) {
                         e.preventDefault();
                         $('#dialog').dialog("close");
+                        
+                        if (keep_changed==false) {
+                            changed = false;
+                        }
+                        // console.log(changed)
                     });
 
                 }
             });
+
 
             $('.change').click(function(event) {
                 event.preventDefault();
@@ -105,12 +117,34 @@
                     
                 });
             });
-            if ($.contains('#dialog .name', '.errorlist')) {
-                console.log('Yup!');
-            }
-            else {
-                console.log("Nope.");
-            }
+
+            $('.documents').click(function(event) {
+                event.preventDefault();
+                if ($(this).hasClass('government')) {
+                    if ($('.government-list').hasClass('no-display')) {
+                        $('.government-list').removeClass('no-display');
+                    } 
+                    else {
+                        $('.government-list').addClass('no-display');
+                    }
+                }
+                else if ($(this).hasClass('health')) {
+                    if ($('.health-list').hasClass('no-display')) {
+                        $('.health-list').removeClass('no-display');
+                    } 
+                    else {
+                        $('.health-list').addClass('no-display');
+                    }
+                }
+                else if ($(this).hasClass('others')) {
+                    if ($('.others-list').hasClass('no-display')) {
+                        $('.others-list').removeClass('no-display');
+                    } 
+                    else {
+                        $('.others-list').addClass('no-display');
+                    }
+                }
+            });
 
         </script>
     </body>

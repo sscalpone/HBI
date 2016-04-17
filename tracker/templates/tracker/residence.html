@@ -21,7 +21,10 @@
 		<li>Niñas: {{ girls }}</li>
 		<li>En riesgo: {{ at_risk }} </li>
 		{% if perms.tracker.add_edit_forms %}
-		<a href="{% url 'tracker:edit_residence' residence_id %}"><li>Edita Detalles</li></a>
+		<li><a href="{% url 'tracker:edit_residence' residence_id %}">Edita Detalles</a></li>
+		{% endif %}
+		{% if perms.tracker.delete_info %}
+		<li><a href="#" class="delete delete_exam">Borrar</a></li>
 		{% endif %}
 	</ul>
 
@@ -65,7 +68,11 @@
 		    	<a href="{% url 'tracker:child' child.id %}">
 		    		<li>
 		    			<div class="thumbnail gray">
-		    				<img src="{{ child.photo.url }}">
+		    				{% if child.photo %}
+				    		<img src="{{ child.photo.url }}">
+				    		{% else %}
+					    	{% load staticfiles %}<img src="{% static "tracker/person-icon.svg" %}">
+					    	{% endif %}
 		    			</div>
 			    		{% if child.first_name == '' %}
 			    			Unknown Name
@@ -78,4 +85,12 @@
 		  {% endif %}
 		</ul>
     </div>
+
+    <span id="dialog">
+        <form action ="" method="post" class="no-display">{% csrf_token %}
+            <p>¿Estás seguro que quieres borrar este examen?</p>
+            <input type="submit" name="discard" value="Sí">
+            <input type="submit" value="No" id="no">
+        </form>
+    </span>
 {% endblock %}

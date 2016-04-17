@@ -20,15 +20,30 @@
         </ul>
         <ul id="signature">
             <li><h3>Los Datos del Profesíonal</h3></li>
-            <li><span>Nombre:</span> {{ signature.name }} {{ signature.surname }}</li>
-            <li><span>EMP:</span> {{ signature.emp }}</li>
-            <li><span>Direccion:</span> {{ signature.direction }}</li>
-            <li><span>Celular:</span> {{ signature.cell }}</li>
+            <li><span>Nombre:</span> {{ exam.signature_name }} {{ exam.signature_surname }}</li>
+            <li><span>EMP:</span> {{ exam.signature_emp }}</li>
+            <li><span>Direccion:</span> {{ exam.signature_direction }}</li>
+            <li><span>Celular:</span> {{ exam.signature_cell }}</li>
         </ul>
 
-        {% if perms.tracker.add_edit_forms %}
-        <a href="{% url 'tracker:edit_operation_history' child_id exam.id %}">Edita Detalles</a>
+        {% if perms.tracker.add_edit_forms or perms.tracker.delete_info %}
+        <ul>
+            {% if perms.tracker.add_edit_forms %}
+            <li><a href="{% url 'tracker:edit_operation_history' child_id exam.id %}">Edita Detalles</a></li>
+            {% endif %}
+            {% if perms.tracker.delete_info %}
+            <li><a href="#" class="delete delete_exam">Borrar</a></li>
+            {% endif %}
+        </ul>
         {% endif %}
+
+        <span id="dialog">
+            <form action ="" method="post" class="no-display">{% csrf_token %}
+                <p>¿Estás seguro que quieres borrar este examen?</p>
+                <input type="submit" name="discard" value="Sí">
+                <input type="submit" value="No" id="no">
+            </form>
+        </span>
 
     </div>
     

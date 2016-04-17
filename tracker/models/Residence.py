@@ -90,10 +90,6 @@ class ResidenceForm(ModelForm):
 				administrator = cleaned_data.get('administrator')
 				if (administrator == ''):
 					self.add_error('administrator', msg)
-				
-				photo = cleaned_data.get('photo')
-                if (photo is None):
-                    self.add_error('photo', msg)
 
 
 

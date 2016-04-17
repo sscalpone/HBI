@@ -21,7 +21,7 @@ clean() method.
 """
 class Photograph(models.Model):
 	uuid = models.CharField(max_length=200, unique=True, default=uuid.uuid4)
-	child = models.ForeignKey(Child)
+	child = models.ForeignKey(Child, blank=True, null=True)
 	date = models.DateField(default=datetime.date.today)
 	photo = models.ImageField(upload_to='photos', blank=True, null=True)
 	# For de-duping forms that have been edited.

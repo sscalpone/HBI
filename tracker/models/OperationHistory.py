@@ -9,7 +9,6 @@ from django.forms import ModelForm
 from django.forms import DateInput
 
 from Child import Child
-from Signature import Signature
 
 
 """The OperationHistory model holds information about each child's 
@@ -21,14 +20,20 @@ can't be completed. This is overriden in the clean() method.
 """
 class OperationHistory(models.Model):
 	uuid = models.CharField(max_length=200, unique=True, default=uuid.uuid4)
-	child = models.ForeignKey(Child)
+	child = models.ForeignKey(Child, blank=True, null=True)
 	date = models.DateField(default=datetime.date.today)
 	institution = models.CharField(max_length=200, blank=True, null=True)
 	preop_diagnosis = models.TextField(blank=True, null=True)
 	intervention = models.TextField(blank=True, null=True)
 	postop_diagnosis = models.TextField(blank=True, null=True)
 	follow_up = models.TextField(blank=True, null=True)
-	signature = models.ForeignKey(Signature, blank=True, null=True)
+	signature_name = models.CharField(max_length=200, blank=True, null=True)
+	signature_surname = models.CharField(max_length=200, blank=True, 
+		null=True)
+	signature_emp = models.CharField(max_length=200, blank=True, null=True)
+	signature_direction = models.CharField(max_length=200, blank=True, 
+		null=True)
+	signature_cell = models.CharField(max_length=200, blank=True, null=True)
 	# For de-duping forms that have been edited.
 	last_saved = models.DateTimeField(default=datetime.datetime.now)
 

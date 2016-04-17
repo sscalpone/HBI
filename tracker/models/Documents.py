@@ -10,7 +10,6 @@ from django.forms import RadioSelect
 from django.forms import DateInput
 
 from Child import Child
-from Signature import Signature
 
 
 """The Documents model stores any documents users upload about the 
@@ -33,14 +32,18 @@ class Documents(models.Model):
     )
 
 	uuid = models.CharField(max_length=200, unique=True, default=uuid.uuid4)
-	child = models.ForeignKey(Child)
+	child = models.ForeignKey(Child, blank=True, null=True)
 	date = models.DateField(default=datetime.date.today)
 	title = models.CharField(max_length=200, blank=True, null=True)
 	document = models.FileField(upload_to='documents', blank=True, null=True)
 	file_to = models.CharField(max_length=10, 
                                choices=FOLDER_CHOICES, 
                                default=HEALTH)
-	signature = models.ForeignKey(Signature)
+	signature_name = models.CharField(max_length=200, blank=True, null=True)
+	signature_surname = models.CharField(max_length=200, blank=True, null=True)
+	signature_emp = models.CharField(max_length=200, blank=True, null=True)
+	signature_direction = models.CharField(max_length=200, blank=True, null=True)
+	signature_cell = models.CharField(max_length=200, blank=True, null=True)
 	# For de-duping forms that have been edited.
 	last_saved = models.DateTimeField(default=datetime.datetime.utcnow) 
 

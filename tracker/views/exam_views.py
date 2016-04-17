@@ -10,7 +10,9 @@ priority, and render the child_information template.
 
 from django.contrib.auth.decorators import login_required
 
+from django.core.urlresolvers import reverse
 from django.shortcuts import render, get_object_or_404
+from django.http import HttpResponseRedirect
 
 from tracker.models import Child
 from tracker.models import DentalExam
@@ -30,6 +32,11 @@ information template.
 def index(request, child_id):
 	child = get_object_or_404(Child, pk=child_id)
 	residence_id = child.residence_id
+	if (request.POST):
+		if ('discard' in request.POST):
+			child.delete()
+			return HttpResponseRedirect(reverse('tracker:add_child', 
+        		kwargs={'residence_id': residence_id}))
 
 	# Get last Dental Exam if one exists
 	try:

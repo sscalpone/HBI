@@ -1,10 +1,34 @@
-	<div class="exam-list">
-		<h3>Documentos</h3>
-		<ol>
-		{% if DocumentsList %}
-		{% for exam in DocumentsList reversed %}
-			<li><a href="{% url 'tracker:document' child_id exam.id %}">{{ exam.date }}</a></li>
-		{% endfor %}
-		{% endif %}
-		</ol>
-	</div>
+    <div class="exam-list">
+        <h3><a href="" class="documents government">Documentos del Gobierno</a></h3>
+        <ol class="government-list no-display">
+        {% if DocumentsList %}
+        {% for exam in DocumentsList reversed %}
+            {% if exam.file_to == "Government" %}
+            <li><a href="{% url 'tracker:document' child_id exam.id %}">{{ exam.date }}</a></li>
+            {% endif %}
+        {% endfor %}
+        {% endif %}
+        </ol>
+        
+        <h3><a href="" class="documents health">Documentos de Salud</a></h3>
+        <ol class="health-list no-display">
+        {% if DocumentsList %}
+        {% for exam in DocumentsList reversed %}
+            {% if exam.file_to == "Health" %}
+            <li><a href="{% url 'tracker:document' child_id exam.id %}">{{ exam.date }}</a></li>
+            {% endif %}
+        {% endfor %}
+        {% endif %}
+        </ol>
+        
+        <h3><a href="" class="documents others">Otros Documentos</a></h3>
+        <ol class="others-list no-display">
+        {% if DocumentsList %}
+        {% for exam in DocumentsList reversed %}
+            {% if exam.file_to == "Other" %}
+            <li><a href="{% url 'tracker:document' child_id exam.id %}">{{ exam.date }}</a></li>
+            {% endif %}
+        {% endfor %}
+        {% endif %}
+        </ol>
+    </div>

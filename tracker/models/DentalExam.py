@@ -9,7 +9,6 @@ from django.forms import ModelForm
 from django.forms import DateInput
 
 from Child import Child
-from Signature import Signature
 
 
 """The model to track the dental information of the children. 
@@ -31,14 +30,20 @@ class DentalExam(models.Model):
     )
 
     uuid = models.CharField(max_length=200, unique=True, default=uuid.uuid4)
-    child = models.ForeignKey(Child)
+    child = models.ForeignKey(Child, blank=True, null=True)
     date = models.DateField(default=datetime.date.today)
     diagnosis = models.TextField(blank=True, null=True)
     completed_treatment = models.TextField(blank=True, null=True)
     recommendation = models.TextField(blank=True, null=True)
     priority = models.IntegerField(choices=PRIORITY_CHOICES, 
                                    default=HIGH)
-    signature = models.ForeignKey(Signature, blank=True, null=True)
+    signature_name = models.CharField(max_length=200, blank=True, null=True)
+    signature_surname = models.CharField(max_length=200, blank=True,
+     null=True)
+    signature_emp = models.CharField(max_length=200, blank=True, null=True)
+    signature_direction = models.CharField(max_length=200, blank=True, 
+        null=True)
+    signature_cell = models.CharField(max_length=200, blank=True, null=True)
     # For de-duping forms that have been edited.
     last_saved = models.DateTimeField(default=datetime.datetime.utcnow) 
 
@@ -96,13 +101,10 @@ class DentalExamForm(ModelForm):
                 if (diagnosis == ''):
                     self.add_error('diagnosis', msg)
                 
-                completed_treatment = cleaned_data('completed_treatment')
+                completed_treatment = cleaned_data.get('completed_treatment')
                 if (completed_treatment == ''):
                     self.add_error('completed_treatment', msg)
 
                 recommendation = cleaned_data.get('recommendation')
                 if (recommendation == ''):
                     self.add_error('recommendation', msg)
-
-
-

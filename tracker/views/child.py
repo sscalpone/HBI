@@ -12,9 +12,6 @@ from tracker.models import Child, ChildForm
 from tracker.models import Residence
 
 
-def num_fields(request):
-    return len(request._meta.fields)
-
 """The new() function creates and processes a new Child form. It then 
 creates a new Child object from the Child model, populates it with the 
 form info, and saves it to the database. It is protected with the 
@@ -53,7 +50,7 @@ def new(request, residence_id):
                     if ('save' in request.POST):
                         return HttpResponseRedirect(
                             reverse('tracker:edit_child', 
-                                kwargs={'child_id': save_child.id}))
+                                kwargs={'child_id': saved_child.id}))
                     
                     # If user clicked 'submit', render child template.
                     else:
@@ -92,11 +89,23 @@ add a form.
 """
 @login_required
 def view(request, child_id):
-    p = get_object_or_404(Child, pk=child_id)
+    child = get_object_or_404(Child, pk=child_id)
+    residence_id = child.residence_id
+    print "hello?"
+    if (request.POST):
+        print "post"
+        # After confirmation, delete photo and render the 
+        # add_photograph template
+        if ('discard' in request.POST):
+            print "discard"
+            child.delete()
+            return HttpResponseRedirect(reverse('tracker:new_child', 
+                kwargs={'residence_id': residence_id}))  
+
     context = {
-        'child': p,
-        'child_id': p.id,
-        'residence_id': p.residence_id,
+        'child': child,
+        'child_id': child.id,
+        'residence_id': child.residence_id,
         'page': 'child',
     }
     return render(request, 'tracker/child_information.html', context)
@@ -178,3 +187,36 @@ def edit(request, child_id):
         'page': 'child',
     }
     return render(request, 'tracker/edit_child.html', context)
+
+
+"""The delete() function confirms with the user that a photograph 
+should be deleted, and then deletes the objects from the database. 
+This function is unused as long as javascript is enabled, as the 
+deletion process is done in the view() function, and the form is 
+rendered in a jQueryUI dialog box. This function is kept merely as a 
+precaution/so that it can be rebuilt for other objects without needing 
+to parse the view() object too carefully.
+"""
+def delete(request, child_id, exam_id):
+    # If POST request, get Photograph object, confirm deletion with 
+    # user, and delete object
+    if (request.POST):
+        residence_id = child.resid
+        child = get_object_or_404(Child, pk=child_id)
+        
+        # On confirmation, delete object and load the add_photograph 
+        # template
+        if ('discard' in request.POST):
+            child.delete()
+            return HttpResponseRedirect(reverse('tracker:new_child', 
+                kwargs={'residence_id': residence_id}))  
+        
+        # If no confirmation, return to photograph template
+        elif ('no' in request.POST):
+            context = {
+                'child': child,
+                'child_id': child.id,
+                'residence_id': child.residence_id,
+                'page': 'residence',
+            }
+            return render(request, 'tracker/child.html', context)

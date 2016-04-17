@@ -17,12 +17,13 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 	uuid = models.CharField(max_length=200, unique=True, default=uuid.uuid4)
 	first_name = models.CharField(max_length=50, blank=True)
 	last_name = models.CharField(max_length=50, blank=True)
-	email = models.EmailField(max_length=200, unique=True, blank=True)
+	email = models.EmailField(max_length=200, blank=True)
 	is_staff = models.BooleanField(default=True)
 	is_active = models.BooleanField(default=True)
 	last_saved = models.DateTimeField(default=datetime.datetime.utcnow)
 	date_joined = models.DateTimeField(default=datetime.datetime.utcnow)
-	residence = models.ForeignKey(Residence, blank=True, null=True, default=None)
+	residence = models.ForeignKey(Residence, blank=True, null=True, 
+		default=None)
 	
 	add_users = models.BooleanField(default=False)
 	delete_info = models.BooleanField(default=False)

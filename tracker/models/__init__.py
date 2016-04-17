@@ -14,7 +14,7 @@ from OperationHistory import OperationHistoryForm, OperationHistory
 from PsychologicalExam import PsychologicalExam, PsychologicalExamForm
 from Photograph import Photograph, PhotographForm
 from Residence import Residence, ResidenceForm
-from Signature import Signature, SignatureForm
+from Signature import SignatureForm
 from SocialExam import SocialExam, SocialExamForm
 from Profile import ProfileForm
 from Profile import EditNameForm, EditPasswordForm, EditIsStaffForm
