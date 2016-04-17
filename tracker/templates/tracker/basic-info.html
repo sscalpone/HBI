@@ -1,4 +1,5 @@
-    <div class="child-info">
+    <div id="sticky-anchor"></div>
+    <div class="child-info" id="sticky">
         {% if child.photo %}
         <div class="profile-picture">
         <img src="{{ child.photo.url }}"></div>
@@ -11,7 +12,7 @@
             <li><span>Fecha de Naciemiento:</span> {% if child.birthdate %}{{ child.birthdate }}</li>
             <li><span>Años:</span> {{ child.age }}</li>
             {% endif %}
-            <li><span>Género:</span> {% if child.gender == 'f' %} Niña {% elif child.gender == 'm' %} Niño {% endif %}</li>
+            <li><span>Género:</span> {% if child.gender == 'f' %} Feminino {% elif child.gender == 'm' %} Masculino {% endif %}</li>
             <li><span>Casa Girasoles:</span>{{ child.residence.residence_name }}</li>
             <li><span>Fecha de Ingreso:</span> {% if child.intake_date %}{{ child.intake_date }}{% endif %}</li>
             <li><span>Lugar de Naciemiento:</span> {% if child.birthplace %}{{ child.birthplace }}{% endif %}</li>

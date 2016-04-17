@@ -393,6 +393,10 @@ CHILD PAGE STYLES
   margin: 0 auto;
   overflow: hidden;
 }
+.child-info {
+  width: 100%;
+  display: block;
+}
 
 .child-info span, #form-info span {
   display: inline-block;
@@ -525,4 +529,18 @@ MESSAGES
 form {
   min-height: 60px;
   padding-bottom: 10px;
+}
+
+#sticky.stick {
+  margin-top: 0 !important;
+  position: fixed;
+  top: 0;
+  width: 78%;
+  z-index: 10000;
+  border-radius: 0 0 0.5em 0.5em;
+  background: white;
+}
+
+#sticky.stick .basic-info, #sticky.stick .profile-picture {
+  padding-top: 10px;
 }

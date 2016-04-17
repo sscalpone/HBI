@@ -39,24 +39,46 @@
         {% load staticfiles %}<script type="text/javascript" src="{% static "tracker/jquery-ui.min.js" %}"></script>
         <script type="text/javascript">
 
+            // sourced from livibetter on jsfiddle: 
+            // https://jsfiddle.net/livibetter/HV9HM/
+            function sticky_relocate() {
+                var window_top = $(window).scrollTop();
+                var div_top = $('#sticky-anchor').offset().top;
+                if (window_top > div_top) {
+                    $('#sticky').addClass('stick');
+                    $('#sticky-anchor').height($('#sticky').outerHeight());
+                } else {
+                    $('#sticky').removeClass('stick');
+                    $('#sticky-anchor').height(0);
+                }
+            }
+
+            $(function() {
+                if ($(document).width() > 800) {
+                    $(window).scroll(sticky_relocate);
+                    sticky_relocate();
+                }
+            });
+
             var changed=false;
             var keep_changed = true;
             $("form").on("input", function() {
                 changed=true;
-                console.log('on input')
             });
             $("form :input").change(function() {
                 changed=true;
-                console.log('form :input')
             });
 
             $('.delete').click(function(event) {
+                link = $(this).attr('href') ;
+
                 if ($(this).hasClass('delete_exam')) {
                     changed=true;
                     console.log(changed);
                     console.log('delete has class')
                     keep_changed = false ;
                 }
+
                 if (changed==true) {
                     event.preventDefault();
                     $('#dialog form').removeClass('no-display');
@@ -69,10 +91,14 @@
                         if (keep_changed==false) {
                             changed = false;
                         }
-                        // console.log(changed)
                     });
-
                 }
+                $('#discard').click(function(e) {
+                    e.preventDefault();
+                    window.location = link;
+                });
+
+                
             });
 
 

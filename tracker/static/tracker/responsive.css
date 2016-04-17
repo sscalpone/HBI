@@ -90,9 +90,9 @@ MEDIA QUERIES
 
   /* Updates CHILD INFORMATION STYLES*/
 
-  .child-info, #child-view-lists {
+/*  .child-info, #child-view-lists {
     width: 79%;
-  }
+  }*/
 
   .child-info {
     min-height: 200px;
@@ -146,6 +146,7 @@ MEDIA QUERIES
 
   .profile-picture {
     float: right;
+    padding-right: 20%;
   }
 
   .exam-list {
