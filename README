@@ -20,7 +20,7 @@ Install Python Graphing Tools:
 sudo pip install matplotlib
 
 Install Django Import Export:
-sudo pip install import-export
+sudo pip install django-import-export
 
 Install Python Dateutil
 sudo pip install python-dateutil
