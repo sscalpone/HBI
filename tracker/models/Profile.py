@@ -40,6 +40,10 @@ class ProfileForm(forms.Form):
 								  required=False, 
 								  label='¿Es el personal?',
 								  widget=forms.CheckboxInput)
+	is_superuser = forms.BooleanField(initial=False, 
+								  required=False, 
+								  label='¿Es el superuser?',
+								  widget=forms.CheckboxInput)
 	add_users = forms.BooleanField(initial=False, 
 								   required=False, 
 								   label='Añadir Otros Usuarios', 
@@ -103,30 +107,41 @@ class ProfileForm(forms.Form):
 					self.add_error('email', 'Este correo electrónico ya ' 
 						'tiene una cuenta.')
 
-				# Set 
-				view = cleaned_data.get('view')
-				if view is not True:
-					view = False
-				add_edit_forms= cleaned_data.get('add_edit_forms')
-				if add_edit_forms is not True:
-					add_edit_forms = False
-				delete_info = cleaned_data.get('delete_info')
-				if delete_info is not True:
-					delete_info = False
-				add_users = cleaned_data.get('add_users')
-				if add_users is not True:
-					add_users = False
-				restrict_to_home = cleaned_data.get('restrict_to_home')
-				if restrict_to_home is not True:
-					restrict_to_home = False
+				# set is_superuser
+				is_superuser = cleaned_data.get('is_superuser')
+				if is_superuser is not True:
+					is_superuser = False;
+				
+				# Non-superuser users cannot create superusers
+				if (is_superuser and not self.request.user.is_superuser):
+					self.add_error('is_superuser', 'Usted no tiene permiso '
+						'para crear superusuarios .')
+				
+				if not is_superuser:
+					# Set permissions if user isn't superuser
+					view = cleaned_data.get('view')
+					if view is not True:
+						view = False
+					add_edit_forms= cleaned_data.get('add_edit_forms')
+					if add_edit_forms is not True:
+						add_edit_forms = False
+					delete_info = cleaned_data.get('delete_info')
+					if delete_info is not True:
+						delete_info = False
+					add_users = cleaned_data.get('add_users')
+					if add_users is not True:
+						add_users = False
+					restrict_to_home = cleaned_data.get('restrict_to_home')
+					if restrict_to_home is not True:
+						restrict_to_home = False
 
-				# Checks that a home is selected for any user 
-				# restricted to a home.
-				restrict_to_home = cleaned_data.get('restrict_to_home')
-				residence = cleaned_data.get('residence')
-				if (restrict_to_home and residence is None):
-					self.add_error('restrict_to_home', 'Se ha seleccionado ningún '
-						'hogar.')
+					# Checks that a home is selected for any user 
+					# restricted to a home.
+					restrict_to_home = cleaned_data.get('restrict_to_home')
+					residence = cleaned_data.get('residence')
+					if (restrict_to_home and residence is None):
+						self.add_error('restrict_to_home', 'Se ha seleccionado '
+							'ningún hogar.')
 
 
 """Form to edit the name of a user in the User model. The clean() 

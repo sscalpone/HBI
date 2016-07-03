@@ -24,12 +24,12 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 	date_joined = models.DateTimeField(default=datetime.datetime.utcnow)
 	residence = models.ForeignKey(Residence, blank=True, null=True, 
 		default=None)
-	
 	add_users = models.BooleanField(default=False)
 	delete_info = models.BooleanField(default=False)
 	add_edit_forms = models.BooleanField(default=False)
 	not_restricted_to_home = models.BooleanField(default=False)
 	view = models.BooleanField(default=True)
+
 
 	objects = UserManager()
 
@@ -59,3 +59,5 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 			('view', 'View'),
 			('not_restricted_to_home', 'Not Restricted to Home'),
 		)
+
+		

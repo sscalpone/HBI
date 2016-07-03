@@ -6,4 +6,5 @@ from tracker.models import CustomUser
 
 admin.site.register(Child)
 admin.site.register(Residence)
+
 admin.site.register(CustomUser)

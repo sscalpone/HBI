@@ -128,6 +128,7 @@ def new(request):
                             saved_user['email'], 
                             saved_user['password']
                         )
+                        user.is_superuser = saved_user['is_superuser']
                         user.first_name = saved_user['first_name']
                         user.last_name = saved_user['last_name']
                         user.is_staff = saved_user['is_staff']
@@ -315,11 +316,12 @@ def view(request, profile_id):
                 if (form.is_valid()):
                     saved_form = form.cleaned_data
                     profile = get_object_or_404(User, pk=profile_id)
-                    profile.password = saved_form['password']
+                    profile.password = make_password(saved_form['password'])
                     profile.last_saved = datetime.datetime.utcnow()
                     profile.save()
                 # Render the profile template
-                return render(request, 'tracker/profile.html', context)
+                return HttpResponseRedirect(reverse('tracker:profile', 
+                    kwargs={'profile_id': profile_id}))
             
             # If the user is editing the add_user permission, 
             # process the form and edit the user's permission
