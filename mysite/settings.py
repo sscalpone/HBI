@@ -63,7 +63,7 @@ USE_TZ = True
 
 # For testing emails, will reroute emails so nothing actually gets sent
 # Comment out for production
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+#EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 # Absolute filesystem path to the directory that will hold user-uploaded files.
 # Example: "/var/www/example.com/media/"
