@@ -70,6 +70,8 @@ def new(request, child_id):
                     saved_exam.signature_cell = saved_signature['signature_cell']
                     saved_exam.child = child
                     saved_exam.last_saved = datetime.datetime.utcnow()
+                    if (saved_exam.weight and saved_exam.height):
+                        saved_exam.bmi = saved_exam.weight / (saved_exam.height/100 * saved_exam.height/100)
                     saved_exam.save()
                     exam_form.save_m2m()
 
@@ -215,6 +217,8 @@ def edit(request, child_id, exam_id):
                     saved_exam.signature_cell = saved_signature['signature_cell']
                     saved_exam.child = child
                     saved_exam.last_saved = datetime.datetime.utcnow()
+                    if (saved_exam.weight and saved_exam.height):
+                        saved_exam.bmi = round(saved_exam.weight / (saved_exam.height/100 * saved_exam.height/100), 2)
                     saved_exam.save()
                     exam_form.save_m2m()
 
