@@ -72,7 +72,7 @@ class DischargePlanForm(ModelForm):
             'future_housing': 'Futuras posibilidades de alojamiento', 
         }
         widgets = {
-            'date': DateInput(format='%d/%m/%Y')
+            'date': DateInput(attrs={'placeholder': 'DD/MM/AAAA', 'format': 'DD/MM/AAAA'}),
         }
 
 

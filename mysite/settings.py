@@ -43,7 +43,7 @@ SITE_ID = 1
 
 # If you set this to False, Django will make some optimizations so as not
 # to load the internationalization machinery.
-USE_I18N = True
+USE_I18N = False
 
 DATE_INPUT_FORMATS = (
     '%d/%m/%Y', '%d-%m-%Y', # 20/4/2014, 20-4-2014
@@ -63,7 +63,7 @@ USE_TZ = True
 
 # For testing emails, will reroute emails so nothing actually gets sent
 # Comment out for production
-#EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 # Absolute filesystem path to the directory that will hold user-uploaded files.
 # Example: "/var/www/example.com/media/"

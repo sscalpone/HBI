@@ -10,17 +10,19 @@ from django.forms import CheckboxInput
 from django.forms import TextInput
 from django.forms import DateInput
 
+from mysite import settings
+
 from Residence import Residence
 
 
-"""The Child model stores the basic information of each child saved in 
-the database. It includes a function to calculate age. Child priority 
-is saved in this model but cannot be set programmatically (set in 
-exam_views.py). The residence ForeignKey references the Residence 
-model: it saves the information about the house they live in. All 
-forms reference this model to save which child each form belongs to. 
-All fields are allowed to be saved null so that forms can be saved 
-before validation to prevent losing information if the form can't be 
+"""The Child model stores the basic information of each child saved in
+the database. It includes a function to calculate age. Child priority
+is saved in this model but cannot be set programmatically (set in
+exam_views.py). The residence ForeignKey references the Residence
+model: it saves the information about the house they live in. All
+forms reference this model to save which child each form belongs to.
+All fields are allowed to be saved null so that forms can be saved
+before validation to prevent losing information if the form can't be
 completed. This is overriden in the clean() method.
 """
 class Child(models.Model):
@@ -31,7 +33,7 @@ class Child(models.Model):
         (MALE, 'Hombre'),
         (FEMALE, 'Mujer')
     )
-    
+
     # The priority choices
     HIGH = 1
     MEDIUM = 2
@@ -41,7 +43,7 @@ class Child(models.Model):
         (MEDIUM, 'Prioridad Media'),
         (LOW, 'Prioridad Baja')
     )
-    
+
     # The fields
     uuid = models.CharField(max_length=200, unique=True, default=uuid.uuid4)
     residence = models.ForeignKey(Residence, default=1, blank=True, null=True)
@@ -49,20 +51,20 @@ class Child(models.Model):
     last_name = models.CharField(max_length=200, blank=True, null=True)
     nickname = models.CharField(max_length=200, blank=True, null=True)
     birthdate = models.DateField(blank=True, null=True)
-    gender = models.CharField(max_length=6, 
-                              choices=GENDER_CHOICES, 
+    gender = models.CharField(max_length=6,
+                              choices=GENDER_CHOICES,
                               default=MALE)
     birthplace = models.CharField(max_length=200, blank=True, null=True)
     intake_date = models.DateField(blank=True, null=True)
     discharge_date = models.DateField(blank=True, null=True)
     photo = models.ImageField(upload_to='photos', blank=True, null=True)
-    priority = models.IntegerField(choices=PRIORITY_CHOICES, 
+    priority = models.IntegerField(choices=PRIORITY_CHOICES,
                                    default=LOW)
     is_active = models.BooleanField(default=True)
     # for de-duping forms that have been edited.
     last_saved = models.DateTimeField(default=datetime.datetime.utcnow)
 
-    # Meta class defines database table and labels, and clears any 
+    # Meta class defines database table and labels, and clears any
     # default permissions.
     class Meta:
         app_label = 'tracker'
@@ -74,7 +76,7 @@ class Child(models.Model):
     def __unicode__(self):
         return self.first_name
 
-    # Calculates age of child in years based on age_in_years() 
+    # Calculates age of child in years based on age_in_years()
     # function.
     def age(self):
         return self.age_in_years(self.birthdate, datetime.datetime.utcnow())
@@ -99,11 +101,11 @@ class Child(models.Model):
 """Form for the Child model."""
 class ChildForm(ModelForm):
 
-    # Meta class defines the fields and Spanish labels for the form. 
+    # Meta class defines the fields and Spanish labels for the form.
     # Also defines any weidgets being used.
     class Meta:
         model = Child
-        
+
         fields = (
             'residence',
             'first_name',
@@ -117,7 +119,7 @@ class ChildForm(ModelForm):
             'photo',
             'is_active',
         )
-        
+
         labels = {
             'residence': 'Casa Girasoles',
             'first_name': 'Nombres',
@@ -134,50 +136,50 @@ class ChildForm(ModelForm):
 
         widgets = {
             'is_active': CheckboxInput(),
-            'intake_date': TextInput(attrs={'placeholder': 'DD/MM/AAAA'}),
-            'discharge_date': TextInput(attrs={'placeholder': 'DD/MM/AAAA'}),
-            'birthdate': TextInput(attrs={'placeholder': 'DD/MM/AAAA'}),
+            'intake_date': DateInput(attrs={'placeholder': 'DD/MM/AAAA', 'format': 'DD/MM/AAAA'}),
+            'discharge_date': DateInput(attrs={'placeholder': 'DD/MM/AAAA', 'format': 'DD/MM/AAAA'}),
+            'birthdate': DateInput(attrs={'placeholder': 'DD/MM/AAAA', 'format': 'DD/MM/AAAA'}),
         }
 
-    # Override __init__ so 'request' can be accessed in the clean() 
+    # Override __init__ so 'request' can be accessed in the clean()
     # function.
     def __init__(self, *args, **kwargs):
         self.request = kwargs.pop('request', None)
         super(ChildForm, self).__init__(*args, **kwargs)
 
-    # Override clean so forms can be saved without validating (so data 
-    # isn't lost if the form can't be completed), but still raises 
+    # Override clean so forms can be saved without validating (so data
+    # isn't lost if the form can't be completed), but still raises
     # exceptions when form is done incorrectly.
     def clean(self):
         msg = "Este campo es obligatorio."
         cleaned_data = super(ChildForm, self).clean()
 
-        # On validation ('submit' in request), checks if signature 
-        # forms fields are filled out and raises exceptions on any 
+        # On validation ('submit' in request), checks if signature
+        # forms fields are filled out and raises exceptions on any
         # fields left blank.
         if (self.request.POST):
             if ('submit' in self.request.POST):
-                
+
                 residence = cleaned_data.get('residence')
                 if (residence is None):
                     self.add_error('residence', msg)
-                
+
                 first_name = cleaned_data.get('first_name')
                 if (first_name == ''):
                     self.add_error('first_name', msg)
-                
+
                 last_name = cleaned_data.get('last_name')
                 if (last_name == ''):
                     self.add_error('last_name', msg)
-                
+
                 birthdate = cleaned_data.get('birthdate')
                 if (birthdate is None):
                     self.add_error('birthdate', msg)
-                
+
                 birthplace = cleaned_data.get('birthplace')
                 if (birthplace == ''):
                     self.add_error('birthplace', msg)
-                
+
                 intake_date = cleaned_data.get('intake_date')
                 if (intake_date is None):
                     self.add_error('intake_date', msg)
@@ -185,15 +187,14 @@ class ChildForm(ModelForm):
                 photo = cleaned_data.get('photo')
                 if (photo is None):
                     self.add_error('photo', msg)
-                
+
                 # Checks that inactive children have discharge date
                 discharge_date = cleaned_data.get('discharge_date')
                 is_active = cleaned_data.get('is_active')
                 if (not is_active and discharge_date is None):
                     self.add_error('discharge_date', msg)
 
-                # Checks that active children do not have discharge 
+                # Checks that active children do not have discharge
                 # date
                 if (is_active and discharge_date is not None):
                     self.add_error('discharge_date', 'Sin fecha de alta se puede especificar para niños activos.')
-

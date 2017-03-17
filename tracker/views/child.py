@@ -124,9 +124,9 @@ def edit(request, child_id):
 
     # If POST request, get posted Child form.
     if (request.POST):
-        form = ChildForm(request.POST, request.FILES, instance=child, 
+        form = ChildForm(request.POST, request.FILES, instance=child,
             request=request)
-        
+
         # If user clicked discard button, discard posted form and 
         # render the residence template.
         if ('discard' in request.POST):
@@ -147,15 +147,15 @@ def edit(request, child_id):
 
                 # Check that the child object saved
                 if (saved_child):
-                
-                    # If user clicked 'save', render edit_child 
+
+                    # If user clicked 'save', render edit_child
                     # template.
                     if ('save' in request.POST):
                         return HttpResponseRedirect(reverse(
-                            'tracker:edit_child', 
+                            'tracker:edit_child',
                             kwargs={'child_id': saved_child.id}
                         ))
-                    
+
                     # If user clicked 'submit', render child template.
                     else:
                         return HttpResponseRedirect(
@@ -173,12 +173,12 @@ def edit(request, child_id):
                          'puede guardar en este momento. Por favor, vuelva a '
                          'intentarlo.',
                         })
-    
-    # If not POST request, create new Child form, populated with Child 
+
+    # If not POST request, create new Child form, populated with Child
     # object.
     else:
         form = ChildForm(instance=child)
-    
+
     # Render edit_child template
     context = {
         'form': form.as_ul,

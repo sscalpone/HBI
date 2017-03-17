@@ -76,7 +76,7 @@ class DentalExamForm(ModelForm):
             'priority': 'Prioridad',
         }
         widgets = {
-            'date': DateInput(format='%d/%m/%Y')
+            'date': DateInput(attrs={'placeholder': 'DD/MM/AAAA', 'format': 'DD/MM/AAAA'}),
         }
 
     # Override __init__ so 'request' can be accessed in the clean() 

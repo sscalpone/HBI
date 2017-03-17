@@ -68,11 +68,11 @@ class SocialExam(models.Model):
 """The form for the Social Exam."""
 class SocialExamForm(ModelForm):
 
-    # Meta class defines the fields and Spanish labels for the form. 
+    # Meta class defines the fields and Spanish labels for the form.
     # Also defines any widgets being used.
     class Meta:
         model = SocialExam
-        
+
         fields = (
             'date',
             'has_birth_certificate',
@@ -120,7 +120,7 @@ class SocialExamForm(ModelForm):
             'sis': CheckboxInput(),
             'sis_in_process': CheckboxInput(),
             'visitors_allowed': CheckboxInput(),
-            'date': DateInput(format='%d/%m/%Y'),
+            'date': DateInput(attrs={'placeholder': 'DD/MM/AAAA', 'format': 'DD/MM/AAAA'}),
         }
 
     # Override __init__ so 'request' can be accessed in the clean() 

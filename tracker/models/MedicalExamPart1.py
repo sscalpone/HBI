@@ -124,25 +124,16 @@ class MedicalExamPart1Form(ModelForm):
         }
 
         widgets = {
-            'date': DateInput(format='%d/%m/%Y'),
-            'bcg_vaccine_date': TextInput(
-                attrs={'placeholder': 'DD/MM/AAAA'}),
-            'polio_vaccine_date': TextInput(
-                attrs={'placeholder': 'DD/MM/AAAA'}),
-            'dpt_vaccine_date': TextInput(
-                attrs={'placeholder': 'DD/MM/AAAA'}),
-            'hepatitis_b_vaccine_date': TextInput(
-                attrs={'placeholder': 'DD/MM/AAAA'}),
-            'flu_vaccine_date': TextInput(
-                attrs={'placeholder': 'DD/MM/AAAA'}),
-            'yellow_fever_vaccine_date': TextInput(
-                attrs={'placeholder': 'DD/MM/AAAA'}),
-            'spr_vaccine_date': TextInput(
-                attrs={'placeholder': 'DD/MM/AAAA'}),
-            'hpv_vaccine_date': TextInput(
-                attrs={'placeholder': 'DD/MM/AAAA'}),
-            'pneumococcal_vaccine_date': TextInput(
-                attrs={'placeholder': 'DD/MM/AAAA'}),
+            'date': DateInput(attrs={'placeholder': 'DD/MM/AAAA', 'format': 'DD/MM/AAAA'}),
+            'bcg_vaccine_date': DateInput(attrs={'placeholder': 'DD/MM/AAAA', 'format': 'DD/MM/AAAA'}),
+            'polio_vaccine_date': DateInput(attrs={'placeholder': 'DD/MM/AAAA', 'format': 'DD/MM/AAAA'}),
+            'dpt_vaccine_date': DateInput(attrs={'placeholder': 'DD/MM/AAAA', 'format': 'DD/MM/AAAA'}),
+            'hepatitis_b_vaccine_date': DateInput(attrs={'placeholder': 'DD/MM/AAAA', 'format': 'DD/MM/AAAA'}),
+            'flu_vaccine_date': DateInput(attrs={'placeholder': 'DD/MM/AAAA', 'format': 'DD/MM/AAAA'}),
+            'yellow_fever_vaccine_date': DateInput(attrs={'placeholder': 'DD/MM/AAAA', 'format': 'DD/MM/AAAA'}),
+            'spr_vaccine_date': DateInput(attrs={'placeholder': 'DD/MM/AAAA', 'format': 'DD/MM/AAAA'}),
+            'hpv_vaccine_date': DateInput(attrs={'placeholder': 'DD/MM/AAAA', 'format': 'DD/MM/AAAA'}),
+            'pneumococcal_vaccine_date': DateInput(attrs={'placeholder': 'DD/MM/AAAA', 'format': 'DD/MM/AAAA'}),
         }
 
     # Override __init__ so 'request' can be accessed in the clean() 
