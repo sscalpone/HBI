@@ -353,6 +353,7 @@ some cases, such as uuids, default must be specified).
 """
 
 def compare_csv(request, file, model_instance, fix, dependent_csvs_dict):
+
     # Open the csv file as a dictionary so it's searchable by field
     # name
     csvfile = open(file, 'rb')
@@ -375,7 +376,8 @@ def compare_csv(request, file, model_instance, fix, dependent_csvs_dict):
                         getattr(obj_inst, 'last_saved')):
                     messages.add_message(request, messages.ERROR,
                                          ('%s is already up to date in the '
-                                          'database, no need to update' % model_instance))
+                                          'database, no need to update'
+                                          % model_instance))
                     # will be rewritten, just here so nothing throws an error
                     return None
         except:
@@ -440,20 +442,20 @@ def compare_csv(request, file, model_instance, fix, dependent_csvs_dict):
                     dependent_csvfile.close()  # close dependent's csv
 
         for name in field_names:
-            # if name is not blank
 
             # if the current cell in the csv is empty and the
             # corresponding field has a default, use the default value
             if (row[name] == ''
                     and obj_inst._meta.get_field(name).get_default()):
                     value = obj_inst._meta.get_field(name).get_default()
+
             # if there's no default value or the current cell is not
             # empty, use the current cell
             elif (row[name] != ''):
                 value = row[name]
             else:
                 continue
-            print "This is the %s field and my value is %s" % (name, value)
+
             # IntegerField: convert string to integer and save to
             # object
             if (obj_inst._meta.get_field(name).get_internal_type()
@@ -517,11 +519,13 @@ def compare_csv(request, file, model_instance, fix, dependent_csvs_dict):
                 else:
                     setattr(obj_inst, name, None)
 
-            # BooleanField: check if the csv has it saved as true or false (1 or 0) and then set the object field with as a boolean
+            # BooleanField: check if the csv has it saved as true or false (1
+            # or 0) and then set the object field with as a boolean
             elif (obj_inst._meta.get_field(name).get_internal_type()
                     == 'BooleanField'):
 
-                # For user permissions, which are saved as booleans in the user model
+                # For user permissions, which are saved as booleans in the
+                # user model
                 content_type = ContentType.objects.get_for_model(User)
                 if (name == 'add_users'):
                     permission = Permission.objects.get(
@@ -534,7 +538,7 @@ def compare_csv(request, file, model_instance, fix, dependent_csvs_dict):
                         obj_inst.user_permissions.remove(permission)
                 if (name == 'delete_info'):
                     permission = Permission.objects.get(
-                        codename='delete_info', 
+                        codename='delete_info',
                         content_type=content_type
                     )
                     if (value == '1'):
@@ -575,31 +579,32 @@ def compare_csv(request, file, model_instance, fix, dependent_csvs_dict):
                 else:
                     setattr(obj_inst, name, False)
 
-            # FileFieldField: just set the object, no conversion 
+            # FileFieldField: just set the object, no conversion
             # required.
-            elif (obj_inst._meta.get_field(name).get_internal_type() == 
-                'FileField'):
+            elif (obj_inst._meta.get_field(name).get_internal_type()
+                    == 'FileField'):
                 setattr(obj_inst, name, value)
 
             # CharField: just set the object, no conversion required.
-            elif (obj_inst._meta.get_field(name).get_internal_type() == 
-                'CharField'):
+            elif (obj_inst._meta.get_field(name).get_internal_type()
+                    == 'CharField'):
                 setattr(obj_inst, name, value)
 
             # TextField: just set the object, no conversion required.
-            elif (obj_inst._meta.get_field(name).get_internal_type() == 
-                'TextField'):
+            elif (obj_inst._meta.get_field(name).get_internal_type() ==
+                    'TextField'):
                     setattr(obj_inst, name, value)
 
             # If none of those are correct, print them out so I can see
             # what I'm missing
             else:
                 pass
-                # messages.add_message(request, messages.ERROR, 
-                #     ('Unknown field type: %s' % 
+                # messages.add_message(request, messages.ERROR,
+                #     ('Unknown field type: %s' %
                 #      obj_inst._meta.get_field(name).get_internal_type()))
                 # return False
-                # print "Unknown field type: %s" % obj_inst._meta.get_field(name).get_internal_type()
+                # print "Unknown field type: %s" % obj_inst._meta.get_field
+                # (name).get_internal_type()
 
         # Save the object to the database
         obj_inst.save()
@@ -607,12 +612,13 @@ def compare_csv(request, file, model_instance, fix, dependent_csvs_dict):
         row_count += 1
     csvfile.close()
 
-    
-"""This function exports the database using the import-export django 
-app, and imports CSVs to be read into the database. During import, it 
-checks for errors and deletes files that fail with an error message. 
-CSVs that pass are sent to compare_csvs to be 
+
+"""This function exports the database using the import-export django
+app, and imports CSVs to be read into the database. During import, it
+checks for errors and deletes files that fail with an error message.
+CSVs that pass are sent to compare_csvs to be compared to the master database.
 """
+
 @login_required
 @user_passes_test(is_superuser_check)
 def import_export_db(request):
@@ -622,14 +628,14 @@ def import_export_db(request):
 # DOWNLOAD DATABASE
 #######################################################################
 
-        # If request was to export the database, 
+        # If request was to export the database,
         # make csv files of each table and gzip them
         if ('submit_export' in request.POST):
-            
+
             # Making the csv files using django-import-export app
             # saving them to the csvs directory
             # LOOK INTO TURNING THIS INTO A LOOP
-            tables = [] # logs the csv names to be zipped
+            tables = []  # logs the csv names to be zipped
 
             child = ChildResource().export()
             with open('csvs/child.csv', 'w') as child_csv:
@@ -657,17 +663,20 @@ def import_export_db(request):
             tables.append('csvs/disease_history.csv')
 
             medical_exam_part1 = MedicalExamPart1Resource().export()
-            with open('csvs/medical_exam_part1.csv', 'w') as medical_exam_part1_csv:
+            with (open('csvs/medical_exam_part1.csv', 'w')
+                    as medical_exam_part1_csv):
                 medical_exam_part1_csv.write(medical_exam_part1.csv)
             tables.append('csvs/medical_exam_part1.csv')
 
             medical_exam_part2 = MedicalExamPart2Resource().export()
-            with open('csvs/medical_exam_part2.csv', 'w') as medical_exam_part2_csv:
+            with (open('csvs/medical_exam_part2.csv', 'w')
+                    as medical_exam_part2_csv):
                 medical_exam_part2_csv.write(medical_exam_part2.csv)
             tables.append('csvs/medical_exam_part2.csv')
 
             operation_history = OperationHistoryResource().export()
-            with open('csvs/operation_history.csv', 'w') as operation_history_csv:
+            with (open('csvs/operation_history.csv', 'w') as
+                    operation_history_csv):
                 operation_history_csv.write(operation_history.csv)
             tables.append('csvs/operation_history.csv')
 
@@ -677,7 +686,8 @@ def import_export_db(request):
             tables.append('csvs/photograph.csv')
 
             psychological_exam = PsychologicalExamResource().export()
-            with open('csvs/psychological_exam.csv', 'w') as psychological_exam_csv:
+            with (open('csvs/psychological_exam.csv', 'w') as
+                    psychological_exam_csv):
                 psychological_exam_csv.write(psychological_exam.csv)
             tables.append('csvs/psychological_exam.csv')
 
@@ -697,8 +707,7 @@ def import_export_db(request):
                 user_csv.write(user.csv)
             tables.append('csvs/user.csv')
 
-
-            # Before zipping file, remove any previously zipped 
+            # Before zipping file, remove any previously zipped
             # database file.
             if (os.path.isfile('media/hbi-db-export.zip')):
                 os.remove('media/hbi-db-export.zip')
@@ -718,8 +727,8 @@ def import_export_db(request):
                 zippy.write(p)
 
             # Since serving the zipped file as an attachment corrupted
-            # the file (most likely because django isn't equipped to 
-            # serve larger files), render it in the import_export 
+            # the file (most likely because django isn't equipped to
+            # serve larger files), render it in the import_export
             # template for download.
             form = ImportDBForm()
 
@@ -740,13 +749,14 @@ def import_export_db(request):
 
             # If the form posted a file, get it and extract it.
             if form.is_valid():
-                upload_name, upload_extension = request.FILES['upload'].name.split('.')
-                
+                upload_name,
+                upload_extension = request.FILES['upload'].name.split('.')
+
                 # delete previously uploaded files, if any
                 if os.path.isdir('database/db_merging'):
                     shutil.rmtree('database/db_merging')
                     os.mkdir('database/db_merging')
-                
+
                 # if uploaded file is a zip, extract files
                 if (upload_extension == 'zip'):
                     with zipfile.ZipFile(request.FILES['upload']) as zf:
@@ -756,49 +766,50 @@ def import_export_db(request):
                 # csvs directory in chunks
                 elif (upload_extension == 'csv'):
                     os.mkdir('database/db_merging/csvs')
-                    with open('database/db_merging/csvs/%s.csv' % 
-                        upload_name, 'wb+') as destination:
+                    with open('database/db_merging/csvs/%s.csv' %
+                              upload_name, 'wb+') as destination:
                         for chunk in request.FILES['upload'].chunks():
                             destination.write(chunk)
-                
+
                 # If file is not zipped or not csv, return with error message
                 else:
-                    messages.add_message(request, messages.ERROR, 
-                        ('Incorrect File Type: .%s files are not compatible '
-                         'with our database.' % upload_extension))
+                    messages.add_message(request, messages.ERROR,
+                                         ('Incorrect File Type: .%s files are'
+                                          ' not compatible with our database.'
+                                          % upload_extension))
                     return HttpResponseRedirect(
                         reverse('tracker:import_export'))
-                
-                # create glob path to loop through all dirs in 
+
+                # create glob path to loop through all dirs in
                 # db_merging
-                path = 'database/db_merging/*' 
+                path = 'database/db_merging/*'
                 directories = []
                 # create a list of all directories in db_merging
                 for pathname in glob.glob(path):
                     if (os.path.isdir(pathname)):
                         # if directory is empty, remove it
-                        try: 
+                        try:
                             os.rmdir(pathname)
                         # if it's not, add the name to the list
                         except:
                             directories.append(os.path.basename(pathname))
 
-                # After deleting all the empty directories, check that 
+                # After deleting all the empty directories, check that
                 # db_merging isn't empty
                 if (not dir_not_empty('database/db_merging')):
-                    messages.add_message(request, messages.ERROR, 
-                        'There is nothing left to return!')
+                    messages.add_message(request, messages.ERROR,
+                                         'There is nothing left to return!')
                     return HttpResponseRedirect(
                         reverse('tracker:import_export'))
 
-                # if there are directories, loop through them and move 
+                # if there are directories, loop through them and move
                 # all files to csvs directory
                 if (directories):
-                    # create the csvs directory that all files will be 
+                    # create the csvs directory that all files will be
                     # read into if it doesn't already exist
                     if 'csvs' not in directories:
                         os.mkdir('database/db_merging/csvs')
-                    # if it already exists, great, remove it from the 
+                    # if it already exists, great, remove it from the
                     # directories list so it doesn't get looped over.
                     else:
                         directories.remove('csvs')
@@ -808,43 +819,47 @@ def import_export_db(request):
                     # to csvs directory, deleting copies and non-csvs
                     if (directories):
                         for d in directories:
-                            # loop through files and make sure they aren't directories before evaluating and moving
+                            # loop through files and make sure they aren't
+                            # directories before evaluating and moving
                             for pathname in glob.glob(
-                                'database/db_merging/%s/*' % d):
-                                if (os.path.exists(pathname) and 
-                                    not os.path.isdir(pathname)):
+                                    'database/db_merging/%s/*' % d):
+                                if (os.path.exists(pathname)
+                                        and not os.path.isdir(pathname)):
                                     move_files(request, pathname)
 
-                                # If there's a directory within a directory, return a too many levels error and delete directory
+                                # If there's a directory within a directory,
+                                # return a too many levels error and delete
+                                # directory
                                 else:
                                     d2 = os.path.basename(pathname)
                                     for p in glob.glob(
-                                        'database/db_merging/%s/%s/*' % 
-                                        (d, d2)):
-                                        if (os.path.exists(p) and 
-                                            not os.path.isdir(p)):
+                                        'database/db_merging/%s/%s/*' %
+                                            (d, d2)):
+                                        if (os.path.exists(p)
+                                                and not os.path.isdir(p)):
                                             move_files(request, p)
 
                                         else:
-                                            messages.add_message(request, 
-                                                messages.ERROR, 
-                                                ('Unable to read %s '
-                                                 'subfolder. Please add all '
-                                                 'csvfiles to main folder and'
-                                                 ' re-upload.' % d2))
+                                            messages.add_message(
+                                                request,
+                                                messages.ERROR,
+                                                ('Unable to read %s subfolder'
+                                                 '. Please add all csvfiles '
+                                                 'to main folder and '
+                                                 're-upload.' % d2))
                                             if (os.path.exists(p)):
                                                 shutil.rmtree(pathname)
-                        
+
                             # after moving all readable files to csvs
                             # directory, delete empty directory
                             shutil.rmtree('database/db_merging/%s' % d)
 
-                # if there are no directories, create the csvs 
+                # if there are no directories, create the csvs
                 # directory
                 else:
-                    os.mkdir('database/db_merging/csvs')                    
+                    os.mkdir('database/db_merging/csvs')
 
-                # move all files in db_merging to csvs directory, 
+                # move all files in db_merging to csvs directory,
                 # deleting copies and non-csvs
                 for pathname in glob.glob(path):
                     if (not os.path.isdir(pathname)):
@@ -854,161 +869,177 @@ def import_export_db(request):
                 path = 'database/db_merging/csvs/*.csv'
 
                 # Loop through the csvs directory five times:
-                # First, check that all the csvs and their dependencies 
+                # First, check that all the csvs and their dependencies
                 # correspond to a model.
-                # Second, check that all fields are present in each 
+                # Second, check that all fields are present in each
                 # csv.
-                # Third, make sure all files are populated. This won't 
-                # break anything, but might be useful information for 
+                # Third, make sure all files are populated. This won't
+                # break anything, but might be useful information for
                 # the user.
-                # Fourth, indentify and delete all files with repeated 
+                # Fourth, indentify and delete all files with repeated
                 # identifiers
-                # Fifth, identify and locate dependent objects and 
-                # their csvs, check that the ids and uuids in both the 
+                # Fifth, identify and locate dependent objects and
+                # their csvs, check that the ids and uuids in both the
                 # csv and the dependent csvs are unique, and then check
                 # that all csvs are there again.
                 for i in range(5):
+
                     # before each iteration, check that file isn't empty
-                    if (dir_not_empty('database/db_merging/csvs')): 
+                    if (dir_not_empty('database/db_merging/csvs')):
                         for pname in glob.glob(path):
+
                             # get the table name by parsing the path name
                             bname = os.path.basename(pname)
                             tname, extension = bname.split('.')
-                            # FIRST LOOP: Identify and Remove CSVS and 
-                            # Their Dependencies that Don't Match 
+
+                            # FIRST LOOP: Identify and Remove CSVS and
+                            # Their Dependencies that Don't Match
                             # Database Headers
                             if (i == 0):
-                                # Check that each csv corresponds to a 
-                                # table in the database. If a table 
-                                # that does not exist appears, render 
-                                # the import_export template with an 
-                                # error message saying which csv 
+
+                                # Check that each csv corresponds to a
+                                # table in the database. If a table
+                                # that does not exist appears, render
+                                # the import_export template with an
+                                # error message saying which csv
                                 # doesn't correspond.
                                 if (not get_object(tname)):
-                                    messages.add_message(request, 
-                                        messages.ERROR, 
+                                    messages.add_message(
+                                        request,
+                                        messages.ERROR,
                                         ('%s does not correspond to any table'
                                          ' in the database. Please re-upload '
-                                         'with the correct file name.' 
+                                         'with the correct file name.'
                                          % bname))
-                                    os.remove(pname) # remove defective csv
-                                
-                                # # if the main csv corresponds to a 
-                                # model, check for dependents and make 
+                                    os.remove(pname)  # remove defective csv
+
+                                # # if the main csv corresponds to a
+                                # model, check for dependents and make
                                 # sure those correspond to a model.
                                 if (is_dependent(tname)):
                                     dependents_list = get_dependents_list(
                                         tname)
                                     for dependent in dependents_list:
                                         if (not get_object(dependent)):
-                                            messages.add_message(request, 
-                                                messages.ERROR, 
+                                            messages.add_message(
+                                                request,
+                                                messages.ERROR,
                                                 ('%s is dependent on the %s '
                                                  'model, which does not exist'
                                                  ' in our database. Please '
                                                  're-upload with the correct '
-                                                 'dependencies.' % 
+                                                 'dependencies.' %
                                                  (bname, dependent)))
                                             # remove defective csv
-                                            os.remove(pname)                                    
+                                            os.remove(pname)
 
-                            
-                            # SECOND LOOP: Identify and Remove CSVs 
+                            # SECOND LOOP: Identify and Remove CSVs
                             # with Missing or Extra Fields
                             elif (i == 1):
                                 model_obj = get_object(tname)
 
                                 # Check if all fields exist in the csv.
                                 # If it comes up
-                                mef_check = missing_or_extra_fields(pname, model_obj)
+                                mef_check = missing_or_extra_fields(
+                                    pname,
+                                    model_obj)
                                 if (mef_check is not None):
+
                                     # If there are missing headers, add
-                                    # a error message to be displayed 
-                                    # on render of all the fields 
+                                    # a error message to be displayed
+                                    # on render of all the fields
                                     # missing in that csv file.
                                     if (mef_check['missing_headers']):
                                         missing_headers = ', '.join(
                                             mef_check['missing_headers'])
-                                        messages.add_message(request, 
+                                        messages.add_message(
+                                            request,
                                             messages.ERROR,
                                             ('The following fields are '
                                              'missing from %s: %s. Please add'
-                                             ' those fields and re-upload' % 
+                                             ' those fields and re-upload' %
                                              (bname, missing_headers)
-                                            ))
+                                             ))
 
                                     # If there are extra headers, add a
-                                    # error message to be displayed on 
+                                    # error message to be displayed on
                                     # render of all the extra fields in
                                     # that csv file.
                                     if (mef_check['extra_headers']):
                                         extra_headers = ', '.join(
                                             mef_check['extra_headers'])
-                                        messages.add_message(request, 
+                                        messages.add_message(
+                                            request,
                                             messages.ERROR,
                                             ('The following fields from %s do'
                                              ' not exist in the database: %s.'
                                              ' Please either rename or remove'
                                              ' these fields before '
-                                             're-uploading.' % 
+                                             're-uploading.' %
                                              (bname, extra_headers)
-                                            ))
-                                    os.remove(pname) # remove broken csv
-                            
-                            # THIRD LOOP: Identify and Remove Empty 
+                                             ))
+                                    os.remove(pname)  # remove broken csv
+
+                            # THIRD LOOP: Identify and Remove Empty
                             # CSVs (except header)
                             elif (i == 2):
-                                
-                                if (file_empty(pname)):
-                                    messages.add_message(request, 
-                                        messages.ERROR, 
-                                        ('%s is empty. If that is correct,'
-                                         ' please ignore this message.' % 
-                                         bname))
-                                    os.remove(pname) # remove empty csv
 
-                            # FOURTH LOOP: Look for repeating ids and 
+                                if (file_empty(pname)):
+                                    messages.add_message(
+                                        request,
+                                        messages.ERROR,
+                                        ('%s is empty. If that is correct,'
+                                         ' please ignore this message.' %
+                                         bname))
+                                    os.remove(pname)  # remove empty csv
+
+                            # FOURTH LOOP: Look for repeating ids and
                             # uuids in csv
                             elif (i == 3):
-                                
-                                empty_identifiers = ids_not_empty(pname, 
-                                    tname)
+
+                                empty_identifiers = ids_not_empty(
+                                    pname, tname)
                                 if (empty_identifiers is not None):
                                     empty_ids_str = (', ').join(
                                         empty_identifiers)
-                                    messages.add_message(request, 
+                                    messages.add_message(
+                                        request,
                                         messages.ERROR,
                                         ('The following required fields have'
                                          ' blank values in %s: %s. Please '
                                          'resolve these repetitions and '
-                                         're-upload.' % 
+                                         're-upload.' %
                                          (bname, empty_ids_str)))
-                                    os.remove(pname) # remove csv with repeating ids/uuids                                    
+                                    os.remove(pname)  # remove csv with
+                                                      # repeating ids/uuids
+
                                 else:
                                     repeating_identifiers = ids_uuids_unique(
                                         pname)
                                     if (repeating_identifiers is not None):
                                         repeating_id_str = (', ').join(
                                             repeating_identifiers)
-                                        messages.add_message(request, 
+                                        messages.add_message(
+                                            request,
                                             messages.ERROR,
                                             ('The following fields have '
                                              'repeating values that should be'
                                              ' unique in %s: %s. Please '
                                              'resolve these repetitions and '
-                                             're-upload.' % 
+                                             're-upload.' %
                                              (bname, repeating_id_str)))
-                                        # remove csv with repeating 
+                                        # remove csv with repeating
                                         #ids/uuids
-                                        os.remove(pname) 
-                            
-                            # FIFTH LOOP: Indentify dependent objects 
+                                        os.remove(pname)
+
+                            # FIFTH LOOP: Indentify dependent objects
                             # and locate their csvs
                             elif (i == 4):
-                                # If the current object is dependent on 
-                                # other objects, search the csvs 
-                                # directory for csvs that match the 
-                                # dependent objects and add those csvs 
+
+                                # If the current object is dependent on
+                                # other objects, search the csvs
+                                # directory for csvs that match the
+                                # dependent objects and add those csvs
                                 # to a dependents_csvs dict
                                 if (is_dependent(tname)):
 
@@ -1017,62 +1048,104 @@ def import_export_db(request):
                                     dependents_list = get_dependents_list(
                                         tname)
 
-                                    # If there not the same number of 
-                                    # dependents in the objects dict 
+                                    # If there not the same number of
+                                    # dependents in the objects dict
                                     # and the csvs dict, create list of
-                                    # missing csvs, add a message, and 
-                                    # remove the csv with dependents 
+                                    # missing csvs, add a message, and
+                                    # remove the csv with dependents
                                     # that don't exist.
-                                    if (len(dependents_list) != len(dependents_csvs)):
+                                    if (len(dependents_list)
+                                            != len(dependents_csvs)):
                                         missing_dependents_list = []
                                         for dependent in dependents_list:
-                                            if dependent not in dependents_csvs:
-                                                missing_dependents_list.append(dependent) # stitch list together to add to message
+                                            if (dependent not in
+                                                    dependents_csvs):
+                                                # stitch list together to add
+                                                # to message
+                                                (missing_dependents_list.
+                                                    append(dependent))
 
-                                        #first, check that there are no missing dependents that the main csv might need
+                                        #first, check that there are no
+                                        # missing dependents that the main
+                                        # csv might need
                                         if (missing_dependents_list):
-                                            missing_dependents_str = (', ').join(missing_dependents_list)
-                                            messages.add_message(request, messages.ERROR,
-                                                ('%s needs the following csv files to upload correctly'
-                                                ': %s. Please add those files to your zip and '
-                                                're-upload.' % (bname, missing_dependents_str)))
-                                            os.remove(pname) # remove empty csv
+                                            missing_dependents_str = (
+                                                (', ').join(
+                                                    missing_dependents_list))
+                                            messages.add_message(
+                                                request,
+                                                messages.ERROR,
+                                                ('%s needs the following csv '
+                                                 'files to upload correctly'
+                                                 ': %s. Please add those '
+                                                 'files to your zip and '
+                                                 're-upload.'
+                                                 % (bname,
+                                                    missing_dependents_str)))
+                                            os.remove(pname)  # remove empty
+                                                              # csv
 
                     else:
-                        messages.add_message(request, messages.ERROR, "There's nothing left to return!")
-                        return HttpResponseRedirect(reverse('tracker:import_export'))
-                
+                        messages.add_message(
+                            request,
+                            messages.ERROR,
+                            "There's nothing left to return!")
+                        return HttpResponseRedirect(reverse(
+                            'tracker:import_export'))
+
                 if dir_not_empty('database/db_merging/csvs'):
+
                     # Must be on own loop with a specific list to loop over
                     # To make sure the dependent objects are read in first
-                    read_order = ['residence', 'child', 'dental_exam', 'discharge_plan', 'disease_history', 'documents', 'medical_exam_part1', 'medical_exam_part2', 'operation_history', 'psychological_exam', 'social_exam', 'documents', 'photograph', 'user']
+                    read_order = ['residence', 'child', 'dental_exam',
+                                  'discharge_plan', 'disease_history',
+                                  'documents', 'medical_exam_part1',
+                                  'medical_exam_part2', 'operation_history',
+                                  'psychological_exam', 'social_exam',
+                                  'documents', 'photograph', 'user']
+
                     for item in read_order:
                         for pname in glob.glob(path):
+
                             # get the table name by parsing the path name
                             bname = os.path.basename(pname)
                             tname, extension = bname.split('.')
                             if (tname == item):
                                 replace_blank_uuids(pname)
                                 if (is_dependent(tname)):
-                                    dependents_csvs = get_dependents_csvs(tname, path)
-                                    compare_csv(request, pname, tname, request.FILES['upload'], dependents_csvs)
+                                    dependents_csvs = get_dependents_csvs(
+                                        tname, path)
+                                    compare_csv(
+                                        request,
+                                        pname,
+                                        tname,
+                                        request.FILES['upload'],
+                                        dependents_csvs)
 
-                                # If no dependents, just pass in the csv and the table name
+                                # If no dependents, just pass in the csv and
+                                # the table name
                                 else:
-                                    compare_csv(request, pname, tname, request.FILES['upload'], None)
+                                    compare_csv(
+                                        request,
+                                        pname,
+                                        tname,
+                                        request.FILES['upload'],
+                                        None)
                 else:
-                    messages.add_message(request, messages.ERROR, "There's nothing left to return!")
-                    return HttpResponseRedirect(reverse('tracker:import_export'))
+                    messages.add_message(request, messages.ERROR,
+                                         "There's nothing left to return!")
+                    return HttpResponseRedirect(
+                        reverse('tracker:import_export'))
 
                 return HttpResponseRedirect(reverse('tracker:import_export'))
-
 
             else:
-                messages.add_message(request, messages.SUCCESS, 'Please add a file to be imported!')
+                messages.add_message(request, messages.SUCCESS,
+                                     'Please add a file to be imported!')
                 return HttpResponseRedirect(reverse('tracker:import_export'))
-    
+
     else:
-        form = ImportDBForm()            
+        form = ImportDBForm()
 
         # Render the help.html template
         context = {
@@ -1086,6 +1159,7 @@ def import_export_db(request):
 #######################################################################
 
 # app tables
+
 
 class ChildResource(resources.ModelResource):
 
@@ -1123,6 +1197,7 @@ class DocumentsResource(resources.ModelResource):
         widgets = {
             'date': {'format': '%d/%m/%Y'},
         }
+
 
 class DiseaseHistoryResource(resources.ModelResource):
 
