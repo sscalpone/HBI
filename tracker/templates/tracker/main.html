@@ -16,7 +16,7 @@
 	<div id="residences">
 		<ul>
 		{% if residences %}
-			{% for residence in residences %}
+			{% for residence in residences|dictsort:"residence_name" %}
 				{% if perms.tracker.not_restricted_to_home %}
 			<li>
 				<a href="{% url 'tracker:residence' residence.id %}"><div class="thumbnail gray">{% load staticfiles %}<img src="{% static "tracker/house-icon.svg" %}"></div>

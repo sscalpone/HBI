@@ -35,7 +35,7 @@
 		<h3>Activo Niños</h3>
 	    <ul>
 	    {% if active %}
-		    {% for child in active %}
+		    {% for child in active|dictsort:"first_name" %}
 		    	<li>
 		    		<a href="{% url 'tracker:child' child.id %}">
 		    			<div class="thumbnail {% if child.priority == 1 %} red {% elif child.priority == 2 %} yellow {% else %} green {% endif %}">
@@ -64,7 +64,7 @@
 	    <h3>Inactivo Niños</h3>
 	    <ul>
 	    {% if inactive %}
-		    {% for child in inactive %}
+		    {% for child in inactive|dictsort:"first_name" %}
 		    	<a href="{% url 'tracker:child' child.id %}">
 		    		<li>
 		    			<div class="thumbnail gray">
