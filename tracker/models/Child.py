@@ -3,14 +3,10 @@
 import datetime
 import uuid
 
-from django.contrib.auth.models import User
 from django.db import models
 from django.forms import ModelForm
 from django.forms import CheckboxInput
-from django.forms import TextInput
 from django.forms import DateInput
-
-from mysite import settings
 
 from Residence import Residence
 
@@ -25,7 +21,10 @@ All fields are allowed to be saved null so that forms can be saved
 before validation to prevent losing information if the form can't be
 completed. This is overriden in the clean() method.
 """
+
+
 class Child(models.Model):
+
     # The gender choices for the children
     MALE = 'm'
     FEMALE = 'f'
@@ -61,6 +60,7 @@ class Child(models.Model):
     priority = models.IntegerField(choices=PRIORITY_CHOICES,
                                    default=LOW)
     is_active = models.BooleanField(default=True)
+
     # for de-duping forms that have been edited.
     last_saved = models.DateTimeField(default=datetime.datetime.utcnow)
 
@@ -99,6 +99,8 @@ class Child(models.Model):
 
 
 """Form for the Child model."""
+
+
 class ChildForm(ModelForm):
 
     # Meta class defines the fields and Spanish labels for the form.
@@ -197,4 +199,5 @@ class ChildForm(ModelForm):
                 # Checks that active children do not have discharge
                 # date
                 if (is_active and discharge_date is not None):
-                    self.add_error('discharge_date', 'Sin fecha de alta se puede especificar para niños activos.')
+                    self.add_error('discharge_date', 'Sin fecha de alta se'
+                                   'puede especificar para niños activos.')

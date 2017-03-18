@@ -3,11 +3,8 @@
 import datetime
 import uuid
 
-from django.contrib.auth.models import User
 from django.db import models
 from django.forms import ModelForm
-from django.forms import RadioSelect
-from django.forms import TextInput
 from django.forms import DateInput
 
 from Child import Child
@@ -21,7 +18,10 @@ saved null so that forms can be saved before validation to prevent
 losing information if the form can't be completed. This is overriden
 in the clean() method.
 """
+
+
 class MedicalExamPart1(models.Model):
+
     # Priority choices
     HIGH = 1
     MEDIUM = 2
@@ -56,10 +56,13 @@ class MedicalExamPart1(models.Model):
     priority = models.IntegerField(choices=PRIORITY_CHOICES,
                                    default=HIGH)
     signature_name = models.CharField(max_length=200, blank=True, null=True)
-    signature_surname = models.CharField(max_length=200, blank=True, null=True)
+    signature_surname = models.CharField(max_length=200, blank=True,
+                                         null=True)
     signature_emp = models.CharField(max_length=200, blank=True, null=True)
-    signature_direction = models.CharField(max_length=200, blank=True, null=True)
+    signature_direction = models.CharField(max_length=200, blank=True,
+                                           null=True)
     signature_cell = models.CharField(max_length=200, blank=True, null=True)
+
     # For de-duping forms that have been edited.
     last_saved = models.DateTimeField(default=datetime.datetime.utcnow)
 
@@ -72,6 +75,8 @@ class MedicalExamPart1(models.Model):
 
 
 """The form the Medical Exam Part 1 model."""
+
+
 class MedicalExamPart1Form(ModelForm):
 
     # Meta class defines the fields and Spanish labels for the form.
@@ -104,18 +109,18 @@ class MedicalExamPart1Form(ModelForm):
             'date': 'Fecha',
             'height': 'Estatura (cm)',
             'weight': 'Peso (kg)',
-            'hemoglobin_abnormal': 'Hemoglobina',
-            'hemoglobin_notes': 'Comentarios',
+            'hemoglobin_abnormal': 'Hemoglobina Anormal',
+            'hemoglobin_notes': ' Hemoglobina Comentarios',
             'visual_acuity_left': 'Agudeza Visual Izquierdo',
             'visual_acuity_right': 'Agudeza Visual Derecha',
             'bcg_vaccine_date': 'BCG Fecha de Administracion',
-            'polio_vaccine_date': ('Antipoliomielitica Fecha de '
-                'Administracion'),
+            'polio_vaccine_date': 'Antipoliomielitica Fecha de '
+                                  'Administracion',
             'dpt_vaccine_date': 'DPT Fecha de Administracion',
             'hepatitis_b_vaccine_date': 'Hepatitis B Fecha de Administracion',
             'flu_vaccine_date': 'Hemofilus Influenza Fecha de Administracion',
-            'yellow_fever_vaccine_date': ('Fiebre Amarilla Fecha de '
-                'Administracion'),
+            'yellow_fever_vaccine_date': 'Fiebre Amarilla Fecha de '
+                                         'Administracion',
             'spr_vaccine_date': 'SPR Fecha de Administracion',
             'hpv_vaccine_date': 'HPV Fecha de Administracion',
             'pneumococcal_vaccine_date': 'Neumococo Fecha de Administracion',
@@ -125,40 +130,51 @@ class MedicalExamPart1Form(ModelForm):
         }
 
         widgets = {
-            'date': DateInput(
-                attrs={'placeholder': 'DD/MM/AAAA', 'format': 'DD/MM/AAAA'}
-                ),
-            'bcg_vaccine_date': DateInput(
-                attrs={'placeholder': 'DD/MM/AAAA', 'format': 'DD/MM/AAAA'}
-                ),
-            'polio_vaccine_date': DateInput(
-                attrs={'placeholder': 'DD/MM/AAAA', 'format': 'DD/MM/AAAA'}
-                ),
-            'dpt_vaccine_date': DateInput(
-                attrs={'placeholder': 'DD/MM/AAAA', 'format': 'DD/MM/AAAA'}
-                ),
-            'hepatitis_b_vaccine_date': DateInput(
-                attrs={'placeholder': 'DD/MM/AAAA', 'format': 'DD/MM/AAAA'}
-                ),
-            'flu_vaccine_date': DateInput(
-                attrs={'placeholder': 'DD/MM/AAAA', 'format': 'DD/MM/AAAA'}
-                ),
-            'yellow_fever_vaccine_date': DateInput(
-                attrs={'placeholder': 'DD/MM/AAAA', 'format': 'DD/MM/AAAA'}
-                ),
-            'spr_vaccine_date': DateInput(
-                attrs={'placeholder': 'DD/MM/AAAA', 'format': 'DD/MM/AAAA'}
-                ),
-            'hpv_vaccine_date': DateInput(
-                attrs={'placeholder': 'DD/MM/AAAA', 'format': 'DD/MM/AAAA'}
-                ),
-            'pneumococcal_vaccine_date': DateInput(
-                attrs={'placeholder': 'DD/MM/AAAA', 'format': 'DD/MM/AAAA'}
-                ),
+            'date': DateInput(attrs={
+                'placeholder': 'DD/MM/AAAA',
+                'format': 'DD/MM/AAAA'
+            }),
+            'bcg_vaccine_date': DateInput(attrs={
+                'placeholder': 'DD/MM/AAAA',
+                'format': 'DD/MM/AAAA'
+            }),
+            'polio_vaccine_date': DateInput(attrs={
+                'placeholder': 'DD/MM/AAAA',
+                'format': 'DD/MM/AAAA'
+            }),
+            'dpt_vaccine_date': DateInput(attrs={
+                'placeholder': 'DD/MM/AAAA',
+                'format': 'DD/MM/AAAA'
+            }),
+            'hepatitis_b_vaccine_date': DateInput(attrs={
+                'placeholder': 'DD/MM/AAAA',
+                'format': 'DD/MM/AAAA'
+            }),
+            'flu_vaccine_date': DateInput(attrs={
+                'placeholder': 'DD/MM/AAAA',
+                'format': 'DD/MM/AAAA'
+            }),
+            'yellow_fever_vaccine_date': DateInput(attrs={
+                'placeholder': 'DD/MM/AAAA',
+                'format': 'DD/MM/AAAA'
+            }),
+            'spr_vaccine_date': DateInput(attrs={
+                'placeholder': 'DD/MM/AAAA',
+                'format': 'DD/MM/AAAA'
+            }),
+            'hpv_vaccine_date': DateInput(attrs={
+                'placeholder': 'DD/MM/AAAA',
+                'format': 'DD/MM/AAAA'
+            }),
+            'pneumococcal_vaccine_date': DateInput(attrs={
+                'placeholder': 'DD/MM/AAAA',
+                'format': 'DD/MM/AAAA'
+            }),
         }
 
     # Override __init__ so 'request' can be accessed in the clean()
     # function.
+
     def __init__(self, *args, **kwargs):
         self.request = kwargs.pop('request', None)
         super(MedicalExamPart1Form, self).__init__(*args, **kwargs)

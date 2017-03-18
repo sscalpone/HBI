@@ -3,24 +3,24 @@
 import datetime
 import uuid
 
-from django.contrib.auth.models import User
 from django.db import models
 from django.forms import ModelForm
-from django.forms import RadioSelect
 from django.forms import DateInput
 
 from Child import Child
 
 
-"""The model for Medical Exam Part 2 stores the second half the 
-medical exam, primarily observations on the child's physical and 
-mental health. Also notes any treatment plans. It references the Child 
-model and the Signature model. It affects priority. All fields are 
-allowed to be saved null so that forms can be saved before validation 
-to prevent losing information if the form can't be completed. This is 
+"""The model for Medical Exam Part 2 stores the second half the
+medical exam, primarily observations on the child's physical and
+mental health. Also notes any treatment plans. It references the Child
+model and the Signature model. It affects priority. All fields are
+allowed to be saved null so that forms can be saved before validation
+to prevent losing information if the form can't be completed. This is
 overriden in the clean() method.
 """
+
 class MedicalExamPart2(models.Model):
+
     # Priority choices
     HIGH = 1
     MEDIUM = 2
@@ -30,7 +30,7 @@ class MedicalExamPart2(models.Model):
         (MEDIUM, 'Prioridad Media'),
         (LOW, 'Prioridad Baja')
     )
-    
+
     uuid = models.CharField(max_length=200, unique=True, default=uuid.uuid4)
     child = models.ForeignKey(Child, blank=True, null=True)
     date = models.DateField(default=datetime.date.today)
@@ -50,17 +50,20 @@ class MedicalExamPart2(models.Model):
     treatment_notes = models.TextField(blank=True, null=True)
     diagnosis = models.TextField(blank=True, null=True)
     recommendation = models.TextField(blank=True, null=True)
-    priority = models.IntegerField(choices=PRIORITY_CHOICES, 
+    priority = models.IntegerField(choices=PRIORITY_CHOICES,
                                    default=HIGH)
     signature_name = models.CharField(max_length=200, blank=True, null=True)
-    signature_surname = models.CharField(max_length=200, blank=True, null=True)
+    signature_surname = models.CharField(max_length=200, blank=True,
+                                         null=True)
     signature_emp = models.CharField(max_length=200, blank=True, null=True)
-    signature_direction = models.CharField(max_length=200, blank=True, null=True)
+    signature_direction = models.CharField(max_length=200, blank=True,
+                                           null=True)
     signature_cell = models.CharField(max_length=200, blank=True, null=True)
-    # For de-duping forms that have been edited.
-    last_saved = models.DateTimeField(default=datetime.datetime.utcnow) 
 
-    # Meta class defines database table and labels, and clears any 
+    # For de-duping forms that have been edited.
+    last_saved = models.DateTimeField(default=datetime.datetime.utcnow)
+
+    # Meta class defines database table and labels, and clears any
     # default permissions.
     class Meta:
         app_label = 'tracker'
@@ -69,12 +72,13 @@ class MedicalExamPart2(models.Model):
 
 
 """Form for the Mecical Exam Part 2 model."""
+
 class MedicalExamPart2Form(ModelForm):
 
     # Meta class defines the fields and Spanish labels for the form.
     class Meta:
         model = MedicalExamPart2
-        
+
         fields = (
             'date',
             'appetite_notes',
@@ -95,7 +99,7 @@ class MedicalExamPart2Form(ModelForm):
             'recommendation',
             'priority',
         )
-        
+
         labels = {
             'date': 'Fecha',
             'appetite_notes': 'Apetito',
@@ -118,25 +122,29 @@ class MedicalExamPart2Form(ModelForm):
             'recommendation': 'Recomendaciones',
             'priority': 'Prioridad',
         }
+
         widgets = {
-            'date': DateInput(attrs={'placeholder': 'DD/MM/AAAA', 'format': 'DD/MM/AAAA'}),
+            'date': DateInput(attrs={
+                'placeholder': 'DD/MM/AAAA',
+                'format': 'DD/MM/AAAA'
+            }),
         }
 
-    # Override __init__ so 'request' can be accessed in the clean() 
+    # Override __init__ so 'request' can be accessed in the clean()
     # function.
     def __init__(self, *args, **kwargs):
         self.request = kwargs.pop('request', None)
         super(MedicalExamPart2Form, self).__init__(*args, **kwargs)
 
-    # Override clean so forms can be saved without validating (so data 
-    # isn't lost if the form can't be completed), but still raises 
+    # Override clean so forms can be saved without validating (so data
+    # isn't lost if the form can't be completed), but still raises
     # exceptions when form is done incorrectly.
     def clean(self):
         msg = "Este campo es obligatorio."
         cleaned_data = super(MedicalExamPart2Form, self).clean()
 
-        # On validation ('submit' in request), checks if signature 
-        # forms fields are filled out and raises exceptions on any 
+        # On validation ('submit' in request), checks if signature
+        # forms fields are filled out and raises exceptions on any
         # fields left blank.
         if (self.request.POST):
             if ('submit' in self.request.POST):
@@ -154,15 +162,15 @@ class MedicalExamPart2Form(ModelForm):
 
                 appearance_notes = cleaned_data.get('appearance_notes')
                 if (appearance_notes == ''):
-                    self.add_error('appearance_notes', msg) 
-                
+                    self.add_error('appearance_notes', msg)
+
                 skin_notes = cleaned_data.get('skin_notes')
                 if (skin_notes == ''):
-                    self.add_error('skin_notes', msg) 
-                
+                    self.add_error('skin_notes', msg)
+
                 lymph_notes = cleaned_data.get('lymph_notes')
                 if (lymph_notes == ''):
-                    self.add_error('lymph_notes', msg) 
+                    self.add_error('lymph_notes', msg)
 
                 neck_notes = cleaned_data.get('neck_notes')
                 if (neck_notes == ''):
@@ -203,7 +211,3 @@ class MedicalExamPart2Form(ModelForm):
                 diagnosis = cleaned_data.get('diagnosis')
                 if (diagnosis == ''):
                     self.add_error('diagnosis', msg)
-
-
-
-

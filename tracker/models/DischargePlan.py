@@ -3,7 +3,6 @@
 import datetime
 import uuid
 
-from django.contrib.auth.models import User
 from django.db import models
 from django.forms import ModelForm
 from django.forms import DateInput
@@ -13,10 +12,11 @@ from Child import Child
 
 """Model for the Dicharge Plan, which evaluates the child's plans after
 they have been dicharged. This model references the Signature model and
-the Child model. All fields are allowed to be saved null so that forms 
-can be saved before validation to prevent losing information if the 
+the Child model. All fields are allowed to be saved null so that forms
+can be saved before validation to prevent losing information if the
 form can't be completed. This is overriden in the clean() method.
 """
+
 class DischargePlan(models.Model):
 
     uuid = models.CharField(max_length=200, unique=True, default=uuid.uuid4)
@@ -28,28 +28,33 @@ class DischargePlan(models.Model):
     training = models.TextField(blank=True, null=True)
     future_housing = models.TextField(blank=True, null=True)
     signature_name = models.CharField(max_length=200, blank=True, null=True)
-    signature_surname = models.CharField(max_length=200, blank=True, null=True)
+    signature_surname = models.CharField(max_length=200, blank=True,
+                                         null=True)
     signature_emp = models.CharField(max_length=200, blank=True, null=True)
-    signature_direction = models.CharField(max_length=200, blank=True, null=True)
+    signature_direction = models.CharField(max_length=200, blank=True,
+                                           null=True)
     signature_cell = models.CharField(max_length=200, blank=True, null=True)
+
     # For de-duping forms that have been edited.
     last_saved = models.DateTimeField(default=datetime.datetime.utcnow)
 
-    # Meta class defines database table and labels, and clears any 
+    # Meta class defines database table and labels, and clears any
     # default permissions.
     class Meta:
         app_label = 'tracker'
         db_table = 'tracker_dischargeplan'
         default_permissions = ()
 
+
 """The form for the Discharge Plan."""
+
 class DischargePlanForm(ModelForm):
 
-    # Meta class defines the fields and Spanish labels for the form. 
+    # Meta class defines the fields and Spanish labels for the form.
     # Also defines any widgets being used.
     class Meta:
         model = DischargePlan
-        
+
         fields = (
             'date',
             'summary',
@@ -58,44 +63,46 @@ class DischargePlanForm(ModelForm):
             'training',
             'future_housing',
         )
-        
+
         labels = {
             'date': "Fecha",
             'summary': ('Resumen del Niño(a) - Salud mental, físico, y '
-                'emocional.'),
+                        'emocional.'),
             'strengths_challenges': ('Fuerzas, Desafios, Consideraciones '
-                'Especiales, etc.'),
+                                     'Especiales, etc.'),
             'family': 'Relaciones Familiares o Comunitarias',
             'training': ('Enfoque de formación profesional (es decir, '
-                'educación superior, militar, manual laboral, gastronomía, '
-                'etc.)'),
-            'future_housing': 'Futuras posibilidades de alojamiento', 
+                         'educación superior, militar, manual laboral, '
+                         'gastronomía, etc.)'),
+            'future_housing': 'Futuras posibilidades de alojamiento',
         }
         widgets = {
-            'date': DateInput(attrs={'placeholder': 'DD/MM/AAAA', 'format': 'DD/MM/AAAA'}),
+            'date': DateInput(attrs={
+                'placeholder': 'DD/MM/AAAA',
+                'format': 'DD/MM/AAAA'
+            }),
         }
 
-
-    # Override __init__ so 'request' can be accessed in the clean() 
+    # Override __init__ so 'request' can be accessed in the clean()
     # function.
     def __init__(self, *args, **kwargs):
         self.request = kwargs.pop('request', None)
         super(DischargePlanForm, self).__init__(*args, **kwargs)
 
-    # Override clean so forms can be saved without validating (so data 
-    # isn't lost if the form can't be completed), but still raises 
+    # Override clean so forms can be saved without validating (so data
+    # isn't lost if the form can't be completed), but still raises
     # exceptions when form is done incorrectly.
     def clean(self):
         msg = "Este campo es obligatorio."
         cleaned_data = super(DischargePlanForm, self).clean()
-        
+
         if (self.request.POST):
-            
-            # On validation ('submit' in request), checks if signature 
-            # forms fields are filled out and raises exceptions on any 
+
+            # On validation ('submit' in request), checks if signature
+            # forms fields are filled out and raises exceptions on any
             # fields left blank.
             if ('submit' in self.request.POST):
-                
+
                 summary = cleaned_data.get('summary')
                 if (summary == ''):
                     self.add_error('summary', msg)
@@ -115,5 +122,3 @@ class DischargePlanForm(ModelForm):
                 future_housing = cleaned_data.get('future_housing')
                 if (future_housing == ''):
                     self.add_error('future_housing', msg)
-
-
