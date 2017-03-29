@@ -207,7 +207,7 @@ class MedicalExamPart1Form(ModelForm):
                 if (visual_acuity_right == ''):
                     self.add_error('visual_acuity_right', msg)
 
-                diagnosis = cleaned_data('diagnosis')
+                diagnosis = cleaned_data.get('diagnosis')
                 if (diagnosis == ''):
                     self.add_error('diagnosis', msg)
 
