@@ -7,6 +7,7 @@ from DentalExam import DentalExam, DentalExamForm
 from DischargePlan import DischargePlan, DischargePlanForm
 from Documents import Documents, DocumentsForm
 from DiseaseHistory import DiseaseHistory, DiseaseHistoryForm
+from EducationPlan import EducationPlan, EducationPlanForm
 from ImportDB import ImportDBForm
 from MedicalExamPart1 import MedicalExamPart1, MedicalExamPart1Form
 from MedicalExamPart2 import MedicalExamPart2, MedicalExamPart2Form

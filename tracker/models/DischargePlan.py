@@ -10,8 +10,8 @@ from django.forms import DateInput
 from Child import Child
 
 
-"""Model for the Dicharge Plan, which evaluates the child's plans after
-they have been dicharged. This model references the Signature model and
+"""Model for the Discharge Plan, which evaluates the child's plans after
+they have been discharged. This model references the Signature model and
 the Child model. All fields are allowed to be saved null so that forms
 can be saved before validation to prevent losing information if the
 form can't be completed. This is overriden in the clean() method.

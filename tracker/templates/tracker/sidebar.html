@@ -12,6 +12,7 @@
             <li {% if page == 'dental_exam' %} class="selected" {% endif %}><a href="{% url 'tracker:new_dental_exam' child_id %}" class="delete">Informe Odontológico</a></li>          
             <li {% if page == 'disease_history' %} class="selected" {% endif %}><a href="{% url 'tracker:new_disease_history' child_id %}" class="delete">Historia de Enfermedades</a></li>
             <li {% if page == 'operation_history' %} class="selected" {% endif %}><a href="{% url 'tracker:new_operation_history' child_id %}" class="delete">Historia de Operaciones</a></li>
+            <li {% if page == 'education_plan' %} class="selected" {% endif %}><a href="{% url 'tracker:new_education_plan' child_id %}" class="delete">Area Pedagógica</a></li>
             <li {% if page == 'discharge_plan' %} class="selected" {% endif %}><a href="{% url 'tracker:new_discharge_plan' child_id %}" class="delete">Plan de Alta</a></li>
         </span>
         <li {% if page == 'photo' %} class="selected" {% endif %}><a href="{% url 'tracker:new_photo' child_id %}" class="delete">Fotografias</a></li>

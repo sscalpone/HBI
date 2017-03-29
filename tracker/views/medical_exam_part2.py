@@ -136,23 +136,24 @@ def new(request, child_id):
     return render(request, 'tracker/add_medical_exam_part2.html', context)
 
 
-"""The view() function renders the medical_exam_part2 template, 
-populated with information from the MedicalExamPart2 model. It is 
-protected with the login_required decorator, so that no one who isn't 
+"""The view() function renders the medical_exam_part2 template,
+populated with information from the MedicalExamPart2 model. It is
+protected with the login_required decorator, so that no one who isn't
 logged in can add a form.
 """
+
 @login_required
 def view(request, child_id, exam_id):
     exam = get_object_or_404(MedicalExamPart2, pk=exam_id)
     child = get_object_or_404(Child, pk=child_id)
     if (request.POST):
-        # After confirmation, delete photo and render the 
+        # After confirmation, delete photo and render the
         # add_photograph template
         if ('discard' in request.POST):
             exam.delete()
             return HttpResponseRedirect(
-                reverse('tracker:new_medical_exam_part2', 
-                kwargs={'child_id': child_id}))  
+                reverse('tracker:new_medical_exam_part2',
+                        kwargs={'child_id': child_id}))
 
     context = {
         'exam': exam,
@@ -242,7 +243,7 @@ def edit(request, child_id, exam_id):
                     # return to edit_medical_exam_part2 template with
                     # "Sorry, please try again" error message
                     else:
-                        return render(request, 
+                        return render(request,
                                       'tracker/edit_medical_exam_part2.html',
                                       {'error_message': 'Lo sentimos, el '
                                        'formulario no se puede guardar en '

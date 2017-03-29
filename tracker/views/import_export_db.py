@@ -663,20 +663,17 @@ def import_export_db(request):
             tables.append('csvs/disease_history.csv')
 
             medical_exam_part1 = MedicalExamPart1Resource().export()
-            with (open('csvs/medical_exam_part1.csv', 'w')
-                    as medical_exam_part1_csv):
+            with open('csvs/medical_exam_part1.csv', 'w') as medical_exam_part1_csv:
                 medical_exam_part1_csv.write(medical_exam_part1.csv)
             tables.append('csvs/medical_exam_part1.csv')
 
             medical_exam_part2 = MedicalExamPart2Resource().export()
-            with (open('csvs/medical_exam_part2.csv', 'w')
-                    as medical_exam_part2_csv):
+            with open('csvs/medical_exam_part2.csv', 'w') as medical_exam_part2_csv:
                 medical_exam_part2_csv.write(medical_exam_part2.csv)
             tables.append('csvs/medical_exam_part2.csv')
 
             operation_history = OperationHistoryResource().export()
-            with (open('csvs/operation_history.csv', 'w') as
-                    operation_history_csv):
+            with open('csvs/operation_history.csv', 'w') as operation_history_csv:
                 operation_history_csv.write(operation_history.csv)
             tables.append('csvs/operation_history.csv')
 
@@ -686,8 +683,7 @@ def import_export_db(request):
             tables.append('csvs/photograph.csv')
 
             psychological_exam = PsychologicalExamResource().export()
-            with (open('csvs/psychological_exam.csv', 'w') as
-                    psychological_exam_csv):
+            with open('csvs/psychological_exam.csv', 'w') as psychological_exam_csv:
                 psychological_exam_csv.write(psychological_exam.csv)
             tables.append('csvs/psychological_exam.csv')
 

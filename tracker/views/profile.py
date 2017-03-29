@@ -2,8 +2,6 @@
 
 import datetime
 
-from django.contrib.auth import authenticate
-
 from tracker.models import CustomUser as User
 from django.contrib.auth.models import Permission
 from django.contrib.contenttypes.models import ContentType
@@ -11,12 +9,10 @@ from django.contrib.contenttypes.models import ContentType
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.core.urlresolvers import reverse
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
-from django.template import loader
 
 from tracker.models import ProfileForm
-
 from tracker.models import EditNameForm, EditPasswordForm
 from tracker.models import EditIsStaffForm, EditIsActiveForm
 from tracker.models import EditAddUsersForm, EditDeleteInfoForm
@@ -27,47 +23,56 @@ from tracker.models import EditRestrictToHomeForm, EditEmailForm
 def is_superuser_check(user):
     return user.is_superuser
 
-"""add_users_check() checks if a user can add_users and returns a 
+
+"""add_users_check() checks if a user can add_users and returns a
 boolean.
 """
+
 def add_users_check(user):
     if (user.has_perm('tracker.add_users')):
         return True
     else:
         return False
 
-"""add_edit_forms_check() checks if a user can add and edit forms for 
+
+"""add_edit_forms_check() checks if a user can add and edit forms for
 children in homes, and returns a boolean.
 """
+
 def add_edit_forms_check(user):
     if (user.has_perm('tracker.add_edit_forms')):
         return True
     else:
         return False
 
-"""restrict_to_home_check() checks if a user is restricted to a home, 
+
+"""restrict_to_home_check() checks if a user is restricted to a home,
 and returns the home if True, and returns a None if false.
 """
+
 def restrict_to_home_check(user):
     if (not user.has_perm('tracker.not_restricted_to_home')):
         return user.residence
     else:
         return None
 
+
 def current_user_profile_check(user_id, profile_id):
     if (user_id == int(profile_id)):
         return True
-    else: 
+    else:
         return False
 
-"""index() gets a list of users and renders the profiles.html template 
-with that list. If the user can add users (checks with add_user_check) 
-and is the superuser, the entire list of users is displayed. If the 
-user can add users but isn't the superuser, all users except the 
-superuser are displayed. Otherwise, only the current user's profile is 
-displayed. Protected by thr login_required decorator so users have to 
+
+"""index() gets a list of users and renders the profiles.html template
+with that list. If the user can add users (checks with add_user_check)
+and is the superuser, the entire list of users is displayed. If the
+user can add users but isn't the superuser, all users except the
+superuser are displayed. Otherwise, only the current user's profile is
+displayed. Protected by thr login_required decorator so users have to
 be logged in to access information.
 """
+
 @login_required
 def index(request):
     # Check if user can add users
@@ -75,11 +80,11 @@ def index(request):
         # If user can add users, check if user is superuser
         if (request.user.is_superuser):
             user_list = User.objects.all()
-        
+
         # If not superuser, exclude superuser from list
         else:
             user_list = User.objects.filter(is_superuser=0)
-    
+
     # If user can't add users, only display current user's profile
     else:
         user_list = User.objects.filter(pk=request.user.id)
@@ -93,30 +98,33 @@ def index(request):
     return render(request, 'tracker/profiles.html', context)
 
 
-"""new() creates a new User using the Profile model (which will be 
+"""new() creates a new User using the Profile model (which will be
 removed in later versions as extraneous) and the ProfileForm modelform.
-User objects are populated from the ProfileForm, with extra 
-information (which home they belong to and their UUID) in the UserUUID 
-model. Protected by the login_required and 
-user_passes_test(add_users_check) decorators so that only logged-in 
+User objects are populated from the ProfileForm, with extra
+information (which home they belong to and their UUID) in the UserUUID
+model. Protected by the login_required and
+user_passes_test(add_users_check) decorators so that only logged-in
 users who can also add new users can visit this page.
 """
+
 @login_required
-@user_passes_test(add_users_check, login_url='tracker/residences/', )
+@user_passes_test(add_users_check, login_url='tracker/residences/')
 def new(request):
     # If POST request, get posted ProfileForm
     if (request.POST):
-        profile_form = ProfileForm(request.POST, request.FILES, 
-            request=request)
+        profile_form = ProfileForm(request.POST, request.FILES,
+                                   request=request)
 
-        # If user clicked discard button, discard posted form and 
+        # If user clicked discard button, discard posted form and
         # render the profiles template.
         if ('discard' in request.POST):
             return HttpResponseRedirect(reverse('tracker:profiles'))
-        
-        # If user clicked 'save' or 'submit', process and save form 
-        # (form will validate no matter what in 'save', will be 
-        # validated in custom clean() in 'submit'). Create a User object and populate it with the ProfileForm information. The Profile object will not be saved.
+
+        # If user clicked 'save' or 'submit', process and save form
+        # (form will validate no matter what in 'save', will be
+        # validated in custom clean() in 'submit'). Create a User
+        # object and populate it with the ProfileForm information.
+        # The Profile object will not be saved.
         else:
             if (profile_form.is_valid()):
                     saved_user = profile_form.cleaned_data
@@ -124,8 +132,8 @@ def new(request):
                     if (saved_user):
                         # Create and populate new User object
                         user = User.objects.create_user(
-                            saved_user['username'], 
-                            saved_user['email'], 
+                            saved_user['username'],
+                            saved_user['email'],
                             saved_user['password']
                         )
                         user.is_superuser = saved_user['is_superuser']
@@ -141,43 +149,43 @@ def new(request):
                         if (saved_user['add_users'] is True):
                             user.add_users = True
                             permission = Permission.objects.get(
-                                codename='add_users', 
+                                codename='add_users',
                                 content_type=content_type
                             )
                             user.user_permissions.add(permission)
-                        
+
                         if (saved_user['delete_info'] is True):
                             user.delete_info = True
                             permission = Permission.objects.get(
-                                codename='delete_info', 
+                                codename='delete_info',
                                 content_type=content_type
                             )
                             user.user_permissions.add(permission)
-                        
+
                         if (saved_user['add_edit_forms'] is True):
                             user.add_edit_forms = True
                             permission = Permission.objects.get(
-                                codename='add_edit_forms', 
+                                codename='add_edit_forms',
                                 content_type=content_type
                             )
                             user.user_permissions.add(permission)
-                        
+
                         if (saved_user['view'] is True):
                             user.add_edit_forms = True
                             permission = Permission.objects.get(
-                                codename='view', 
+                                codename='view',
                                 content_type=content_type
                             )
                             user.user_permissions.add(permission)
-                        
+
                         if (saved_user['restrict_to_home'] is False):
                             user.not_restricted_to_home = True
                             permission = Permission.objects.get(
-                                codename='not_restricted_to_home', 
+                                codename='not_restricted_to_home',
                                 content_type=content_type
                             )
                             user.user_permissions.add(permission)
-                        
+
                         user.save()
 
                         # Check that user object saved
@@ -185,36 +193,33 @@ def new(request):
                             context = {
                                 'profile_list': User.objects.all(),
                             }
-                            return render(request, 
-                                'tracker/profiles.html', 
-                                context)
-                            
+                            return render(request,
+                                          'tracker/profiles.html',
+                                          context)
 
-                        # if validation passed but the user object 
-                        # still didn't save, return to 
-                        # add_profile template with "Sorry, 
+                        # if validation passed but the user object
+                        # still didn't save, return to
+                        # add_profile template with "Sorry,
                         # please try again" error message
                         else:
-                            return render(request, 
-                                'tracker/add_profile.html', 
-                                {
-                                 'error_message': 'Lo sentimos, el '
-                                 'formulario se puede guardar en este '
-                                 'momento. Por favor, vuelva a intentarlo.',
-                                })
+                            return render(request,
+                                          'tracker/add_profile.html',
+                                          {'error_message': 'Lo sentimos, el '
+                                           'formulario se puede guardar en '
+                                           'este momento. Por favor, vuelva a'
+                                           ' intentarlo.', })
 
-                    # if validation passed but the profile still 
-                    # didn't save, return to add_disease_history 
-                    # template with "Sorry, please try again" error 
+                    # if validation passed but the profile still
+                    # didn't save, return to add_disease_history
+                    # template with "Sorry, please try again" error
                     # message
                     else:
-                        return render(request, 
-                            'tracker/add_profile.html', 
-                            {
-                             'error_message': 'Lo sentimos, el formulario no '
-                             'se puede guardar en este momento. Por favor, '
-                             'vuelva a intentarlo.',
-                            })
+                        return render(request,
+                                      'tracker/add_profile.html',
+                                      {'error_message': 'Lo sentimos, el '
+                                       'formulario no se puede guardar en '
+                                       'este momento. Por favor, vuelva a '
+                                       'intentarlo.', })
 
     # If not POST request, load add_profile.html template
     else:
@@ -232,9 +237,10 @@ def new(request):
 @login_required
 def view(request, profile_id):
     user = request.user
-    # Check if the user can add users or if profile is of the current 
-    # user. If neither are true, return to profiles. This is just a 
-    # precaution, as the profiles page shouldn't display any profiles 
+
+    # Check if the user can add users or if profile is of the current
+    # user. If neither are true, return to profiles. This is just a
+    # precaution, as the profiles page shouldn't display any profiles
     # the current user isn't allowed to see.
     if (not current_user_profile_check(user.id, profile_id)):
         if (not add_users_check(user)):
@@ -242,9 +248,9 @@ def view(request, profile_id):
 
     p = get_object_or_404(User, pk=profile_id)
 
-    # If the profile is of the superuser and the current user is 
-    # not a the superuser, turn to the profiles template again. 
-    # Also a precaution, as the superuser profile should only 
+    # If the profile is of the superuser and the current user is
+    # not a the superuser, turn to the profiles template again.
+    # Also a precaution, as the superuser profile should only
     # display on profiles if the current user is the superuser.
     if (p.is_superuser and not user.is_superuser):
         context = {
@@ -252,87 +258,96 @@ def view(request, profile_id):
             'profile_list': User.objects.all(),
         }
         return render(request, 'tracker/profiles.html', context)
-    
+
     else:
         permissions = p.get_all_permissions()
 
-        # If POST request, edit the User 
+        # If POST request, edit the User
         if (request.POST):
             content_type = ContentType.objects.get_for_model(User)
-            
+
             # Each form has different name so that posted forms
             # can be differentiated and processed correctly
 
-            # If the user is editing the name, process the form 
+            # If the user is editing the name, process the form
             # and edit the user's name
             if ('name_form' in request.POST):
-                form = EditNameForm(request.POST, request.FILES, 
-                    request=request)
+                form = EditNameForm(request.POST, request.FILES,
+                                    request=request)
                 if (form.is_valid()):
                     saved_form = form.cleaned_data
                     if (not request.user.check_password(
-                        saved_form['password'])):
-                        messages.add_message(request, messages.INFO, 
-                            'Su contraseña es incorrecta.', extra_tags='name')
-                        return HttpResponseRedirect(reverse(
-                            'tracker:profile', 
-                             kwargs={'profile_id': profile_id}))
+                            saved_form['password'])):
+                        messages.add_message(request, messages.INFO,
+                                             'Su contraseña es incorrecta.',
+                                             extra_tags='name')
+                        return HttpResponseRedirect(
+                            reverse('tracker:profile',
+                                    kwargs={'profile_id': profile_id}))
                     profile = get_object_or_404(User, pk=profile_id)
                     profile.first_name = saved_form['first_name']
                     profile.last_name = saved_form['last_name']
                     profile.last_saved = datetime.datetime.utcnow()
                     profile.save()
-                # Render the profile.html template
-                return HttpResponseRedirect(reverse('tracker:profile', 
-                    kwargs={'profile_id': profile_id}))
 
-            # If the user is editing the email, process the form 
+                # Render the profile.html template
+                return HttpResponseRedirect(
+                    reverse('tracker:profile',
+                            kwargs={'profile_id': profile_id}))
+
+            # If the user is editing the email, process the form
             # and edit the user's email
             elif ('email_form' in request.POST):
-                form = EditEmailForm(request.POST, request.FILES, 
-                    request=request)
+                form = EditEmailForm(request.POST, request.FILES,
+                                     request=request)
                 if (form.is_valid()):
                     saved_form = form.cleaned_data
                     if (not request.user.check_password(
-                        saved_form['password'])):
-                        messages.add_message(request, messages.INFO, 
-                            'Su contraseña es incorrecta.', extra_tags='name')
-                        return HttpResponseRedirect(reverse(
-                            'tracker:profile', 
-                            kwargs={'profile_id': profile_id}))
+                            saved_form['password'])):
+                        messages.add_message(request,
+                                             messages.INFO,
+                                             'Su contraseña es incorrecta.',
+                                             extra_tags='name')
+                        return HttpResponseRedirect(
+                            reverse('tracker:profile',
+                                    kwargs={'profile_id': profile_id}))
                     profile = get_object_or_404(User, pk=profile_id)
                     profile.email = saved_form['email']
                     profile.last_saved = datetime.datetime.utcnow()
                     profile.save()
+
                 # Render the profile.html template
-                return HttpResponseRedirect(reverse('tracker:profile', 
-                    kwargs={'profile_id': profile_id}))
-            
-            # If the user is editing the password, process the 
+                return HttpResponseRedirect(
+                    reverse('tracker:profile',
+                            kwargs={'profile_id': profile_id}))
+
+            # If the user is editing the password, process the
             # form and edit the user's password
             elif ('password_form' in request.POST):
-                form = EditPasswordForm(request.POST, request.FILES, 
-                    request=request)
+                form = EditPasswordForm(request.POST, request.FILES,
+                                        request=request)
                 if (form.is_valid()):
                     saved_form = form.cleaned_data
                     profile = get_object_or_404(User, pk=profile_id)
                     profile.password = make_password(saved_form['password'])
                     profile.last_saved = datetime.datetime.utcnow()
                     profile.save()
+
                 # Render the profile template
-                return HttpResponseRedirect(reverse('tracker:profile', 
-                    kwargs={'profile_id': profile_id}))
-            
-            # If the user is editing the add_user permission, 
+                return HttpResponseRedirect(
+                    reverse('tracker:profile',
+                            kwargs={'profile_id': profile_id}))
+
+            # If the user is editing the add_user permission,
             # process the form and edit the user's permission
             elif 'add_users_form' in request.POST:
-                form = EditAddUsersForm(request.POST, request.FILES, 
-                    request=request)
+                form = EditAddUsersForm(request.POST, request.FILES,
+                                        request=request)
                 if (form.is_valid()):
                     saved_form = form.cleaned_data
                     profile = get_object_or_404(User, pk=profile_id)
                     permission = Permission.objects.get(
-                        codename='add_users', 
+                        codename='add_users',
                         content_type=content_type
                     )
                     if (saved_form['add_users'] is True):
@@ -343,20 +358,22 @@ def view(request, profile_id):
                         profile.user_permissions.remove(permission)
                     profile.last_saved = datetime.datetime.utcnow()
                     profile.save()
-                # Render the profile template
-                return HttpResponseRedirect(reverse('tracker:profile', 
-                    kwargs={'profile_id': profile_id}))
 
-            # If the user is editing the delete_info permission, 
+                # Render the profile template
+                return HttpResponseRedirect(
+                    reverse('tracker:profile',
+                            kwargs={'profile_id': profile_id}))
+
+            # If the user is editing the delete_info permission,
             # process the form and edit the user's permission
             elif 'delete_info_form' in request.POST:
-                form = EditDeleteInfoForm(request.POST, request.FILES, 
-                    request=request)
+                form = EditDeleteInfoForm(request.POST, request.FILES,
+                                          request=request)
                 if (form.is_valid()):
                     saved_form = form.cleaned_data
                     profile = get_object_or_404(User, pk=profile_id)
                     permission = Permission.objects.get(
-                        codename='delete_info', 
+                        codename='delete_info',
                         content_type=content_type
                     )
                     if (saved_form['delete_info'] is True):
@@ -518,7 +535,3 @@ def view(request, profile_id):
             'email_form': email_form.as_ul,
         }
         return render(request, 'tracker/profile.html', context)
-
-
-
-
