@@ -1,5 +1,7 @@
 # coding=utf-8
 
+import sys
+
 import datetime
 import numpy as np
 from dateutil.relativedelta import relativedelta
@@ -333,6 +335,7 @@ def growth_png(request, child_id):
     avg_height = []
     avg_bmi_age = []
     avg_bmi = []
+
     if (child.gender == 'm'):
         avg_bmi_list = who_stats.boys_bmi
         avg_height_list = who_stats.boys_height
@@ -347,8 +350,7 @@ def growth_png(request, child_id):
         age.append(age_in_months(child.birthdate, exam.date))
         height.append(exam.height)
         weight.append(exam.weight)
-        bmi_calc = (exam.weight / (exam.height * exam.height)) * 10000
-        bmi.append(bmi_calc)
+        bmi.append(exam.bmi)
 
     np_age = np.array(age)
     np_height = np.array(height)
@@ -382,6 +384,7 @@ def growth_png(request, child_id):
     expected_arc = mpatches.Patch(color='#666666', label='Arco Esperado')
 
     plt.figure(figsize=(7, 10))
+
     plt.subplot(311)
     plt.plot(np_age, np_height, color='#95bcf2', marker='.')
     plt.plot(np_avg_height_age, np_avg_height, color='#666666', marker='')
