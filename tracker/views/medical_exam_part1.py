@@ -1,7 +1,5 @@
 # coding=utf-8
 
-import sys
-
 import datetime
 import numpy as np
 from dateutil.relativedelta import relativedelta

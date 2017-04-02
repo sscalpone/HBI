@@ -7,10 +7,14 @@ from django.db import models
 from django.contrib.auth.models import AbstractBaseUser
 from django.contrib.auth.models import UserManager
 from django.contrib.auth.models import PermissionsMixin
-from django.forms import DateInput
-from django import forms
 
 from Residence import Residence
+
+
+"""This model creates custom fields for the User model, since the default
+User model is basic and difficult to build upon when using UUIDs. It uses
+the built-in Django authentication, it just has more fields.
+"""
 
 
 class CustomUser(AbstractBaseUser, PermissionsMixin):
@@ -36,15 +40,20 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     USERNAME_FIELD = 'username'
     REQUIRED_FIELDS = ['email']
 
+    # Returns the first name of the user
     def get_short_name(self):
         return self.first_name
 
+    # Returns the first and last name of the user
     def get_full_name(self):
         return self.first_name + ' ' + self.last_name
 
+    # Returns the user's username
     def __unicode__(self):
         return self.username
 
+    # Meta class defines database table and labels, and clears any
+    # default permissions. It also adds custom permissions.
     class Meta:
         app_label = 'tracker'
         db_table = 'tracker_customuser'

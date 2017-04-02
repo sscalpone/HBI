@@ -47,16 +47,20 @@
                 if (window_top > div_top) {
                     $('#sticky').addClass('stick');
                     $('#sticky-anchor').height($('#sticky').outerHeight());
+                    console.log('wee');
                 } else {
                     $('#sticky').removeClass('stick');
                     $('#sticky-anchor').height(0);
+                    console.log('woo');
                 }
             }
 
             $(function() {
-                if ($(document).width() > 800) {
-                    $(window).scroll(sticky_relocate);
-                    sticky_relocate();
+                if ($(document).width() > 800 && $(window).height()< $('#content').height()) {
+                    $(window).on('scroll', function() {
+                        sticky_relocate();
+                    });
+                    
                 }
             });
 

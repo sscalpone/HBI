@@ -3,6 +3,9 @@
 from django import forms
 
 
+"""This is the form users can fill out to send a help email.
+"""
+
 class HelpEmailForm(forms.Form):
     PROBLEM_CHOICES = (
         ('EMR Help: Medical Question', 'Tengo una pregunta médica'),

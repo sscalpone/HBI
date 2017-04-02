@@ -531,8 +531,8 @@ form {
   padding-bottom: 10px;
 }
 
-#sticky.stick {
-  margin-top: 0 !important;
+.stick {
+  /*margin-top: 0 !important;*/
   position: fixed;
   top: 0;
   width: 78%;
@@ -541,6 +541,6 @@ form {
   background: white;
 }
 
-#sticky.stick .basic-info, #sticky.stick .profile-picture {
-  padding-top: 10px;
+.basic-info, .profile-picture {
+  margin: 10px 0;
 }
