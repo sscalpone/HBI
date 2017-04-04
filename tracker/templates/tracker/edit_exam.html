@@ -1,8 +1,8 @@
 {% extends 'two-column.html' %}
 
-{% block title %}Editar Informe Social{% endblock %}
+{% block title %}Editar {{ name }}{% endblock %}
 
-{% block h2 %}Editar Informe Social{% endblock %}
+{% block h2 %}Editar {{ name }}{% endblock %}
 
 {% block sidebar %}
     {% include 'tracker/sidebar.html' %}
@@ -11,19 +11,19 @@
 {% block content %}
 
     {% include 'tracker/basic-info.html' %}
-    {% include 'tracker/social_exam_list.html' %}
+    {% if page != 'photo' %}{% include 'tracker/exam_list.html' %}{% endif %}
 
     {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
 
     {% if perms.tracker.add_edit_forms %}
 
-    <form action="{% url 'tracker:edit_social_exam' child_id exam_id %}" enctype="multipart/form-data" method="post" class="exam">
+    <form action="{% url 'tracker:edit_'|add:page child_id exam_id %}" enctype="multipart/form-data" method="post" class="exam">
         {% csrf_token %}
         <ul>
-            {{ social_exam_form }}
+            {{ exam_form }}
         
             <li><h3>Los Datos del Profesíonal</h3></li>
-        
+
             {{ signature_form }}
         </ul>
         <input type="submit" name="submit" value="Enviar">
@@ -43,5 +43,7 @@
     <p><strong>Usted no tiene permiso para agregar o formularios de edición.</strong></p>
 
     {% endif %}
+
+    {% if page == 'photo' %}{% include 'tracker/exam_list.html' %}{% endif %}
     
 {% endblock %}

@@ -98,7 +98,7 @@ def new(request, child_id):
                     # please try again" error message
                     else:
                         return render(request,
-                                      'tracker/add_discharge_plan.html',
+                                      'tracker/add_exam.html',
                                       {'error_message': 'Lo sentimos, el '
                                        'formulario no se puede guardar en '
                                        'este momento. Por favor, vuelva a '
@@ -108,7 +108,7 @@ def new(request, child_id):
                 # save,return to add_discharge_plan template with "Sorry,
                 # please try again" error message
                 else:
-                    return render(request, 'tracker/add_discharge_plan.html',
+                    return render(request, 'tracker/add_exam.html',
                                   {'error_message': 'Lo sentimos, el '
                                    'formulario no se puede guardar en este '
                                    'momento. Por favor, vuelva a '
@@ -131,13 +131,14 @@ def new(request, child_id):
         'child': child,
         'child_id': child_id,
         'residence_id': child.residence_id,
-        'discharge_plan_form': exam_form.as_ul,
+        'exam_form': exam_form.as_ul,
         'signature_form': signature_form.as_ul,
-        'DischargePlans': discharge_plan_list,
+        'ExamList': discharge_plan_list,
         'page': 'discharge_plan',
+        'name': 'Plan de Alta',
         # 'exam': True,
     }
-    return render(request, 'tracker/add_discharge_plan.html', context)
+    return render(request, 'tracker/add_exam.html', context)
 
 
 """The view() function renders the discharge_plan template, populated
@@ -251,7 +252,7 @@ def edit(request, child_id, exam_id):
                     # please try again" error message
                     else:
                         return render(request,
-                                      'tracker/edit_discharge_plan.html',
+                                      'tracker/edit_exam.html',
                                       {'error_message': 'Lo sentimos, el '
                                        'formulario no se puede guardar en '
                                        'este momento. Por favor, vuelva a '
@@ -261,7 +262,7 @@ def edit(request, child_id, exam_id):
                 # save, return to edit_discharge_plan template with
                 # "Sorry, please try again" error message
                 else:
-                    return render(request, 'tracker/edit_discharge_plan.html',
+                    return render(request, 'tracker/edit_exam.html',
                                   {'error_message': 'Lo sentimos, el '
                                    'formulario no se puede guardar en este '
                                    'momento. Por favor, vuelva a '
@@ -286,13 +287,14 @@ def edit(request, child_id, exam_id):
         'child_id': child_id,
         'exam_id': exam.id,
         'residence_id': child.residence_id,
-        'discharge_plan_form': exam_form.as_ul,
+        'exam_form': exam_form.as_ul,
         'signature_form': signature_form.as_ul,
-        'DischargePlans': exam_list,
+        'ExamList': exam_list,
         'page': 'discharge_plan',
+        'name': 'Plan de Alta',
         # 'exam': True,
     }
-    return render(request, 'tracker/edit_discharge_plan.html', context)
+    return render(request, 'tracker/edit_exam.html', context)
 
 
 """The delete() function confirms with the user that a photograph

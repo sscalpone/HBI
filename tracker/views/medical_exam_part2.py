@@ -93,7 +93,7 @@ def new(request, child_id):
                     # "Sorry, please try again" error message
                     else:
                         return render(request,
-                                      'tracker/add_medical_exam_part2.html',
+                                      'tracker/add_exam.html',
                                       {'error_message': 'Lo sentimos, el '
                                        'formulario no se puede guardar en '
                                        'este momento. Por favor, vuelva a '
@@ -104,7 +104,7 @@ def new(request, child_id):
                 # "Sorry, please try again" error message
                 else:
                     return render(request,
-                                  'tracker/add_medical_exam_part2.html',
+                                  'tracker/add_exam.html',
                                   {'error_message': 'Lo sentimos, el '
                                    'formulario no se puede guardar en este '
                                    'momento. Por favor, vuelva a '
@@ -127,13 +127,14 @@ def new(request, child_id):
         'child': child,
         'child_id': child_id,
         'residence_id': child.residence_id,
-        'medical_exam_part2_form': exam_form.as_ul,
+        'exam_form': exam_form.as_ul,
         'signature_form': signature_form.as_ul,
-        'MedicalExamPart2s': exam_list,
+        'ExamList': exam_list,
         'page': 'medical_exam_part2',
+        'name': 'Nuevo Informe Médico / Parte 2',
         # 'exam': True,
     }
-    return render(request, 'tracker/add_medical_exam_part2.html', context)
+    return render(request, 'tracker/add_exam.html', context)
 
 
 """The view() function renders the medical_exam_part2 template,
@@ -244,7 +245,7 @@ def edit(request, child_id, exam_id):
                     # "Sorry, please try again" error message
                     else:
                         return render(request,
-                                      'tracker/edit_medical_exam_part2.html',
+                                      'tracker/edit_exam.html',
                                       {'error_message': 'Lo sentimos, el '
                                        'formulario no se puede guardar en '
                                        'este momento. Por favor, vuelva a '
@@ -255,7 +256,7 @@ def edit(request, child_id, exam_id):
                 # with "Sorry, please try again" error message
                 else:
                     return render(request,
-                                  'tracker/edit_medical_exam_part2.html',
+                                  'tracker/edit_exam.html',
                                   {'error_message': 'Lo sentimos, el '
                                    'formulario no se puede guardar en este '
                                    'momento. Por favor, vuelva a '
@@ -281,13 +282,14 @@ def edit(request, child_id, exam_id):
         'child_id': child_id,
         'residence_id': child.residence_id,
         'exam_id': exam.id,
-        'medical_exam_part2_form': exam_form.as_ul,
+        'exam_form': exam_form.as_ul,
         'signature_form': signature_form.as_ul,
-        'MedicalExamPart2s': exam_list,
+        'ExamList': exam_list,
         'page': 'medical_exam_part2',
+        'name': 'Nuevo Informe Médico / Parte 2',
         # 'exam': True,
     }
-    return render(request, 'tracker/edit_medical_exam_part2.html', context)
+    return render(request, 'tracker/edit_exam.html', context)
 
 
 """The delete() function confirms with the user that a photograph

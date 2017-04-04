@@ -91,7 +91,7 @@ def new(request, child_id):
                     # please try again" error message
                     else:
                         return render(request,
-                                      'tracker/add_dental_exam.html',
+                                      'tracker/add_exam.html',
                                       {'error_message': 'Lo sentimos, el '
                                        'formulario no se puede guardar en '
                                        'este momento. Por favor, vuelva a '
@@ -101,7 +101,7 @@ def new(request, child_id):
                 # save,return to add_dental_exam template with "Sorry,
                 # please try again" error message
                 else:
-                    return render(request, 'tracker/add_dental_exam.html',
+                    return render(request, 'tracker/add_exam.html',
                                   {'error_message': 'Lo sentimos, el '
                                    'formulario no se puede guardar en este '
                                    'momento. Por favor, vuelva a intentarlo.',
@@ -124,13 +124,14 @@ def new(request, child_id):
         'child': child,
         'child_id': child_id,
         'residence_id': child.residence_id,
-        'dental_exam_form': exam_form.as_ul,
+        'exam_form': exam_form.as_ul,
         'signature_form': signature_form.as_ul,
-        'DentalExams': dental_exam_list,
+        'ExamList': dental_exam_list,
         'page': 'dental_exam',
+        'name': 'Informe Odontológico',
         # 'exam': True,
     }
-    return render(request, 'tracker/add_dental_exam.html', context)
+    return render(request, 'tracker/add_exam.html', context)
 
 
 """The view() function renders the dental_exam template, populated
@@ -242,7 +243,7 @@ def edit(request, child_id, exam_id):
                     # please try again" error message
                     else:
                         return render(request,
-                                      'tracker/edit_dental_exam.html',
+                                      'tracker/edit_exam.html',
                                       {'error_message': 'Lo sentimos, el '
                                        'formulario no se puede guardar en '
                                        'este momento. Por favor, vuelva a '
@@ -252,7 +253,7 @@ def edit(request, child_id, exam_id):
                 # save, return to edit_dental_exam template with
                 # "Sorry, please try again" error message
                 else:
-                    return render(request, 'tracker/edit_dental_exam.html',
+                    return render(request, 'tracker/edit_exam.html',
                                   {'error_message': 'Lo sentimos, el '
                                    'formulario no se puede guardar en este'
                                    ' momento. Por favor, vuelva a '
@@ -277,13 +278,14 @@ def edit(request, child_id, exam_id):
         'child_id': child_id,
         'exam_id': exam.id,
         'residence_id': child.residence_id,
-        'dental_exam_form': exam_form.as_ul,
+        'exam_form': exam_form.as_ul,
         'signature_form': signature_form.as_ul,
-        'DentalExams': exam_list,
+        'ExamList': exam_list,
         'page': 'dental_exam',
+        'name': 'Informe Odontológico',
         # 'exam': True,
     }
-    return render(request, 'tracker/edit_dental_exam.html', context)
+    return render(request, 'tracker/edit_exam.html', context)
 
 """The delete() function confirms with the user that a photograph
 should be deleted, and then deletes the objects from the database.

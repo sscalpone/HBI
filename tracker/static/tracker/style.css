@@ -1,0 +1,548 @@
+/**************************
+***************************
+HBI TRACKER STYLES
+***************************
+**************************/
+
+/*****************
+GENERAL STYLES
+******************/
+
+html {
+  font-family: "Trebuchet MS", 
+               Helvetica, 
+               sans-serif;
+  background: #fff;
+}
+
+h1 {
+  font-size: 1.7em;
+  text-align: center;
+  margin-top: 25px;
+}
+
+h2 {
+  font-size: 1.4em;
+}
+
+ol li {
+  list-style: decimal-leading-zero inside;
+}
+
+img {
+  width: 100%;
+}
+
+a {
+  color: #000;
+}
+
+.no-display {
+  display: none;
+}
+
+.ui-dialog {
+  background: #fff;
+  border: 2px solid #666;
+  border-radius: 5px;
+}
+
+
+/*********************
+DIALOG BOX STYLES
+**********************/
+
+#dialog p {
+  line-height: 120%;
+}
+
+#dialog input[type="submit"] {
+  width: 60px;
+  background: #fff;
+  border: 1px solid #666;
+  padding: 5px;
+  font-size: 1em;
+  box-shadow: 5px 5px 10px #000;
+}
+
+#dialog input[type="submit"]:active {
+  box-shadow: 0 0 0;
+}
+
+/*********************
+HEADER STYLES
+**********************/
+
+.header {
+  background: #fff;
+  padding: 10px 10px 0;
+  color: #000;
+}
+
+.border {
+  content: "";
+  width: 100%;
+  height: 25px;
+  background: #cf2a27;
+  border-top: 1px #000 solid;
+  border-bottom: 1px #000 solid;
+  margin-top: 10px;
+}
+
+.logo {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 250px;
+
+}
+
+/*********************
+FOOTER STYLES
+**********************/
+
+footer p {
+  margin: 20px 50px;
+  padding-top: 10px;
+}
+
+footer {
+  text-align: right;
+  padding-top: 5px;
+}
+
+footer li {
+  display: inline-block;
+  padding: 5px;
+}
+
+/************************
+LOGIN STYLES
+*************************/
+
+#login {
+  display: block;
+  margin-top: 50px;
+}
+#login li {
+  text-align: center;
+  margin: 15px;
+  font-size: 1.3em;
+}
+
+#login label {
+  display: inline-block;
+  width: 186px;
+}
+
+#login input {
+  padding: 4px 4px 4px 4px ;
+  margin-left: 3px;
+  border: 1px solid #000;
+  font-size: 1em;
+}
+
+#login input[type="submit"], 
+.add-new-exam {
+  background: #fff;
+  text-align: center;
+  font-size: 1em;
+  padding: 5px;
+  box-shadow: 5px 5px 10px #000;
+}
+
+#login input[type="submit"]:active {
+  box-shadow: 0 0 0;
+}
+
+/*****************
+SIDEBAR STYLES
+******************/
+
+.selected {
+  background: #95bcf2 ;
+}
+
+.sidebar {
+  display: block;
+  width: 100%;
+  padding-bottom: 5px;
+}
+
+.sidebar a {
+  text-decoration: none;
+}
+.sidebar ul {
+  text-align: center;
+}
+
+.sidebar li {
+  display: inline-block;
+  font-size: 1.1em;
+  padding: 10px 5px ;
+}
+
+.sidebar a {
+  display: block;
+  width: 100%;
+}
+
+/* Two-Column Sidebar */
+
+.sidebar #secondary li {
+  border: none;
+  margin-left: 25px;
+}
+
+/************************
+CHILDREN LIST STYLES 
+*************************/
+
+#residences {
+  margin: 0 auto;
+}
+
+#residences li {
+  position: relative;
+  display: inline-block;
+  width: 110px;
+  vertical-align: top;
+  text-align: center;
+  margin: 5px 1%;
+  font-size: 1.5em;
+}
+
+.children-list {
+  margin: 0 auto;
+}
+
+.child-list li {
+  text-align: justify;
+}
+
+.children-list li {
+  position: relative;
+  display: inline-block;
+  width: 110px;
+  vertical-align: top;
+  text-align: center;
+  margin: 5px 1%;
+  font-size: 1.5em;
+}
+
+.children-list h3 {
+  font-size: 1.7em;
+}
+
+#active {
+  padding-bottom: 10px;
+}
+
+.thumbnail {
+  width: 100px;
+  height: 100px;
+  overflow: hidden;
+}
+
+/* Visual Priority Styles */
+
+.thumbnail.green {
+  border: 4px #009e0f solid;
+}
+
+.thumbnail.yellow {
+  border: 4px #ffff00 solid;
+}
+
+.thumbnail.red {
+  border: 4px #cf2a27 solid;
+}
+
+.thumbnail.gray {
+  border: 4px #666 solid;
+}
+
+/*********************************
+TWO-COLUMN and THREE-COLUMN STYLES
+*********************************/
+
+/* FORM STYLES */
+
+.two-column, .three-column {
+  display: block;
+  height: 100%;
+  overflow: hidden;
+}
+
+.two-column h2 {
+  margin-bottom: 10px;
+  padding-right: 10px;
+}
+
+.two-column .content, 
+.three-column .content {
+  padding-bottom: 10px;
+}
+
+.two-column .content li {
+  padding: 5px;
+}
+
+.two-column .content label {
+  display: inline-block;
+  width: 166px;
+  text-align: right;
+  vertical-align: top;
+}
+
+.three-column .details {
+  text-align: center;
+  padding-bottom: 10px;
+}
+
+.two-column .content p {
+  padding: 20px 0 10px;
+}
+
+/* FORM STYLES */
+
+.two-column .content select {
+  background: transparent;
+}
+
+.two-column .content input[type="text"],
+.two-column .content textarea,
+.two-column .content input[type="number"],
+.two-column .content select,
+.two-column .content input[type="password"], 
+.two-column .content input[type="email"] {
+  font-size: 1em;
+  padding: 4px;
+  border: 2px #666 solid;
+}
+
+.two-column .content input[type="text"]:focus,
+.two-column .content textarea:focus,
+.two-column .content input[type="number"]:focus,
+.two-column .content select:focus,
+.two-column .content input[type="password"]:focus, 
+.two-column .content input[type="email"]:focus,
+input[type="checkbox"]:focus {
+  outline: 2px #95bcf2 groove;
+}
+
+input[type="checkbox"] {
+    -webkit-appearance: none;
+    width: 20px;
+    height: 20px;
+    background: transparent;
+    border-radius: 5px;
+    border: 2px solid #666;
+}
+input[type='checkbox']:checked {
+    background: #95bcf2;
+}
+
+.two-column .content textarea {
+  height: 100px;
+}
+
+.two-column .content #id_photo {
+  font-size: .8em;
+}
+
+.two-column .content input[type="submit"] {
+  display: block;
+  min-width: 160px;
+  background: #fff;
+  text-align: center;
+  font-size: 1em;
+  padding: 0;
+  padding: 10px;
+  box-shadow: 5px 5px 10px #000;
+  margin: 5px auto;
+}
+
+.two-column .content input[type="radio"] {
+  display: inline;
+  float: left;
+}
+
+#graph {
+  display: block;
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.add-new-exam {
+  display: inline-block;
+  margin: 5px 0 15px;
+}
+
+.errorlist {
+  color: #cf2a27;
+  text-transform: uppercase;
+}
+
+/************************
+CHILD PAGE STYLES
+*************************/
+
+.profile-picture {
+  display: block;
+  width: 200px;
+  height: 200px;
+  margin: 0 auto;
+  overflow: hidden;
+}
+.child-info {
+  width: 100%;
+  display: block;
+}
+
+.child-info span, #form-info span {
+  display: inline-block;
+  width: 166px;
+}
+
+#user-info span {
+  display: inline-block;
+  width: 237px;
+}
+
+.name label {
+  display: inline-block;
+  width: 68px;
+}
+
+.password label {
+  display: inline-block;
+  width: 158px;
+}
+
+#signature span {
+  display: inline-block;
+  width: 73px;
+}
+
+.child-info li {
+  padding: 5px 0;
+}
+
+#child-view-lists {
+  padding-left: 10px;
+}
+
+/**********************
+CHILD INFORMATION STYLES:
+SUMMARY AND RISK ASSESSMENT;
+**********************/
+
+.summary {
+  width: 90%;
+  margin: 10px 5%;
+}
+
+.summary .priority {
+  width: 50px;
+  height: 132px;
+  float: left;
+  border: 1px #666 solid;
+  padding: 4px;
+}
+
+.summary .priority .circle {
+  display: inline-block;
+  border-radius: 50%;
+  border: 1px #666 solid;
+  width: 40px;
+  height: 40px;
+  margin: 0 5px;
+}
+
+.high {
+  background-color: #cf2a27;
+}
+
+.medium {
+  background-color: #ffff00;
+}
+
+.low {
+  background-color: #009e0f;
+}
+
+.summary .recommendation {
+  display: inline-block;
+  border: 1px #666 solid;
+  width: 80%;
+  height: 132px;
+  padding: 4px;
+  overflow: auto;
+  margin-left: 1%;
+}
+
+.recommendation span {
+  display: inline-block;
+  width: 119px;
+}
+
+
+.photograph {
+  width: 300px;
+  height: 300px;
+  display: inline-block;
+  float: left;
+}
+
+.photograph img {
+  overflow: hidden;
+}
+
+#photo {
+  display: block;
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+/**********************
+IMPORT - EXPORT
+**********************/
+
+input[type="submit"].import-export-button{
+  width: 260px;
+}
+
+#download_link, #download_link a {
+  margin-bottom: 10px;
+  color: #cf2a27;
+}
+
+
+/**********************
+MESSAGES
+**********************/
+.messages {
+  padding-top: 10px;
+  color: #cf2a27;
+  text-transform: uppercase;
+}
+
+form {
+  min-height: 60px;
+  padding-bottom: 10px;
+}
+
+.stick {
+  /*margin-top: 0 !important;*/
+  position: fixed;
+  top: 0;
+  width: 78%;
+  z-index: 10000;
+  border-radius: 0 0 0.5em 0.5em;
+  background: white;
+}
+
+.basic-info, .profile-picture {
+  margin: 10px 0;
+}

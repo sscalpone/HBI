@@ -17,5 +17,5 @@
         </span>
         <li {% if page == 'photo' %} class="selected" {% endif %}><a href="{% url 'tracker:new_photo' child_id %}" class="delete">Fotografias</a></li>
         <li {% if page == 'growth_graph' %} class="selected" {% endif %}><a href="{% url 'tracker:growth_graph' child_id %}" class="delete">Crecimiento Gráfico</a></li>
-        <li {% if page == 'documents' %} class="selected" {% endif %}><a href="{% url 'tracker:new_document' child_id %}" class="delete">Documentos</a></li>
+        <li {% if page == 'document' %} class="selected" {% endif %}><a href="{% url 'tracker:new_document' child_id %}" class="delete">Documentos</a></li>
     </ul>

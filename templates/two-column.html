@@ -4,7 +4,7 @@
         <title>{% block title %}Unión Bíblica Evaluación de Girasoles{% endblock %}</title>
         {% load staticfiles %}<link rel="stylesheet" href="{% static "tracker/jquery-ui.min.css" %}">
         {% load staticfiles %}<link rel="stylesheet" href="{% static "tracker/css-reset.css" %}">
-        {% load staticfiles %}<link rel="stylesheet" href="{% static "tracker/tracker.css" %}">
+        {% load staticfiles %}<link rel="stylesheet" href="{% static "tracker/style.css" %}">
         {% load staticfiles %}<link rel="stylesheet" href="{% static "tracker/responsive.css" %}">
         <meta name="viewport" content="width=device-width">
         <meta name="description" content="Health Bridges International Record Keeping">
@@ -13,26 +13,26 @@
 
     <body>
 
-        <header id="header">
-            {% load staticfiles %}<img src="{% static "tracker/health-bridges-international-logo.png" %}" alt="Health Bridges International Logo" id="logo">
+        <header class="header">
+            {% load staticfiles %}<img src="{% static "tracker/health-bridges-international-logo.png" %}" alt="Health Bridges International Logo" class="logo">
             <h1>Unión Bíblica Evaluación de Girasoles</h1>
             <h2>{% block h2 %}{% endblock %}</h2>
         </header>
-        <div id="border"></div>
+        <div class="border"></div>
 
         <div class="two-column">
-            <nav id="sidebar">
+            <nav class="sidebar">
                 {% block sidebar %}
                  <ul>
-                    <li>Ohai! I'm a menu item.</li>
+                    <li>I'm a menu item.</li>
                 </ul>
                 {% endblock %}
             </nav>
-            <section id="content">
+            <section class="content">
                 {% block content %}{% endblock %}
             </section>
         </div>
-        <div id="border"></div>
+        <div class="border"></div>
         {% include 'footer.html' %}
 
         {% load staticfiles %}<script type="text/javascript" src="{% static "tracker/jquery-1.11.3.min.js" %}"></script>

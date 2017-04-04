@@ -14,30 +14,36 @@
 
     <div>
     	<ul id="form-info">
-    		<li><span>Antecedents Familiares Patológicos y de Riesgo Conocidos:</span> {{ exam.background_notes }}</li>
-    		<li><span>Historia Perinatal y Neonatal:</span> {{ exam.birth_history }}</li>
-    		
-            <li><span>BCG:</span> {{ exam.bcg_vaccine }}{% if exam.bcg_vaccine %}, {{ exam.bcg_vaccine_date }}{% endif %}</li>
-    		
-            <li><span>Antipoliomielitica:</span> {{ exam.polio_vaccine }}{% if exam.polio_vaccine %}, {{exam.polio_vaccine_date}}{% endif %}</li>
-    		
-            <li><span>DPT:</span> {{ exam.dpt_vaccine }}{% if exam.dpt_vaccine %}, {{ dpt_vaccine_date }}{% endif %}</li>
-    		
-            <li><span>Hepatitis B:</span> {{ exam.hepatitis_b_vaccine }}{% if exam.hepatitis_b_vaccine %}, {{ exam.hepatitis_b_vaccine_date }}{% endif %}</li>
-    		
-            <li><span>Hemofilus Influenza:</span> {{ exam.flu_vaccine }}{% if exam.flue_vaccine %}, {{ exam.flu_vaccine_date }}{% endif %}</li>
-    		
-            <li><span>Fiebre Amarilla:</span> {{ exam.yellow_fever_vaccine }}{% if exam.yellow_fever_vaccine %}, {{ exam.yellow_fever_vaccine_date }}{% endif %}</li>
-    		
-            <li><span>SPR:</span> {{ exam.spr_vaccine }}{% if exam.spr_vaccine %}, {{ exam.spr_vaccine_date }}{% endif %}</li>
-    		
-            <li><span>HPV:</span> {{ exam.hpv_vaccine }}{% if exam.hpv_vaccine %}, {{ exam.hpv_vaccine_date }}{% endif %}</li>
-    		
-            <li><span>Neumococo:</span> {{ exam.pneumococcal_vaccine }}{% if exam.pneumococcal_vaccine %}, {{ exam.pneumococcal_vaccine_date }}{% endif %}</li>
-    		
+
             <li><span>Peso:</span> {{ exam.weight }}</li>
-    		<li><span>Estatura:</span> {{ exam.height }}</li>
-            <li><span>IMC</span> {{ exam.bmi }}</li>
+            <li><span>Estatura:</span> {{ exam.height }}</li>
+            <li><span>IMC:</span> {{ exam.bmi }}</li>
+            <li><span>Hemoglobina Anormal:</span> exam.hemoglobin_abnormal</li>
+            <li><span>Hemoglobina Comentarios:</span> exam.hemoglobin_notes</li> 
+
+            <li><span>Agudeza Visual Izquierdo:</span> {{ exam.visual_acuity_left }}</li>
+            <li><span>Agudeza Visual Derecha:</span> {{ exam.visual_acuity_right }}</li>
+
+            <li><span>BCG:</span> {% if exam.bcg_vaccine_date %}, {{ exam.bcg_vaccine_date }}{% else %}No administrado{% endif %}</li>
+    		
+            <li><span>Antipoliomielitica:</span> {% if exam.polio_vaccine_date %}, {{exam.polio_vaccine_date}} {% else %}No administrado{% endif %}</li>
+    		
+            <li><span>DPT:</span> {% if exam.dpt_vaccine %}, {{ dpt_vaccine_date }}{% else %}No administrado{% endif %}</li>
+    		
+            <li><span>Hepatitis B:</span> {% if exam.hepatitis_b_vaccine_date %}, {{ exam.hepatitis_b_vaccine_date }}{% else %}No administrado{% endif %}</li>
+    		
+            <li><span>Hemofilus Influenza:</span> {% if exam.flu_vaccine_date %}, {{ exam.flu_vaccine_date }}{% else %}No administrado{% endif %}</li>
+    		
+            <li><span>Fiebre Amarilla:</span> {% if exam.yellow_fever_vaccine_date %}, {{ exam.yellow_fever_vaccine_date }}{% else %}No administrado{% endif %}</li>
+    		
+            <li><span>SPR:</span> {% if exam.spr_vaccine_date %}, {{ exam.spr_vaccine_date }}{% else %}No administrado{% endif %}</li>
+    		
+            <li><span>HPV:</span> {% if exam.hpv_vaccine_date %}, {{ exam.hpv_vaccine_date }}{% else %}No administrado{% endif %}</li>
+    		
+            <li><span>Neumococo:</span> {% if exam.pneumococcal_vaccine_date %}, {{ exam.pneumococcal_vaccine_date }}{% else %}No administrado{% endif %}</li>
+            
+            <li><span>Diagnóstico:</span> {{exam.diagnosis}}</li>
+            <li>Otres Recomendaciones:</span> {{ exam.recommendations }}</li>
     		
         </ul>
         <ul id="signature">

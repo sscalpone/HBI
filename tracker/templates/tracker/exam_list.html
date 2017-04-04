@@ -1,0 +1,58 @@
+    {% if page == 'photo' %} 
+        <div>
+            <ul class="photo">
+            {% for exam in ExamList %}
+                <a href="{% url 'tracker:'|add:page child_id exam.id %}"><li class="photograph"><img src="{{ exam.photo.url }}"></li></a>
+            {% endfor %}
+            </ul>
+        </div>
+    {% elif page == 'document' %}
+
+        <div class="exam-list">
+            <h3><a href="" class="documents government">Documentos del Gobierno</a></h3>
+            <ol class="government-list no-display">
+            {% if ExamList %}
+            {% for exam in ExamList reversed %}
+                {% if exam.file_to == "Government" %}
+                <li><a href="{% url 'tracker:'|add:page child_id exam.id %}">{{ exam.date }}</a></li>
+                {% endif %}
+            {% endfor %}
+            {% endif %}
+            </ol>
+            
+            <h3><a href="" class="documents health">Documentos de Salud</a></h3>
+            <ol class="health-list no-display">
+            {% if ExamList %}
+            {% for exam in ExamList reversed %}
+                {% if exam.file_to == "Health" %}
+                <li><a href="{% url 'tracker:'|add:page child_id exam.id %}">{{ exam.date }}</a></li>
+                {% endif %}
+            {% endfor %}
+            {% endif %}
+            </ol>
+            
+            <h3><a href="" class="documents others">Otros Documentos</a></h3>
+            <ol class="others-list no-display">
+            {% if ExamList %}
+            {% for exam in ExamList reversed %}
+                {% if exam.file_to == "Other" %}
+                <li><a href="{% url 'tracker:'|add:page child_id exam.id %}">{{ exam.date }}</a></li>
+                {% endif %}
+            {% endfor %}
+            {% endif %}
+            </ol>
+        </div>
+
+    {% else %}
+        <div class="exam-list">
+            <h3>Evaluaciones Pasadas</h3>
+            <ol>
+            {% if ExamList %}
+                {% for exam in ExamList reversed %}
+                    <li><a href="{% url 'tracker:'|add:page child_id exam.id %}">{{ exam.date }}</a></li>
+                {% endfor%}
+            {% endif %}
+            </ol>
+        </div>
+
+    {% endif %}

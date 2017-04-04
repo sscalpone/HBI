@@ -1,31 +1,29 @@
 {% extends 'two-column.html' %}
 
-{% block title %}Nuevo Informe Social{% endblock %}
+{% block title %}Añadir {{name}}{% endblock %}
 
-{% block h2 %}Nuevo Informe Social{% endblock %}
+{% block h2 %}Añadir {{name}}{% endblock %}
 
 {% block sidebar %}
-    {% include 'tracker/sidebar.html' %}
+	<ul>
+		<li><a href="{% url 'tracker:logout' %}" class="delete">Cerrar sesión</a></li>
+		<li><a href="{% url 'tracker:residences' %}" class="delete">Residencias</a></li>
+		<li class="selected"><a href="{% url 'tracker:residence' residence_id %}" class="delete">Niños de Inicio</a></li>
+	</ul>
+
 {% endblock %}
 
 {% block content %}
 
-    {% include 'tracker/basic-info.html' %}
-    {% include 'tracker/social_exam_list.html' %}
+    {% if perms.tracker.add_edit_forms %}
 
     {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
 
-    {% if perms.tracker.add_edit_forms %}
-
-    <form action="{% url 'tracker:new_social_exam' child_id %}" enctype="multipart/form-data" method="post" class="exam">
+    <form action="{% url 'tracker:add_'|add:page residence_id %}" enctype="multipart/form-data" method="post">
         {% csrf_token %}
         <ul>
-            {{ social_exam_form }}
-        
-            <li><h3>Los Datos del Profesíonal</h3></li>
-        
-            {{ signature_form }}
-        </ul>
+        	{{ form }}
+    	</ul>
         <input type="submit" name="submit" value="Enviar">
         <input type="submit" name="save" value="Guardar Cambios">
     </form>
@@ -36,12 +34,12 @@
             <input type="submit" name="discard" value="Sí" id="discard">
             <input type="submit" value="No" id="no">
         </form>
-    </span>
+     </span>
 
     {% else %}
 
     <p><strong>Usted no tiene permiso para agregar o formularios de edición.</strong></p>
 
     {% endif %}
-     
+
 {% endblock %}

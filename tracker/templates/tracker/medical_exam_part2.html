@@ -11,17 +11,11 @@
 {% block content %}
 
 	{% include 'tracker/basic-info.html' %}
-	{% include 'tracker/medical_exam_part2_list.html' %}
 
     <div>
 	    <ul id="form-info">
-			<li><span>Enfermedad Actual:</span> {{ exam.illness_notes }}</li>
 			<li><span>Apetito:</span>{{ exam.appetite_notes }}</li>
 			<li><span>Sueño:</span> {{ exam.sleep_notes }}</li>
-			<li><span>Presión Arterial: </span>{{ exam.blood_pressure }}</li>
-			<li><span>Pulso:</span> {{ exam.pulse }}</li>
-			<li><span>Agudeza Visual Izquierdo:</span> {{ exam.visual_acuity_left }}</li>
-			<li><span>Agudeza Visual Derecha:</span> {{ exam.visual_acuity_right }}</li>
 			<li><span>Apariencia Comentarios:</span> {{ exam.appearance_notes }}</li>
 			<li><span>Piel Comentarios:</span> {{ exam.skin_notes }}</li>
 			<li>Ganglios Comenarios:</span> {{ exam.lymph_notes }}</li>
@@ -34,7 +28,7 @@
 			<li>Neurológicos Comentarios:</span> {{ exam.neurological_notes }}</li>
 			<li><span>Tratamientos Comentarios:</span> {{ exam.treatment_notes }}</li>
 			<li><span>Diagnóstico:</span> {{exam.diagnosis}}</li>
-			<li>Otres Recomendaciones:</span> {{ exam.recommendations }}</li>
+			<li>Otres Recomendaciones:</span> {{ exam.recommendation }}</li>
 		</ul>
         <ul id="signature">
             <li><h3>Los Datos del Profesíonal</h3></li>

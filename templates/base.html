@@ -3,7 +3,7 @@
     <head>
         <title>{% block title %}Unión Bíblica Evaluación de Girasoles{% endblock %}</title>
         {% load staticfiles %}<link rel="stylesheet" href="{% static "tracker/css-reset.css" %}">
-        {% load staticfiles %}<link rel="stylesheet" href="{% static "tracker/tracker.css" %}">
+        {% load staticfiles %}<link rel="stylesheet" href="{% static "tracker/style.css" %}">
         {% load staticfiles %}<link rel="stylesheet" href="{% static "tracker/responsive.css" %}">
         <meta name="viewport" content="width=device-width">
         <meta name="description" content="Health Bridges International Record Keeping">
@@ -11,16 +11,16 @@
     </head>
     <body>
         <div>
-            <header id="header">
-                {% load staticfiles %}<img src="{% static "tracker/health-bridges-international-logo.png" %}" alt="Health Bridges International Logo" id="logo">
+            <header class="header">
+                {% load staticfiles %}<img src="{% static "tracker/health-bridges-international-logo.png" %}" alt="Health Bridges International Logo" class="logo">
                 <h1>Unión Bíblica Evaluación de Girasoles</h1>
                 <h2>{% block h2 %}{% endblock %}</h2>
             </header>
-            <div id="border"></div>
-            <section id="content">
+            <div class="border"></div>
+            <section class="content">
                 {% block content %}{% endblock %}
             </section>
-            <div id="border"></div>
+            <div class="border"></div>
         </div>
     </body>
 </html>
