@@ -52,7 +52,7 @@ def send_email(request):
             if subject and message and from_email:
                 # Send email, populated with variables created above.
                 try:
-                    send_mail(subject, message, from_email, [to_email],
+                    send_mail(subject, message, from_email, to_email,
                               fail_silently=False)
                     messages.add_message(request, messages.SUCCESS,
                                          ('Tu correo ha sido enviado. Nos '
